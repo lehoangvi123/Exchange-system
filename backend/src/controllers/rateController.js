@@ -4,7 +4,7 @@ const { cacheRate } = require('../utils/cache');
 
 async function getCurrentRate(req, res) {
   try {
-    const data = await fetchRatesFromProvider('https://api.exchangerate-api.com/v4/latest/USD');
+    const data = await fetchRatesFromProvider('https://api.exchangerate-api.com/v4/latest');
 
     // Lưu DB 
     await Rate.create({
