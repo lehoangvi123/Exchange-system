@@ -19,11 +19,11 @@ router.post('/convert', async (req, res) => {
   let { from, to, amount } = req.body;
   if (!from || !to || !amount) {
     return res.status(400).json({ error: 'Missing parameters' });
-  }
+  } 
 
   from = from.toUpperCase();
   to = to.toUpperCase();
-  amount = parseFloat(amount);
+  amount = parseFloat(amount); 
 
   try {
     const rateDoc = await Rate.findOne({ pair: 'USD' }).sort({ createdAt: -1 });
@@ -32,7 +32,7 @@ router.post('/convert', async (req, res) => {
     const rates = rateDoc.rate;
 
     let usdAmount;
-    if (from === 'USD') {
+    if (from === 'USD') { 
       usdAmount = amount;
     } else if (rates[from]) {
       usdAmount = amount / rates[from];
