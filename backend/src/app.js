@@ -4,10 +4,14 @@ const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-const connectDB = require('./config/db')
-
+const connectDB = require('./config/db');
+const { cacheRate, getCachedRate } = require('./utils/cache');
+const historyRoutes = require('./routes/historyRoutes');
+const { processHistoricalData } = require('./services/processHistoricalData');
+const { invalidateRateCache } = require('./utils/cache'); // 👈 Thêm vào
+const { warmupCache } = require('./utils/cache');
 const Rate = require('./models/rateModel');
-const calculateTechnicalIndicators = require('./utils/calculateTechnicalIndicators'); // 👈 Thêm vào
+const calculateTechnicalIndicators = require('./utils/calculateTechnicalIndicators');
 
 const {
   fetchRates,
@@ -15,7 +19,8 @@ const {
   getCurrentOriginalRates, 
   getCurrentProvider,
   getCurrentSources, 
-  getCurrentIndicators
+  getCurrentIndicators, 
+  getCurrentMarketSummary
 } = require('./services/fetchRates');
 
 const app = express();
@@ -24,14 +29,11 @@ const io = socketIo(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
+// ✅ Kết nối MongoDB
 connectDB();
 app.use(cors());
-app.use(express.json());
-
-// ✅ MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+app.use(express.json()); 
+app.use('/api/history', historyRoutes);
 
 // ✅ WebSocket
 io.on('connection', (socket) => {
@@ -67,19 +69,29 @@ app.get('/api/rates/sources', (req, res) => {
   res.json({ success: true, sources });
 });
 
-// ✅ API: Chuyển đổi cơ bản
+// ✅ API: Chuyển đổi cơ bản có cache
 app.post('/api/rates/convert', (req, res) => {
   const { from, to, amount } = req.body;
+  const cacheKey = `${from}_${to}`;
+  const cachedRate = getCachedRate(cacheKey);
+
+  if (cachedRate !== null) {
+    const result = (amount * cachedRate).toFixed(6);
+    return res.json({ from, to, amount, result, cached: true });
+  }
+
   const rates = getCurrentRates();
   const fromRate = rates[from];
   const toRate = rates[to];
 
   if (!fromRate || !toRate || isNaN(amount)) {
-    return res.status(400).json({ error: 'Invalid currency code or amount' });
+    return res.status(400).json({ error: 'Invalid input' });
   }
 
-  const result = (amount / fromRate) * toRate;
-  res.json({ from, to, amount, result });
+  const rate = toRate / fromRate;
+  cacheRate(cacheKey, rate); // TTL mặc định 1 giờ
+  const result = (amount * rate).toFixed(6);
+  res.json({ from, to, amount, result, cached: false });
 });
 
 // ✅ API: Chuyển đổi chéo
@@ -97,9 +109,32 @@ app.post('/api/rates/convert-cross', (req, res) => {
   const crossRate = fromRate / toRate;
   const result = amount * crossRate;
   res.json({ from, to, via, amount, rate: crossRate, result });
+}); 
+
+// ✅ API: Vô hiệu hóa cache theo cặp tiền
+app.post('/api/rates/cache/invalidate', (req, res) => {
+  const { from, to } = req.body;
+  if (!from || !to) {
+    return res.status(400).json({ success: false, message: 'Missing currency pair' });
+  }
+
+  const key = `${from}_${to}`;
+  invalidateRateCache(key);
+  res.json({ success: true, message: `Cache invalidated for ${key}` });
+}); 
+
+// Thêm route API
+app.post('/api/rates/cache/warmup', (req, res) => {
+  const { pairs } = req.body;
+  if (!Array.isArray(pairs)) {
+    return res.status(400).json({ success: false, message: 'pairs must be an array' });
+  }
+  warmupCache(pairs, getCurrentRates);
+  res.json({ success: true, warmedUp: pairs });
 });
 
-// ✅ API: Chỉ số kỹ thuật theo loại tiền tệ cụ thể
+
+// ✅ API: Chỉ số kỹ thuật theo từng loại tiền tệ
 app.get('/api/rates/indicators/:currency', async (req, res) => {
   try {
     const currency = req.params.currency.toUpperCase();
@@ -134,21 +169,38 @@ app.get('/api/rates/indicators', (req, res) => {
   res.json({ success: true, indicators });
 });
 
+// ✅ API: Tóm tắt thị trường
 app.get('/api/rates/summary', (req, res) => {
   const summary = getCurrentMarketSummary();
-  if (!summary) {
-    return res.status(404).json({ success: false, message: 'No summary available' });
+  if (!summary || Object.keys(summary).length === 0) {
+    return res.status(404).json({ success: false, message: 'No market summary available' });
   }
   res.json({ success: true, summary });
+}); 
+
+// ✅ Gọi ngay khi khởi động
+
+// ⬇️ Ngay sau fetchRates(io), gọi warmupCache 
+fetchRates(io).then(() => {
+  warmupCache(
+    ['AUD_RON', 'AUD_BRL', 'AUD_CAD', 'AUD_CNY'],
+    getCurrentRates
+  );
 });
 
+// ⏱️ Gọi lại mỗi 1 giờ
+setInterval(() => fetchRates(io), 24 * 60 * 60 * 1000);
 
-// ✅ Gọi ngay khi server khởi động
-fetchRates(io);  
+// ✅ Gọi xử lý dữ liệu lịch sử lần đầu và lặp lại mỗi 24 giờ
+processHistoricalData('24h');
+setInterval(() => {
+  console.log('⏳ Tự động xử lý dữ liệu lịch sử (24h)');
+  processHistoricalData('24h');
+}, 24 * 60 * 60 * 1000); 
 
-// ⏱️ Sau đó mới chạy lặp theo khoảng thời gian
-setInterval(() => fetchRates(io), 432000000);//1 ngay
+// Khi người dùng cập nhật tỷ giá thủ công
+invalidateRateCache('USD_VND');
 
-
+// ✅ Khởi động server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
