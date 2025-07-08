@@ -6,6 +6,7 @@ const detectRateAnomalies = require('../utils/detectRateAnomalies');
 const calculateTechnicalIndicators = require('../utils/calculateTechnicalIndicators');
 const saveRateToDB = require('./saveRateToDB');
 const generateMarketSummary = require('../utils/generateMarketSummary');
+// const { saveRate } = require('./rateService'); // ✅ Bỏ comment, import lại
 
 let currentRates = {};
 let currentProvider = null;
@@ -25,7 +26,12 @@ const fetchRates = async (io) => {
     }
 
     const aggregated = aggregateRatesFromSources(sources);
-    const anomalies = detectRateAnomalies(aggregated, currentOriginalRates, 0.1);
+    currentOriginalRates = aggregated;
+
+    // ✅ Gọi saveRate để lưu tỷ giá gốc (chưa làm mượt)
+    // await saveRate(aggregated);
+
+    const anomalies = detectRateAnomalies(aggregated, currentRates, 0.1);
     if (anomalies.hasAnomaly && io) {
       console.warn('⚠️ Tỷ giá bất thường:', anomalies.anomalies);
       io.emit('rateAnomalies', anomalies.anomalies);
@@ -44,11 +50,11 @@ const fetchRates = async (io) => {
     const smoothed = smoothRateFluctuations(aggregated, currentRates, 0.2);
     currentRates = smoothed;
 
+    // ✅ Lưu tỷ giá đã làm mượt (nếu cần lưu bản này riêng)
     await saveRateToDB(currentRates);
 
     const marketSummary = generateMarketSummary(currentRates, currentOriginalRates);
     currentMarketSummary = marketSummary;
-    currentOriginalRates = aggregated;
     currentProvider = 'Aggregated from: ' + sources.map(s => s.provider).join(', ');
 
     console.log('✅ Tổng hợp tỷ giá từ:', currentProvider);

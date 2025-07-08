@@ -1,5 +1,9 @@
 const Rate = require('../models/Rate');
 
+/**
+ * Lưu tỷ giá hiện tại vào MongoDB
+ * @param {Object} currencyRate - Object chứa các cặp tiền và tỷ giá, ví dụ: { USD: 1, VND: 24500, EUR: 0.92 }
+ */
 exports.getRateHistory = async (fromDate, toDate) => {
   return await Rate.find({ createdAt: { $gte: new Date(fromDate), $lte: new Date(toDate) } })
     .sort({ createdAt: 1 });
@@ -24,4 +28,19 @@ exports.getPopularCurrencyPairs = async () => {
   ]);
 
   return results;
-};
+}; 
+
+async function saveRate(currencyRate) {
+  try {
+    const rateDoc = new Rate({
+      rate: currencyRate,
+      createdAt: new Date()
+    });
+    await rateDoc.save();
+    console.log('✅ Tỷ giá đã được lưu vào MongoDB');
+  } catch (error) {
+    console.error('❌ Lỗi khi lưu tỷ giá:', error.message);
+  }
+}
+
+module.exports = { saveRate }; 
