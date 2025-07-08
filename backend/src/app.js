@@ -11,8 +11,10 @@ const { processHistoricalData } = require('./services/processHistoricalData');
 const { invalidateRateCache } = require('./utils/cache'); // 👈 Thêm vào
 const { warmupCache } = require('./utils/cache');
 const Rate = require('./models/rateModel');
-const calculateTechnicalIndicators = require('./utils/calculateTechnicalIndicators');
-
+const calculateTechnicalIndicators = require('./utils/calculateTechnicalIndicators'); 
+const { getCacheStatistics } = require('./utils/cache'); 
+const { optimizeCacheMemory } = require('./utils/cache'); 
+const { clearExpiredCache } = require('./utils/cache'); // 👈 import
 const {
   fetchRates,
   getCurrentRates, 
@@ -131,8 +133,30 @@ app.post('/api/rates/cache/warmup', (req, res) => {
   }
   warmupCache(pairs, getCurrentRates);
   res.json({ success: true, warmedUp: pairs });
+}); 
+
+app.post('/api/rates/cache/optimize', (req, res) => {
+  const removed = optimizeCacheMemory();
+  res.json({ success: true, removed });
+}); 
+
+// ✅ API: Xóa cache đã hết hạn
+app.post('/api/rates/cache/clear-expired', (req, res) => {
+  const removedCount = clearExpiredCache();
+  res.json({ success: true, removed: removedCount });
+}); 
+
+app.post('/api/rates/cache/clear-expired', (req, res) => {
+  const removedCount = clearExpiredCache();
+  res.json({ success: true, removed: removedCount });
 });
 
+
+
+app.get('/api/rates/cache/stats', (req, res) => {
+  const stats = getCacheStatistics();
+  res.json({ success: true, stats });
+});   
 
 // ✅ API: Chỉ số kỹ thuật theo từng loại tiền tệ
 app.get('/api/rates/indicators/:currency', async (req, res) => {
@@ -187,6 +211,11 @@ fetchRates(io).then(() => {
     getCurrentRates
   );
 });
+
+// Gọi mỗi 10 phút:
+setInterval(() => {
+  optimizeCacheMemory();
+}, 10 * 60 * 1000);
 
 // ⏱️ Gọi lại mỗi 1 giờ
 setInterval(() => fetchRates(io), 24 * 60 * 60 * 1000);

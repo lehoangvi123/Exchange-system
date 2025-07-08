@@ -37,11 +37,71 @@ const warmupCache = (pairs, getRatesFn) => {
       console.warn(`⚠️ Không thể warmup ${pair} do thiếu dữ liệu`);
     }
   }
-};
+}; 
+
+function getCacheStatistics() {
+  const now = Date.now();
+  let total = 0, expired = 0, active = 0;
+  const entries = [];
+
+  for (const [key, { value: rate, expiresAt }] of cache.entries()) {
+    total++;
+    const isExpired = expiresAt < now;
+    if (isExpired) expired++;
+    else active++;
+
+    entries.push({
+      currencyPair: key,
+      rate,
+      expiry: new Date(expiresAt).toISOString(),
+      status: isExpired ? 'expired' : 'active'
+    });
+  }
+
+  return {
+    total,
+    active,
+    expired,
+    entries
+  };
+} 
+
+function optimizeCacheMemory() {
+  const now = Date.now();
+  let removed = 0;
+
+  for (const [key, { expiresAt }] of cache.entries()) {
+    if (expiresAt < now) {
+      cache.delete(key);
+      removed++;
+    }
+  }
+
+  console.log(`🧹 Đã xoá ${removed} cache hết hạn`);
+  return removed;
+} 
+
+function clearExpiredCache() {
+  const now = Date.now();
+  let removed = 0;
+
+  for (const [key, entry] of cache.entries()) {
+    if (entry.expiresAt < now) {
+      cache.delete(key);
+      removed++;
+    }
+  }
+
+  return removed;
+}
+
 
 module.exports = {
   cacheRate,
   getCachedRate,
   invalidateRateCache, 
-  warmupCache
+  warmupCache, 
+  getCacheStatistics, 
+  optimizeCacheMemory, 
+  clearExpiredCache // 👈 Thêm export
 };
