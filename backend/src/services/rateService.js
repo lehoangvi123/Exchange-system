@@ -97,24 +97,23 @@ async function archiveOldData(cutoffDate) {
 /**
  * Lấy các cặp tiền tệ phổ biến nhất dựa vào ConversionLog
  */
-async function getPopularCurrencyPairs() {
-  const results = await ConversionLog.aggregate([
-    {
-      $group: {
-        _id: { from: "$from", to: "$to" },
-        count: { $sum: 1 }
-      }
-    },
-    { $sort: { count: -1 } },
-    { $limit: 10 }
-  ]);
-  return results;
-}
+// async function getPopularCurrencyPairs() {
+//   const results = await ConversionLog.aggregate([
+//     {
+//       $group: {
+//         _id: { from: "$from", to: "$to" },
+//         count: { $sum: 1 }
+//       }
+//     },
+//     { $sort: { count: -1 } },
+//     { $limit: 10 }
+//   ]);
+//   return results;
+// }
 
 module.exports = {
   saveRate,
   getRawRateHistory,
   getRateHistory,
-  archiveOldData,
-  getPopularCurrencyPairs
+  archiveOldData
 };

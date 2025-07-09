@@ -33,7 +33,7 @@ const {
   getCurrentMarketSummary
 } = require('./services/fetchRates');
 
-const popularPairsRoute = require('./routes/popularPairs');
+const popularPairsRoute = require('./routes/popularPairRoutes');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -47,8 +47,7 @@ app.use(express.json());
 
 app.use('/api/history', historyRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/popular-pairs', popularPairsRoute);
-
+app.use('/api/rates', popularPairsRoute);
 // ✅ WebSocket
 io.on('connection', (socket) => {
   console.log('⚡ Client connected:', socket.id);
