@@ -19,7 +19,11 @@ import ClearCacheButton from './components/ClearCacheButton'
 import WarmupButton from './components/WarmUpButton'; 
 import CacheStats from './components/CacheStats'; 
 import CacheDashboard from './components/CacheDashboard';
-import ClearExpiredCacheButton from './components/ClearExpiredCacheButton';
+import ClearExpiredCacheButton from './components/ClearExpiredCacheButton'; 
+import SaveRateForm from './components/SaveRateForm';
+import UpdateUserForm from './components/UpdateUserForm';
+import SaveUserForm from './components/SaveUserForm';
+
 // Biến môi trường cho backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
@@ -88,8 +92,11 @@ function App() {
                 <ClearCacheButton />   
                  <h1>📊 Hệ thống Tỷ Giá</h1>
                 <CacheDashboard />  
+                <SaveRateForm /> 
                 <CacheStats />
-                <WarmupButton /> 
+                <WarmupButton />  
+                <SaveUserForm /> 
+                <UpdateUserForm />
                 <ClearExpiredCacheButton />
                    <HistoryChart period="24h" />
                   {/* <HistoryChart period="7d" /> */}        

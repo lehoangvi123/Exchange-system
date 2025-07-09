@@ -6,7 +6,7 @@ const detectRateAnomalies = require('../utils/detectRateAnomalies');
 const calculateTechnicalIndicators = require('../utils/calculateTechnicalIndicators');
 const saveRateToDB = require('./saveRateToDB');
 const generateMarketSummary = require('../utils/generateMarketSummary');
-// const { saveRate } = require('./rateService'); // ✅ Bỏ comment, import lại
+const { saveRate } = require('./rateService'); // ✅ Bỏ comment, import lại
 
 let currentRates = {};
 let currentProvider = null;
@@ -29,7 +29,7 @@ const fetchRates = async (io) => {
     currentOriginalRates = aggregated;
 
     // ✅ Gọi saveRate để lưu tỷ giá gốc (chưa làm mượt)
-    // await saveRate(aggregated);
+    await saveRate(aggregated);
 
     const anomalies = detectRateAnomalies(aggregated, currentRates, 0.1);
     if (anomalies.hasAnomaly && io) {

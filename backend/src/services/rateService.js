@@ -1,8 +1,16 @@
-const Rate = require('../models/Rate');
+const Rate = require('../models/rateModel');
 
 /**
  * Lưu tỷ giá hiện tại vào MongoDB
  * @param {Object} currencyRate - Object chứa các cặp tiền và tỷ giá, ví dụ: { USD: 1, VND: 24500, EUR: 0.92 }
+ */ 
+
+
+/**
+ * Trả về lịch sử tỷ giá theo cặp và khoảng thời gian
+ * @param {string} pair - Ví dụ: "USD_VND"
+ * @param {string} fromDate - ISO date: "2025-07-01"
+ * @param {string} toDate - ISO date: "2025-07-09"
  */
 exports.getRateHistory = async (fromDate, toDate) => {
   return await Rate.find({ createdAt: { $gte: new Date(fromDate), $lte: new Date(toDate) } })
@@ -28,7 +36,25 @@ exports.getPopularCurrencyPairs = async () => {
   ]);
 
   return results;
-}; 
+};  
+
+const getRateHistory = async (pair, fromDate, toDate) => {
+  const [from, to] = pair.split('_');
+  const query = {
+    createdAt: { $gte: new Date(fromDate), $lte: new Date(toDate) },
+    [`rate.${from}`]: { $exists: true },
+    [`rate.${to}`]: { $exists: true },
+  };
+
+  const history = await Rate.find(query).sort({ createdAt: 1 });
+
+  return history.map(doc => ({
+    timestamp: doc.createdAt,
+    rate: doc.rate[to] / doc.rate[from],
+    base: from,
+    quote: to,
+  }));
+};
 
 async function saveRate(currencyRate) {
   try {
@@ -43,4 +69,4 @@ async function saveRate(currencyRate) {
   }
 }
 
-module.exports = { saveRate }; 
+module.exports = { saveRate, getRateHistory }; 

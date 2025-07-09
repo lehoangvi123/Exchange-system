@@ -14,7 +14,10 @@ const Rate = require('./models/rateModel');
 const calculateTechnicalIndicators = require('./utils/calculateTechnicalIndicators'); 
 const { getCacheStatistics } = require('./utils/cache'); 
 const { optimizeCacheMemory } = require('./utils/cache'); 
-const { clearExpiredCache } = require('./utils/cache'); // 👈 import
+const { clearExpiredCache } = require('./utils/cache');  // 👈 import 
+const { saveRate } = require('./services/rateService'); 
+// const { getRateHistory } = require('./services/rateService')
+const userRoutes = require('./routes/userRoutes')
 const {
   fetchRates,
   getCurrentRates, 
@@ -32,10 +35,16 @@ const io = socketIo(server, {
 });
 
 // ✅ Kết nối MongoDB
-connectDB();
+connectDB(); 
 app.use(cors());
 app.use(express.json()); 
+
+
 app.use('/api/history', historyRoutes);
+
+
+app.use('/api/users', userRoutes);
+
 
 // ✅ WebSocket
 io.on('connection', (socket) => {
@@ -151,6 +160,22 @@ app.post('/api/rates/cache/clear-expired', (req, res) => {
   res.json({ success: true, removed: removedCount });
 });
 
+app.post('/api/rates/save', async (req, res) => {
+  const currencyRate = req.body;
+
+  if (!currencyRate || typeof currencyRate !== 'object') {
+    return res.status(400).json({ success: false, message: 'Invalid rate data' });
+  }
+
+  try {
+    await saveRate(currencyRate);
+    res.json({ success: true, message: 'Tỷ giá đã được lưu thành công' });
+  } catch (err) {
+    console.error('❌ Lỗi khi lưu tỷ giá:', err.message);
+    res.status(500).json({ success: false, message: 'Lỗi khi lưu tỷ giá' });
+  }
+}); 
+
 
 
 app.get('/api/rates/cache/stats', (req, res) => {
@@ -200,7 +225,12 @@ app.get('/api/rates/summary', (req, res) => {
     return res.status(404).json({ success: false, message: 'No market summary available' });
   }
   res.json({ success: true, summary });
-}); 
+});  
+
+// GET /api/rates/history?pair=USD_VND&from=2025-07-01&to=2025-07-09
+
+
+
 
 // ✅ Gọi ngay khi khởi động
 
