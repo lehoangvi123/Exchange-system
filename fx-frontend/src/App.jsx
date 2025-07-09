@@ -23,7 +23,9 @@ import ClearExpiredCacheButton from './components/ClearExpiredCacheButton';
 import SaveRateForm from './components/SaveRateForm';
 import UpdateUserForm from './components/UpdateUserForm';
 import SaveUserForm from './components/SaveUserForm';
-
+import LogConversionForm from './components/LogConversionForm';
+import ArchiveRateForm from './components/ArchiveRateForm';
+import PopularPairs from './components/PopularPairs'
 // Biến môi trường cho backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
@@ -95,12 +97,14 @@ function App() {
                 <SaveRateForm /> 
                 <CacheStats />
                 <WarmupButton />  
-                <SaveUserForm /> 
-                <UpdateUserForm />
+                <SaveUserForm />   
+                <PopularPairs />
+                <UpdateUserForm /> 
+                <ArchiveRateForm />
                 <ClearExpiredCacheButton />
                    <HistoryChart period="24h" />
                   {/* <HistoryChart period="7d" /> */}        
-
+              <LogConversionForm /> 
               </div>
             ) : (
               <div className="flex justify-center items-center h-64">

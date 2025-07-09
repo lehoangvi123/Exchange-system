@@ -4,30 +4,36 @@ const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+
 const connectDB = require('./config/db');
-const { cacheRate, getCachedRate } = require('./utils/cache');
+const {
+  cacheRate,
+  getCachedRate,
+  invalidateRateCache,
+  warmupCache,
+  getCacheStatistics,
+  optimizeCacheMemory,
+  clearExpiredCache
+} = require('./utils/cache');
 const historyRoutes = require('./routes/historyRoutes');
+const userRoutes = require('./routes/userRoutes');
 const { processHistoricalData } = require('./services/processHistoricalData');
-const { invalidateRateCache } = require('./utils/cache'); // 👈 Thêm vào
-const { warmupCache } = require('./utils/cache');
+const { saveRate } = require('./services/rateService');
+const { logConversion } = require('./services/conversionService');
 const Rate = require('./models/rateModel');
-const calculateTechnicalIndicators = require('./utils/calculateTechnicalIndicators'); 
-const { getCacheStatistics } = require('./utils/cache'); 
-const { optimizeCacheMemory } = require('./utils/cache'); 
-const { clearExpiredCache } = require('./utils/cache');  // 👈 import 
-const { saveRate } = require('./services/rateService'); 
-// const { getRateHistory } = require('./services/rateService')
-const userRoutes = require('./routes/userRoutes')
+const calculateTechnicalIndicators = require('./utils/calculateTechnicalIndicators');
+const { archiveOldData } = require('./services/rateService');
 const {
   fetchRates,
-  getCurrentRates, 
-  getCurrentOriginalRates, 
+  getCurrentRates,
+  getCurrentOriginalRates,
   getCurrentProvider,
-  getCurrentSources, 
-  getCurrentIndicators, 
+  getCurrentSources,
+  getCurrentIndicators,
   getCurrentMarketSummary
 } = require('./services/fetchRates');
 
+const popularPairsRoute = require('./routes/popularPairs');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -35,16 +41,13 @@ const io = socketIo(server, {
 });
 
 // ✅ Kết nối MongoDB
-connectDB(); 
+connectDB();
 app.use(cors());
-app.use(express.json()); 
-
+app.use(express.json());
 
 app.use('/api/history', historyRoutes);
-
-
 app.use('/api/users', userRoutes);
-
+app.use('/api/popular-pairs', popularPairsRoute);
 
 // ✅ WebSocket
 io.on('connection', (socket) => {
@@ -60,7 +63,7 @@ io.on('connection', (socket) => {
 
 // ✅ API: Tỷ giá hiện tại
 app.get('/api/rates/current', (req, res) => {
-  const rates = getCurrentRates(); 
+  const rates = getCurrentRates();
   const original = getCurrentOriginalRates();
   const provider = getCurrentProvider();
 
@@ -80,14 +83,15 @@ app.get('/api/rates/sources', (req, res) => {
   res.json({ success: true, sources });
 });
 
-// ✅ API: Chuyển đổi cơ bản có cache
-app.post('/api/rates/convert', (req, res) => {
-  const { from, to, amount } = req.body;
+// ✅ API: Chuyển đổi có cache + log giao dịch
+app.post('/api/rates/convert', async (req, res) => {
+  const { from, to, amount, userId } = req.body;
   const cacheKey = `${from}_${to}`;
   const cachedRate = getCachedRate(cacheKey);
 
   if (cachedRate !== null) {
     const result = (amount * cachedRate).toFixed(6);
+    await logConversion({ from, to, amount, result, rate: cachedRate, userId: userId || null });
     return res.json({ from, to, amount, result, cached: true });
   }
 
@@ -100,8 +104,10 @@ app.post('/api/rates/convert', (req, res) => {
   }
 
   const rate = toRate / fromRate;
-  cacheRate(cacheKey, rate); // TTL mặc định 1 giờ
+  cacheRate(cacheKey, rate);
   const result = (amount * rate).toFixed(6);
+
+  await logConversion({ from, to, amount, result, rate, userId: userId || null });
   res.json({ from, to, amount, result, cached: false });
 });
 
@@ -120,49 +126,42 @@ app.post('/api/rates/convert-cross', (req, res) => {
   const crossRate = fromRate / toRate;
   const result = amount * crossRate;
   res.json({ from, to, via, amount, rate: crossRate, result });
-}); 
+});
 
-// ✅ API: Vô hiệu hóa cache theo cặp tiền
+// ✅ API: Invalidate cache
 app.post('/api/rates/cache/invalidate', (req, res) => {
   const { from, to } = req.body;
-  if (!from || !to) {
-    return res.status(400).json({ success: false, message: 'Missing currency pair' });
-  }
+  if (!from || !to) return res.status(400).json({ success: false, message: 'Missing currency pair' });
 
   const key = `${from}_${to}`;
   invalidateRateCache(key);
   res.json({ success: true, message: `Cache invalidated for ${key}` });
-}); 
+});
 
-// Thêm route API
+// ✅ API: Warmup cache
 app.post('/api/rates/cache/warmup', (req, res) => {
   const { pairs } = req.body;
-  if (!Array.isArray(pairs)) {
-    return res.status(400).json({ success: false, message: 'pairs must be an array' });
-  }
+  if (!Array.isArray(pairs)) return res.status(400).json({ success: false, message: 'pairs must be an array' });
+
   warmupCache(pairs, getCurrentRates);
   res.json({ success: true, warmedUp: pairs });
-}); 
+});
 
+// ✅ API: Optimize cache
 app.post('/api/rates/cache/optimize', (req, res) => {
   const removed = optimizeCacheMemory();
   res.json({ success: true, removed });
-}); 
+});
 
-// ✅ API: Xóa cache đã hết hạn
-app.post('/api/rates/cache/clear-expired', (req, res) => {
-  const removedCount = clearExpiredCache();
-  res.json({ success: true, removed: removedCount });
-}); 
-
+// ✅ API: Xoá cache hết hạn
 app.post('/api/rates/cache/clear-expired', (req, res) => {
   const removedCount = clearExpiredCache();
   res.json({ success: true, removed: removedCount });
 });
 
+// ✅ API: Lưu tỷ giá mới thủ công
 app.post('/api/rates/save', async (req, res) => {
   const currencyRate = req.body;
-
   if (!currencyRate || typeof currencyRate !== 'object') {
     return res.status(400).json({ success: false, message: 'Invalid rate data' });
   }
@@ -176,22 +175,30 @@ app.post('/api/rates/save', async (req, res) => {
   }
 }); 
 
+app.post('/api/rates/archive', async (req, res) => {
+  const { cutoffDate } = req.body;
+  if (!cutoffDate) return res.status(400).json({ success: false, message: 'cutoffDate là bắt buộc' });
 
+  try {
+    const result = await archiveOldData(cutoffDate);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error('❌ Lỗi khi lưu trữ dữ liệu:', err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
+// ✅ API: Lấy thống kê cache
 app.get('/api/rates/cache/stats', (req, res) => {
   const stats = getCacheStatistics();
   res.json({ success: true, stats });
-});   
+});
 
-// ✅ API: Chỉ số kỹ thuật theo từng loại tiền tệ
+// ✅ API: Chỉ số kỹ thuật theo tiền tệ
 app.get('/api/rates/indicators/:currency', async (req, res) => {
   try {
     const currency = req.params.currency.toUpperCase();
     const history = await Rate.find().sort({ createdAt: -1 }).limit(20);
-
-    if (!history.length) {
-      return res.status(404).json({ success: false, message: 'Not enough data for indicators' });
-    }
 
     const historyArray = history
       .map(h => ({ currency, value: h.rate[currency] }))
@@ -225,40 +232,20 @@ app.get('/api/rates/summary', (req, res) => {
     return res.status(404).json({ success: false, message: 'No market summary available' });
   }
   res.json({ success: true, summary });
-});  
-
-// GET /api/rates/history?pair=USD_VND&from=2025-07-01&to=2025-07-09
-
-
-
-
-// ✅ Gọi ngay khi khởi động
-
-// ⬇️ Ngay sau fetchRates(io), gọi warmupCache 
-fetchRates(io).then(() => {
-  warmupCache(
-    ['AUD_RON', 'AUD_BRL', 'AUD_CAD', 'AUD_CNY'],
-    getCurrentRates
-  );
 });
 
-// Gọi mỗi 10 phút:
-setInterval(() => {
-  optimizeCacheMemory();
-}, 10 * 60 * 1000);
+// ✅ Khởi động hệ thống
+fetchRates(io).then(() => {
+  warmupCache(['AUD_RON', 'AUD_BRL', 'AUD_CAD', 'AUD_CNY'], getCurrentRates);
+});
 
-// ⏱️ Gọi lại mỗi 1 giờ
-setInterval(() => fetchRates(io), 24 * 60 * 60 * 1000);
-
-// ✅ Gọi xử lý dữ liệu lịch sử lần đầu và lặp lại mỗi 24 giờ
-processHistoricalData('24h');
+// ⏱️ Lập lịch
+setInterval(() => fetchRates(io), 60 * 60 * 1000); // mỗi giờ
+setInterval(() => optimizeCacheMemory(), 10 * 60 * 1000); // mỗi 10 phút
 setInterval(() => {
-  console.log('⏳ Tự động xử lý dữ liệu lịch sử (24h)');
+  console.log('⏳ Xử lý dữ liệu lịch sử (24h)');
   processHistoricalData('24h');
-}, 24 * 60 * 60 * 1000); 
-
-// Khi người dùng cập nhật tỷ giá thủ công
-invalidateRateCache('USD_VND');
+}, 24 * 60 * 60 * 1000);
 
 // ✅ Khởi động server
 const PORT = process.env.PORT || 5000;
