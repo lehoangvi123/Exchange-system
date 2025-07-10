@@ -4,6 +4,11 @@ import axios from 'axios';
 const TechnicalIndicators = () => {
   const [data, setData] = useState({});
 
+  // Hàm format an toàn
+  function formatNumber(val, digits = 2) {
+    return typeof val === 'number' ? val.toFixed(digits) : 'N/A';
+  }
+
   useEffect(() => {
     axios.get('http://localhost:5000/api/rates/indicators')
       .then((res) => {
@@ -71,15 +76,9 @@ const TechnicalIndicators = () => {
             {Object.entries(data).map(([currency, indicators], index) => (
               <tr key={currency} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#ffffff' }}>
                 <td style={{ padding: '8px' }}>{currency}</td>
-                <td style={{ padding: '8px' }}>
-                  {indicators?.sma != null ? indicators.sma.toFixed(4) : 'N/A'}
-                </td>
-                <td style={{ padding: '8px' }}>
-                  {indicators?.ema != null ? indicators.ema.toFixed(4) : 'N/A'}
-                </td>
-                <td style={{ padding: '8px' }}>
-                  {indicators?.rsi != null ? indicators.rsi.toFixed(2) : 'N/A'}
-                </td>
+                <td style={{ padding: '8px' }}>{formatNumber(indicators.sma, 4)}</td>
+                <td style={{ padding: '8px' }}>{formatNumber(indicators.ema, 4)}</td>
+                <td style={{ padding: '8px' }}>{formatNumber(indicators.rsi, 2)}</td>
               </tr>
             ))}
           </tbody>

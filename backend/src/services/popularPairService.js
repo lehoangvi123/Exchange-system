@@ -1,20 +1,20 @@
 const ConversionLog = require('../models/ConversionLog');
 
 /**
- * Lấy top các cặp tiền được quy đổi nhiều nhất
- * @param {number} limit - Số lượng cặp muốn lấy (default = 10)
- * @returns {Promise<string[]>}
+ * Lấy top cặp tiền được quy đổi nhiều nhất từ ConversionLog
+ * @param {number} limit - Số lượng cặp phổ biến cần lấy
+ * @returns {Promise<Array<string>>} - Mảng các cặp tiền phổ biến
  */
 async function getPopularCurrencyPairs(limit = 10) {
   const result = await ConversionLog.aggregate([
     {
       $project: {
-        pair: { $concat: ["$from", "_", "$to"] }
+        pair: { $concat: ['$from', '_', '$to'] } // Tạo chuỗi "USD_VND"
       }
     },
     {
       $group: {
-        _id: "$pair",
+        _id: '$pair',
         count: { $sum: 1 }
       }
     },
@@ -27,13 +27,13 @@ async function getPopularCurrencyPairs(limit = 10) {
     {
       $project: {
         _id: 0,
-        pair: "$_id",
+        pair: '$_id',
         count: 1
       }
     }
   ]);
 
-  return result.map(item => item.pair);
+  return result; // [{ pair: 'USD_VND', count: 15 }, ...]
 }
 
 module.exports = { getPopularCurrencyPairs };

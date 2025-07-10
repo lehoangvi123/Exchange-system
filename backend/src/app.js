@@ -34,6 +34,9 @@ const {
 } = require('./services/fetchRates');
 
 const popularPairsRoute = require('./routes/popularPairRoutes');
+const alertRoutes = require('./routes/alertRoutes'); 
+
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -46,8 +49,11 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/history', historyRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/rates', popularPairsRoute);
+app.use('/api/users', userRoutes);   
+app.use('/api/rates', popularPairsRoute); 
+app.use('/api', alertRoutes)
+
+
 // ✅ WebSocket
 io.on('connection', (socket) => {
   console.log('⚡ Client connected:', socket.id);

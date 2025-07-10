@@ -25,7 +25,11 @@ import UpdateUserForm from './components/UpdateUserForm';
 import SaveUserForm from './components/SaveUserForm';
 import LogConversionForm from './components/LogConversionForm';
 import ArchiveRateForm from './components/ArchiveRateForm';
-import PopularPairs from './components/PopularPairs'
+// import PopularPairs from './components/PopularPairs'
+
+import AlertsPage from './pages/AlertsPage';
+
+
 // Biến môi trường cho backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
@@ -70,6 +74,7 @@ function App() {
           <nav className="space-x-4">
             <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/">Home</Link>
             <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/about">About</Link>
+            <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/alerts">Alert</Link>
             <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/contact">Contact</Link>
             <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/setting">Setting</Link>
           </nav>
@@ -98,10 +103,11 @@ function App() {
                 <CacheStats />
                 <WarmupButton />  
                 <SaveUserForm />   
-                <PopularPairs />
+                {/* <PopularPairs /> */}
                 <UpdateUserForm /> 
                 <ArchiveRateForm />
-                <ClearExpiredCacheButton />
+                <ClearExpiredCacheButton /> 
+                
                    <HistoryChart period="24h" />
                   {/* <HistoryChart period="7d" /> */}        
               <LogConversionForm /> 
@@ -113,8 +119,10 @@ function App() {
             )
           } />
          
-          {/* <Route path="/summary" element={<MarketSummary />} /> */}
-          <Route path="/about" element={<About />} />
+          {/* <Route path="/summary" element={<MarketSummary />} /> */} 
+
+          <Route path="/about" element={<About />} /> 
+           <Route path="/alerts" element={<AlertsPage />} /> 
           <Route path="/contact" element={<Contact />} />
           <Route path="/setting" element={<Setting />} />
         </Routes>
