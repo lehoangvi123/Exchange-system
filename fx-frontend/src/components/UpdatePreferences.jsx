@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next'; // <- thêm cái này
 
 const UpdatePreferences = () => {
+  const { t } = useTranslation(); // ✅ gọi bên trong component
+
   const [form, setForm] = useState({
     email: '',
     theme: 'light',
     language: 'en',
     notifications: true
   });
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('');     
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,17 +24,17 @@ const UpdatePreferences = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put('http://localhost:5000/api/users/preferences', {
+      const res = await axios.put(`http://localhost:5000/api/users/preferences`, {
         email: form.email,
         preferences: {
           theme: form.theme,
           language: form.language,
-          notifications: form.notifications
+          notifications: form.notifications     
         }
       });
 
       if (res.data.success) {
-        setMessage('✅ Cập nhật cài đặt thành công!');
+        setMessage(t('success'));
       } else {
         setMessage('❌ Cập nhật thất bại.');
       }
@@ -43,24 +46,18 @@ const UpdatePreferences = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>⚙️ Cập nhật Cài đặt Người dùng</h3>
+      <h3>{t('updateSettings')}</h3>
       <form onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
+        <label>{t('email')}:</label>
+        <input type="email" name="email" value={form.email} onChange={handleChange} required />
 
-        <label>Giao diện (Theme):</label>
+        <label>{t('theme')}:</label>
         <select name="theme" value={form.theme} onChange={handleChange}>
-          <option value="light">Sáng</option>
-          <option value="dark">Tối</option>
+          <option value="light">{t('light')}</option>
+          <option value="dark">{t('dark')}</option>
         </select>
 
-        <label>Ngôn ngữ (Language):</label>
+        <label>{t('language')}:</label>
         <select name="language" value={form.language} onChange={handleChange}>
           <option value="en">English</option>
           <option value="vi">Tiếng Việt</option>
@@ -73,15 +70,17 @@ const UpdatePreferences = () => {
             checked={form.notifications}
             onChange={handleChange}
           />
-          Nhận thông báo
+          {t('notifications')}
         </label>
 
-        <button type="submit" style={{ marginTop: '10px' }}>Cập nhật</button>
+        <button type="submit" style={{ marginTop: '10px' }}>{t('submit')}</button>
       </form>
 
       {message && <p style={{ marginTop: '15px', color: 'green' }}>{message}</p>}
     </div>
   );
 };
+
+
 
 export default UpdatePreferences;
