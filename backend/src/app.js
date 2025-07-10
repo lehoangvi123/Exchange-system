@@ -35,7 +35,7 @@ const {
 
 const popularPairsRoute = require('./routes/popularPairRoutes');
 const alertRoutes = require('./routes/alertRoutes'); 
-
+// const userRoutes = require('./routes/userRoutes')
 
 const app = express();
 const server = http.createServer(app);
@@ -52,7 +52,7 @@ app.use('/api/history', historyRoutes);
 app.use('/api/users', userRoutes);   
 app.use('/api/rates', popularPairsRoute); 
 app.use('/api', alertRoutes)
-
+// app.use('/api/users', userRoutes)
 
 // ✅ WebSocket
 io.on('connection', (socket) => {

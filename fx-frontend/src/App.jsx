@@ -28,7 +28,7 @@ import ArchiveRateForm from './components/ArchiveRateForm';
 // import PopularPairs from './components/PopularPairs'
 
 import AlertsPage from './pages/AlertsPage';
-
+import UpdatePreferences from './components/UpdatePreferences';
 
 // Biến môi trường cho backend
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
@@ -107,7 +107,8 @@ function App() {
                 <UpdateUserForm /> 
                 <ArchiveRateForm />
                 <ClearExpiredCacheButton /> 
-                
+                 <h2>Trang Cài Đặt</h2>
+                <UpdatePreferences />
                    <HistoryChart period="24h" />
                   {/* <HistoryChart period="7d" /> */}        
               <LogConversionForm /> 
