@@ -65,21 +65,36 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 text-gray-800">
       {/* Header */}
-      <header className="bg-white shadow sticky top-0 z-50">
-        <div className="container mx-auto flex justify-between items-center p-4">
-          <div className="flex items-center space-x-2">
-            <span className="text-3xl">💱</span>
-            <h4 className="text-2xl font-extrabold text-blue-700">FX Rate Dashboard</h4>
-          </div>
-          <nav className="space-x-4">
-            <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/">Home</Link>
-            <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/about">About</Link>
-            <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/alerts">Alert</Link>
-            <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/contact">Contact</Link>
-            <Link className="text-blue-600 hover:text-blue-800 font-medium" to="/setting">Setting</Link>
-          </nav>
-        </div>
-      </header>
+     <header className="bg-white shadow sticky top-0 z-50">
+  <div className="container mx-auto flex justify-between items-center p-4">
+    <div className="flex items-center space-x-2">
+      <span className="text-3xl">💱</span>
+      <h4 className="text-2xl font-extrabold text-blue-700">FX Rate Dashboard</h4>
+    </div>
+    
+    <div className="flex items-center space-x-6">
+      <nav className="space-x-4">
+        <Link className="nav-link" to="/">Home</Link>
+        <Link className="nav-link" to="/about">About</Link>
+        <Link className="nav-link" to="/alerts">Alert</Link>
+        <Link className="nav-link" to="/contact">Contact</Link>
+        <Link className="nav-link" to="/setting">Setting</Link>
+      </nav>
+      
+      {/* Auth buttons */}
+      <div className="auth-buttons">
+        <button className="login-btn">
+          <span className="btn-icon">🔐</span>
+          Đăng nhập
+        </button>
+        <button className="register-btn">
+          <span className="btn-icon">✨</span>
+          Đăng ký
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
 
       {/* Main content */}
       <main className="container mx-auto flex-1 p-6">
