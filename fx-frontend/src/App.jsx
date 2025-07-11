@@ -26,7 +26,7 @@ import SaveUserForm from './components/SaveUserForm';
 import LogConversionForm from './components/LogConversionForm';
 import ArchiveRateForm from './components/ArchiveRateForm';
 // import PopularPairs from './components/PopularPairs'
-
+import RateTrend from './components/RateTrend'
 import AlertsPage from './pages/AlertsPage';
 import UpdatePreferences from './components/UpdatePreferences';
 
@@ -99,7 +99,8 @@ function App() {
                 <ClearCacheButton />   
                  <h1>📊 Hệ thống Tỷ Giá</h1>
                 <CacheDashboard />  
-                <SaveRateForm /> 
+                <SaveRateForm />  
+                   <RateTrend pair="AUD_BGN" period="30d" />
                 <CacheStats />
                 <WarmupButton />  
                 <SaveUserForm />   

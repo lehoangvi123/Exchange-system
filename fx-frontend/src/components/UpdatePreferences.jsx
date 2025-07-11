@@ -9,7 +9,7 @@ const UpdatePreferences = () => {
     email: '',
     theme: 'light',
     language: 'en',
-    notifications: true
+    notifications: true  
   });
   const [message, setMessage] = useState('');     
 
