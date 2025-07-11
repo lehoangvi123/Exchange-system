@@ -32,16 +32,17 @@ const {
   getCurrentIndicators,
   getCurrentMarketSummary
 } = require('./services/fetchRates');
-
+const validateBusinessRules = require('./utils/validateBusinessRules')
 const popularPairsRoute = require('./routes/popularPairRoutes');
 const alertRoutes = require('./routes/alertRoutes'); 
 // const userRoutes = require('./routes/userRoutes')
 const trendRoutes = require('./routes/trendRoutes');
 const app = express();
-const server = http.createServer(app);
+const server = http.createServer(app); 
 const io = socketIo(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] }
-});
+}); 
+const checkRateLimits = require('./utils/checkRateLimits')
 
 // ✅ Kết nối MongoDB
 connectDB();
@@ -94,7 +95,22 @@ app.get('/api/rates/sources', (req, res) => {
 
 // ✅ API: Chuyển đổi có cache + log giao dịch
 app.post('/api/rates/convert', async (req, res) => {
-  const { from, to, amount, userId } = req.body;
+  const { from, to, amount, userId } = req.body; 
+
+  
+  // 👉 Kiểm tra quy tắc nghiệp vụ
+  const validation = validateBusinessRules({ type: 'convert', from, to, amount });
+  if (!validation.valid) {
+    return res.status(400).json({ success: false, message: validation.message });
+  } 
+
+    const limitCheck = await checkRateLimits(userId, 'convert');
+  if (!limitCheck.allowed) {
+    return res.status(429).json({ success: false, message: limitCheck.message });
+  }
+
+
+
   const cacheKey = `${from}_${to}`;
   const cachedRate = getCachedRate(cacheKey);
 
