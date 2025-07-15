@@ -163,6 +163,7 @@ app.post('/api/rates/cache/invalidate', (req, res) => {
   invalidateRateCache(key);
   res.json({ success: true, message: `Cache invalidated for ${key}` });
 });
+ 
 
 // ✅ API: Warmup cache
 app.post('/api/rates/cache/warmup', (req, res) => {
@@ -257,7 +258,7 @@ app.get('/api/rates/summary', (req, res) => {
   if (!summary || Object.keys(summary).length === 0) {
     return res.status(404).json({ success: false, message: 'No market summary available' });
   }
-  res.json({ success: true, summary });
+  res.json({ success: true, summary }); 
 });
 
 // ✅ Khởi động hệ thống

@@ -1,0 +1,152 @@
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(to right, #dbeafe, #e9d5ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.login-box {
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Bên trái */
+.login-left {
+  flex: 1;
+  background: linear-gradient(to bottom right, #3b82f6, #9333ea);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.login-left h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.login-left p {
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.login-left img {
+  width: 160px;
+  height: 160px;
+}
+
+/* Bên phải */
+.login-right {
+  flex: 1;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-right h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #1d4ed8;
+  text-align: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+}
+
+.input-group .icon {
+  color: #888;
+  margin-right: 10px;
+}
+
+.input-group input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+}
+
+.login-button {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #1e40af;
+}
+
+.message {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.message.success {
+  color: #16a34a;
+}
+
+.message.error {
+  color: #dc2626;
+}
+
+.register-redirect {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.register-redirect a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-redirect a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-box {
+    flex-direction: column;
+  }
+
+  .login-left,
+  .login-right {
+    width: 100%;
+  }
+
+  .login-left {
+    padding: 30px 20px;
+  }
+
+  .login-right {
+    padding: 30px 20px;
+  }
+}

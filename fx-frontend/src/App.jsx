@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
 
 // Pages
+import Register from './pages/Register';
+import Login from './pages/Login';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Setting from './pages/Setting';
 import AlertsPage from './pages/AlertsPage';
-import Register from './pages/Register'; // ✅ Form đăng ký
 
 // Components
 import RateTable from './components/RateTable';
@@ -36,27 +37,28 @@ import UpdatePreferences from './components/UpdatePreferences';
 import './App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
-const socket = io(BACKEND_URL);
 
 function App() {
   const [rate, setRate] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  // Realtime socket
   useEffect(() => {
     if (!isAuthenticated) return;
+
+    const socket = io(BACKEND_URL);
 
     axios.get(`${BACKEND_URL}/api/rates/current`)
       .then(res => {
         if (res.data?.success && res.data.rates) {
           setRate(res.data.rates);
-        } else {
-          console.warn('⚠ No exchange rates returned from API.');
         }
       })
       .catch(err => console.error('❌ API error:', err));
 
     socket.on('rateUpdate', data => {
-      console.log('🔄 Real-time update received:', data);
       setRate(data);
     });
 
@@ -65,14 +67,24 @@ function App() {
     };
   }, [isAuthenticated]);
 
-  // ❗ Nếu chưa đăng ký: render form đăng ký
+  // Hiển thị Register hoặc Login nếu chưa đăng nhập
   if (!isAuthenticated) {
-    return <Register onRegisterSuccess={() => setIsAuthenticated(true)} />;
-  } 
+    if (location.pathname === '/login') {
+      return <Login onLoginSuccess={() => {
+        setIsAuthenticated(true);
+        navigate('/');
+      }} />;
+    } else {
+      return <Register onRegisterSuccess={() => {
+        setIsAuthenticated(true);
+        navigate('/');
+      }} />;
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 text-gray-800">
-      {/* ✅ Header */}
+      {/* Header */}
       <header className="bg-white shadow sticky top-0 z-50">
         <div className="container mx-auto flex justify-between items-center p-4">
           <div className="flex items-center space-x-2">
@@ -90,15 +102,10 @@ function App() {
             <div className="auth-buttons">
               <button
                 className="login-btn"
-                onClick={() => alert("Sắp có tính năng đăng nhập")}
-              >
-                🔐 Đăng nhập
-              </button>
-              <button
-                className="register-btn"
                 onClick={() => {
                   localStorage.removeItem('token');
                   setIsAuthenticated(false);
+                  navigate('/login');
                 }}
               >
                 🔁 Đăng xuất
@@ -108,7 +115,7 @@ function App() {
         </div>
       </header>
 
-      {/* ✅ Nội dung chính */}
+      {/* Main */}
       <main className="container mx-auto flex-1 p-6">
         <Routes>
           <Route path="/" element={
@@ -123,7 +130,6 @@ function App() {
                 <TechnicalIndicators />
                 <MarketSummary />
                 <ClearCacheButton />
-                <h1>📊 Hệ thống Tỷ Giá</h1>
                 <CacheDashboard />
                 <SaveRateForm />
                 <RateTrend pair="AUD_BGN" period="30d" />
@@ -133,7 +139,6 @@ function App() {
                 <UpdateUserForm />
                 <ArchiveRateForm />
                 <ClearExpiredCacheButton />
-                <h2>Trang Cài Đặt</h2>
                 <UpdatePreferences />
                 <HistoryChart period="24h" />
                 <LogConversionForm />
@@ -151,7 +156,7 @@ function App() {
         </Routes>
       </main>
 
-      {/* ✅ Footer */}
+      {/* Footer */}
       <footer className="pro-footer">
         <div className="pro-footer-container">
           <div className="pro-footer-brand">
