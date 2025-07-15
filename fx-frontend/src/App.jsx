@@ -11,11 +11,11 @@ import './App.css';
 import CrossRateConverter from './components/CrossRateConverter';
 import RatesFromSources from './components/RateFromSources'
 import RateChart from './components/RateChart';
-import ExchangeRateDisplay from './components/ExchangeRateDisplay'
-import TechnicalIndicators from './components/TechnicalIndicator';
-import MarketSummary from './components/MarketSummary'
-import HistoryChart from './components/HistoryChart'
-import ClearCacheButton from './components/ClearCacheButton' 
+import ExchangeRateDisplay from './components/ExchangeRateDisplay';     
+import TechnicalIndicators from './components/TechnicalIndicator';     
+import MarketSummary from './components/MarketSummary'; 
+import HistoryChart from './components/HistoryChart';
+import ClearCacheButton from './components/ClearCacheButton'; 
 import WarmupButton from './components/WarmUpButton'; 
 import CacheStats from './components/CacheStats'; 
 import CacheDashboard from './components/CacheDashboard';
@@ -26,7 +26,7 @@ import SaveUserForm from './components/SaveUserForm';
 import LogConversionForm from './components/LogConversionForm';
 import ArchiveRateForm from './components/ArchiveRateForm';
 // import PopularPairs from './components/PopularPairs'
-import RateTrend from './components/RateTrend'
+import RateTrend from './components/RateTrend'; 
 import AlertsPage from './pages/AlertsPage';
 import UpdatePreferences from './components/UpdatePreferences';
 
@@ -54,7 +54,7 @@ function App() {
     // Lắng nghe cập nhật real-time
     socket.on('rateUpdate', data => {
       console.log('🔄 Real-time update received:', data);
-      setRate(data);
+      setRate(data); 
     });
 
     return () => {
@@ -70,16 +70,16 @@ function App() {
     <div className="flex items-center space-x-2">
       <span className="text-3xl">💱</span>
       <h4 className="text-2xl font-extrabold text-blue-700">FX Rate Dashboard</h4>
-    </div>
+    </div>  
     
-    <div className="flex items-center space-x-6">
+    <div className="flex items-center space-x-6"> 
       <nav className="space-x-4">
         <Link className="nav-link" to="/">Home</Link>
         <Link className="nav-link" to="/about">About</Link>
         <Link className="nav-link" to="/alerts">Alert</Link>
-        <Link className="nav-link" to="/contact">Contact</Link>
+        <Link className="nav-link" to="/contact">Contact</Link> 
         <Link className="nav-link" to="/setting">Setting</Link>
-      </nav>
+      </nav> 
       
       {/* Auth buttons */}
       <div className="auth-buttons">
@@ -146,16 +146,40 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white shadow-inner">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center p-4 text-sm text-gray-600">
-          <p>© 2025 FX Rate Dashboard. All rights reserved.</p>
-          <div className="space-x-3 mt-2 md:mt-0">
-            <a href="/privacy" className="hover:underline">Privacy</a>
-            <a href="/terms" className="hover:underline">Terms</a>
-            <a href="/support" className="hover:underline">Support</a>
-          </div>
-        </div>
-      </footer>
+     <footer className="pro-footer">
+  <div className="pro-footer-container">
+    <div className="pro-footer-brand">
+      <h2>💱 FX Rate Dashboard</h2>
+      <p>Real-time currency exchange & insights</p>
+    </div>
+
+    <div className="pro-footer-links">
+      <div>
+        <h4>Product</h4>
+        <a href="/">Dashboard</a>
+        <a href="/alerts">Alerts</a>
+        <a href="/setting">Settings</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/support">Support</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </div>
+    </div>
+  </div>
+
+  <div className="pro-footer-bottom">
+    <p>© 2025 FX Rate Dashboard. All rights reserved.</p>
+  </div>
+</footer>
+
+
     </div>
   );
 }

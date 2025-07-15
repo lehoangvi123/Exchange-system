@@ -144,6 +144,7 @@ app.post('/api/rates/convert-cross', (req, res) => {
   const toRate = rates[to];
   const viaRate = rates[via];
 
+  console.log('📊 Rates hiện tại:', rates);
   if (!fromRate || !toRate || !viaRate || isNaN(amount)) {
     return res.status(400).json({ error: 'Invalid currency code or amount' });
   }

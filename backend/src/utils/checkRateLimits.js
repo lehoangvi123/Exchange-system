@@ -7,9 +7,10 @@ const LIMITS = {
 };
 
 async function checkRateLimits(userId, operation) {
-  if (!userId || !operation) return { allowed: false, message: 'Missing userId or operation' };
+  // 👇 Nếu không có userId, bỏ qua kiểm tra giới hạn
+  if (!userId) return { allowed: true };
 
-  const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
+  const today = new Date().toISOString().slice(0, 10);
   const limit = LIMITS[operation] || 100;
 
   const record = await RateLimit.findOneAndUpdate(
@@ -24,5 +25,6 @@ async function checkRateLimits(userId, operation) {
 
   return { allowed: true };
 }
+
 
 module.exports = checkRateLimits;
