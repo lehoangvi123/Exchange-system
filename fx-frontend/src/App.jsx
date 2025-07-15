@@ -68,7 +68,7 @@ function App() {
   // ❗ Nếu chưa đăng ký: render form đăng ký
   if (!isAuthenticated) {
     return <Register onRegisterSuccess={() => setIsAuthenticated(true)} />;
-  }
+  } 
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 text-gray-800">

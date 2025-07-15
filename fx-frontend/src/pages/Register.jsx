@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import '../Register.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
@@ -36,46 +39,67 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-xl shadow-md border border-gray-200">
-      <h2 className="text-2xl font-bold mb-4 text-center">📝 Đăng ký tài khoản</h2>
-      <form onSubmit={handleRegister} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Tên"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Mật khẩu"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md"
-          required
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Đăng ký
-        </button>
-      </form>
+    <div className="register-container">
+      <div className="register-box">
+        {/* Left panel */}
+        <div className="register-left">
+          <h2>Chào mừng bạn!</h2>
+          <p>Tạo tài khoản để sử dụng hệ thống theo dõi tỷ giá chuyên nghiệp.</p>
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png"
+            alt="Register"
+          />
+        </div>
 
-      {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
-      {success && <p className="text-green-600 mt-4 text-center">{success}</p>}
+        {/* Right form */}
+        <div className="register-right">
+          <h2>📝 Đăng ký tài khoản</h2>
+          <form onSubmit={handleRegister}>
+            <div className="input-group">
+              <FaUser className="icon" />
+              <input
+                type="text"
+                name="name"
+                placeholder="Tên"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <FaEnvelope className="icon" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <FaLock className="icon" />
+              <input
+                type="password"
+                name="password"
+                placeholder="Mật khẩu"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" className="register-button">Đăng ký</button>
+          </form>
+
+          {error && <p className="message error">{error}</p>}
+          {success && <p className="message success">{success}</p>}
+
+          <p className="login-redirect">
+            Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
