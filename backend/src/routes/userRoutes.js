@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { saveUser, updateUser } = require('../services/userService');
 const User = require('../models/User');
+const { loginUser } = require('../controllers/userController');
 
 // ✅ [POST] Tạo người dùng mới
 router.post('/save', async (req, res) => {
@@ -41,7 +42,7 @@ router.put('/update', async (req, res) => {
   }
 });
 
-// ✅ [PUT] Cập nhật preferences theo userId
+// ✅ [PUT] Cập nhật preferences
 router.put('/preferences', async (req, res) => {
   const { email, preferences } = req.body;
 
@@ -67,5 +68,24 @@ router.put('/preferences', async (req, res) => {
   }
 });
 
+// ✅ [POST] Đăng ký (sử dụng email)
+router.post('/register', async (req, res) => {
+  const { email, password, name } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: 'Email đã tồn tại' });
+
+    const newUser = new User({ email, password, name });
+    await newUser.save();
+
+    res.json({ message: 'Đăng ký thành công' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ✅ [POST] Đăng nhập (chỉ còn 1 lần định nghĩa)
+router.post('/login', loginUser);
 
 module.exports = router;

@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import RateTable from './components/RateTable';
 import CurrencyConverter from './components/CurrencyConverter';
+// import Login from './LoginPages/Login'
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Setting from './pages/Setting';
@@ -37,7 +38,9 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000'
 const socket = io(BACKEND_URL);
 
 function App() {
-  const [rate, setRate] = useState(null);
+  const [rate, setRate] = useState(null); 
+
+
 
   useEffect(() => {
     // Gọi API lấy tỷ giá hiện tại
