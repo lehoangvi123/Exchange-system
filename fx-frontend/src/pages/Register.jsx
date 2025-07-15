@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import '../Register.css';
+import { Link, useNavigate } from 'react-router-dom';
+import '../Register.css'; // CSS riêng
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
-const Register = () => {
+const Register = ({ onRegisterSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,6 +15,7 @@ const Register = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -27,9 +28,25 @@ const Register = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
+
     try {
       const res = await axios.post(`${BACKEND_URL}/api/users/register`, formData);
+
+      // ✅ Nếu backend trả về token thì lưu lại
+      if (res.data?.token) {
+        localStorage.setItem('token', res.data.token);
+      }
+
       setSuccess('✅ Tạo tài khoản thành công!');
+
+      // ✅ Gọi callback nếu có
+      if (onRegisterSuccess) {
+        onRegisterSuccess(); // dùng cho App.jsx
+      } else {
+        // Nếu không có callback thì điều hướng
+        setTimeout(() => navigate('/'), 500);
+      }
+
       console.log('Đăng ký thành công:', res.data);
     } catch (err) {
       const msg = err.response?.data?.message || '❌ Đăng ký thất bại';
@@ -41,7 +58,7 @@ const Register = () => {
   return (
     <div className="register-container">
       <div className="register-box">
-        {/* Left panel */}
+        {/* Panel bên trái */}
         <div className="register-left">
           <h2>Chào mừng bạn!</h2>
           <p>Tạo tài khoản để sử dụng hệ thống theo dõi tỷ giá chuyên nghiệp.</p>
@@ -51,7 +68,7 @@ const Register = () => {
           />
         </div>
 
-        {/* Right form */}
+        {/* Form bên phải */}
         <div className="register-right">
           <h2>📝 Đăng ký tài khoản</h2>
           <form onSubmit={handleRegister}>
