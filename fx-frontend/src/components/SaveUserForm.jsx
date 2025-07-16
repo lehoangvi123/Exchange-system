@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const SaveUserForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState(''); // ✅ Thêm password
   const [preferredCurrencies, setPreferredCurrencies] = useState('');
   const [message, setMessage] = useState('');
 
@@ -21,6 +22,7 @@ const SaveUserForm = () => {
         body: JSON.stringify({
           name,
           email,
+          password, // ✅ Gửi password lên server
           preferredCurrencies: currenciesArray
         })
       });
@@ -38,7 +40,13 @@ const SaveUserForm = () => {
   };
 
   return (
-    <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+    <div style={{
+      maxWidth: '500px',
+      margin: '0 auto',
+      padding: '20px',
+      border: '1px solid #ccc',
+      borderRadius: '8px'
+    }}>
       <h3>👤 Lưu thông tin người dùng</h3>
       <form onSubmit={handleSubmit}>
         <label>
@@ -58,6 +66,17 @@ const SaveUserForm = () => {
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
+            required
+            style={{ width: '100%', marginBottom: '10px' }}
+          />
+        </label>
+        <br />
+        <label>
+          Mật khẩu:
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             required
             style={{ width: '100%', marginBottom: '10px' }}
           />
