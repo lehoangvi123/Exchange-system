@@ -71,11 +71,17 @@ const UserInfoButton = ({ user, onLogout }) => {
                    transition-all duration-200 rounded-lg px-4 py-2 text-white
                    border border-blue-500 hover:border-blue-600"
       >
-        <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-          <span className="text-sm font-bold">
-            {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
-          </span>
-        </div>
+       
+  <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+    <span className="text-sm font-bold text-white">
+      {user?.name?.charAt(0)?.toUpperCase() || 'User profile'}
+    </span>
+  </div>
+  <span className="text-sm text-white font-semibold">
+    {user?.name || user?.email}
+  </span>
+
+
         <div className="hidden sm:flex flex-col items-start">
           <span className="text-sm font-medium">{user?.name || user?.email}</span>
           <span className="text-xs opacity-80">{user?.email}</span>
@@ -271,7 +277,7 @@ function App() {
               <Link className="nav-link" to="/contact">Contact</Link>
               <Link className="nav-link" to="/setting">Setting</Link>
             </nav>
-            <div className="auth-buttons">
+            <div className="auth-buttons ml-auto space-x-4">
               {user && (
                 <UserInfoButton user={user} onLogout={handleLogout} />
               )}
