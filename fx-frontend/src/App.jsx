@@ -274,10 +274,10 @@ function App() {
           <div className="flex items-center space-x-6">
             <nav className="space-x-4">
               <Link className="nav-link" to="/">Home</Link>
-              <Link className="nav-link" to="/about">About</Link>
+              <Link className="nav-link" to="/about">About</Link>        
               <Link className="nav-link" to="/alerts">Alert</Link>
               <Link className="nav-link" to="/contact">Contact</Link>
-              <Link className="nav-link" to="/setting">Setting</Link>
+              <Link className="nav-link" to="/setting">Setting</Link>   
             </nav>
             <div className="auth-buttons ml-auto space-x-4">
               {user && (
