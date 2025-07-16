@@ -5,7 +5,6 @@ const UserInfoButton = ({ user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Đóng dropdown khi click bên ngoài
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -26,89 +25,53 @@ const UserInfoButton = ({ user, onLogout }) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Nút thông tin người dùng */}
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="flex items-center space-x-2 bg-white bg-opacity-20 hover:bg-opacity-30 
-                   transition-all duration-200 rounded-lg px-4 py-2 text-white
-                   border border-white border-opacity-30 hover:border-opacity-50"
+        className="flex items-center space-x-2 bg-white/20 text-white 
+                   hover:bg-white/30 transition rounded-full px-4 py-2 shadow-md"
       >
-        <div className="flex items-center space-x-2">
-  <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-    <span className="text-sm font-bold text-white">
-      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-    </span>
-  </div>
-  <span className="text-sm text-white font-semibold">
-    {user?.name || user?.email}
-  </span>
-</div>
-
-        <ChevronDown 
-          className={`w-4 h-4 transition-transform duration-200 ${
-            isDropdownOpen ? 'rotate-180' : ''
-          }`} 
-        />
+        <div className="w-8 h-8 bg-white text-purple-700 font-bold rounded-full flex items-center justify-center">
+          {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+        </div>
+        <span className="hidden md:inline text-sm font-medium">{user?.name || 'User'}</span>
+        <svg className={`w-4 h-4 transform transition ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
 
-      {/* Dropdown menu */}
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border 
-                        border-gray-200 py-2 z-50 animate-in fade-in slide-in-from-top-2">
-          
-          {/* Thông tin người dùng */}
-          <div className="px-4 py-3 border-b border-gray-100">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 
-                            rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900">
-                  {user?.name || 'Người dùng'}
-                </p>
-                <p className="text-xs text-gray-500">{user?.email}</p>
-              </div>
+        <div className="absolute right-0 mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-xl z-50">
+          {/* Header */}
+          <div className="p-4 border-b border-gray-200 flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold rounded-full flex items-center justify-center">
+              {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+            <div>
+              <p className="text-sm font-semibold">{user?.name || 'Người dùng'}</p>
+              <p className="text-xs text-gray-500">{user?.email}</p>
             </div>
           </div>
 
-          {/* Menu items */}
+          {/* Menu */}
           <div className="py-1">
-            <button
-              onClick={() => {
-                setIsDropdownOpen(false);
-                // Điều hướng đến trang profile
-                window.location.href = '/profile';
-              }}
-              className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 
-                       hover:bg-gray-50 transition-colors"
-            >
-              <User className="w-4 h-4" />
-              <span>Thông tin cá nhân</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setIsDropdownOpen(false);
-                // Điều hướng đến trang settings
-                window.location.href = '/settings';
-              }}
-              className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 
-                       hover:bg-gray-50 transition-colors"
-            >
-              <Settings className="w-4 h-4" />
-              <span>Cài đặt</span>
-            </button>
-
-            <div className="border-t border-gray-100 my-1"></div>
-
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
-                       hover:bg-red-50 transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>Đăng xuất</span>
+            <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 transition">
+              <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A10 10 0 0112 2a10 10 0 016.879 15.804M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Thông tin cá nhân
+            </Link>
+            <Link to="/setting" onClick={() => setIsDropdownOpen(false)} className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 transition">
+              <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m0 14v1m7.071-7.071l.707.707M4.222 4.222l.707.707m13.435 13.435l.707.707M4.222 19.778l.707.707M20 12h1M3 12H2" />
+              </svg>
+              Cài đặt
+            </Link>
+            <div className="border-t my-1"></div>
+            <button onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+              <svg className="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7" />
+              </svg>
+              Đăng xuất
             </button>
           </div>
         </div>

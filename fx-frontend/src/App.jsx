@@ -71,7 +71,7 @@ const UserInfoButton = ({ user, onLogout }) => {
                    transition-all duration-200 rounded-lg px-4 py-2 text-white
                    border border-blue-500 hover:border-blue-600"
       >
-       
+ 
   <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
     <span className="text-sm font-bold text-white">
       {user?.name?.charAt(0)?.toUpperCase() || 'User profile'}
