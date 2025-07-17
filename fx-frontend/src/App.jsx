@@ -77,7 +77,7 @@ const UserInfoButton = ({ user, onLogout }) => {
       {user?.name?.charAt(0)?.toUpperCase() || 'User profile'}
     </span>
   </div>
-  <span className="text-sm text-white font-semibold">
+  <span className="text-sm text-white font-semibold"> 
     {user?.name || user?.email}
   </span>
 
@@ -123,14 +123,13 @@ const UserInfoButton = ({ user, onLogout }) => {
 
           {/* Menu items */}
           <div className="py-1">
-            {/* Thông tin cá nhân */}
+           {/* Thông tin cá nhân */}
 <Link
   to="/profile"
   onClick={() => setIsDropdownOpen(false)}
-  className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 
-             hover:bg-gray-50 transition-colors"
+  className="link-button"
 >
-  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="custom-icon text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
   </svg>
   <span>Thông tin cá nhân</span>
@@ -140,23 +139,23 @@ const UserInfoButton = ({ user, onLogout }) => {
 <Link
   to="/setting"
   onClick={() => setIsDropdownOpen(false)}
-  className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 
-             hover:bg-gray-50 transition-colors"
+  className="link-button"
 >
-  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="custom-icon text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c...z" />
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
   </svg>
   <span>Cài đặt</span>
 </Link>
 
+
 {/* Đăng xuất */}
 <button
   onClick={handleLogout}
-  className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
+  className="logout-btn w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
            hover:bg-red-50 transition-colors"
 >
-  <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="custom-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1..." />
   </svg>
   <span>Đăng xuất</span>

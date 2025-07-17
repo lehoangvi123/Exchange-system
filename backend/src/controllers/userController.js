@@ -20,14 +20,16 @@ exports.loginUser = async (req, res) => {
       expiresIn: '1d',
     });
 
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+   res.status(201).json({
+  token,
+  user: {
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    // thêm gì cũng được, miễn client cần
+  }
+});
+
   } catch (err) {
     console.error('❌ Lỗi khi đăng nhập:', err);
     res.status(500).json({ message: 'Lỗi server khi đăng nhập' });

@@ -33,9 +33,11 @@ const Register = ({ onRegisterSuccess }) => {
       const res = await axios.post(`${BACKEND_URL}/api/users/register`, formData);
 
       // ✅ Nếu backend trả về token thì lưu lại
-      if (res.data?.token) {
-        localStorage.setItem('token', res.data.token);
-      }
+     if (res.data?.token && res.data?.user) {
+     localStorage.setItem('token', res.data.token);
+     localStorage.setItem('user', JSON.stringify(res.data.user)); // ✅ Thêm dòng này
+   } 
+
 
       setSuccess('✅ Tạo tài khoản thành công!');
 
