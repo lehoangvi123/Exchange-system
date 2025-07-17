@@ -275,5 +275,10 @@ setInterval(() => {
 }, 24 * 60 * 60 * 1000);
 
 // ✅ Khởi động server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; 
+
+app.get('/', (req, res) => {
+  res.send('🟢 FX Backend API is running...');
+});
+
 server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
