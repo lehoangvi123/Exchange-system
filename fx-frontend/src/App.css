@@ -575,5 +575,10 @@ svg{
   top: 100%; /* ngay dưới button */
   right: 0;  /* bám sát bên phải */
   z-index: 50;
+} 
+
+.py-1{ 
+  background-color: #764ba2; 
+  border-radius: 10px;
 }
 
