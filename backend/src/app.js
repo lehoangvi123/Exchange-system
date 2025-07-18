@@ -174,6 +174,8 @@ app.post('/api/rates/cache/warmup', (req, res) => {
   res.json({ success: true, warmedUp: pairs });
 });
 
+
+
 // ✅ API: Optimize cache
 app.post('/api/rates/cache/optimize', (req, res) => {
   const removed = optimizeCacheMemory();

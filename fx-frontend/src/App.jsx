@@ -32,7 +32,8 @@ import SaveUserForm from './components/SaveUserForm';
 import LogConversionForm from './components/LogConversionForm';
 import ArchiveRateForm from './components/ArchiveRateForm';
 import RateTrend from './components/RateTrend';
-import UpdatePreferences from './components/UpdatePreferences';
+import UpdatePreferences from './components/UpdatePreferences'; 
+import Profile from './pages/Profile'
 
 import './App.css';
 
@@ -324,7 +325,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/setting" element={<Setting />} />
+          <Route path="/setting" element={<Setting />} /> 
+           <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
 
@@ -368,8 +370,8 @@ function App() {
         <div className="pro-footer-bottom">
           <p>© 2025 FX Rate Dashboard. All rights reserved.</p>
         </div>
-      </footer>
-    </div>
+      </footer>      
+    </div>    
   );
 }
 
