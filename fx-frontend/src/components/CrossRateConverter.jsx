@@ -8,7 +8,7 @@ export default function CrossRateConverter() {
   const [amount, setAmount] = useState(1);
   const [rate, setRate] = useState(null);
   const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); 
 
   const handleConvert = async () => {
     try {
