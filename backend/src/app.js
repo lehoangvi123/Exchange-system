@@ -42,7 +42,9 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] }
 }); 
-const checkRateLimits = require('./utils/checkRateLimits')
+const checkRateLimits = require('./utils/checkRateLimits') 
+const UserProfile = require('./controllers/profileController')  
+const profileRoutes = require('./routes/profile');
 
 // ✅ Kết nối MongoDB
 connectDB();
@@ -54,7 +56,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/rates', popularPairsRoute); 
 app.use('/api', alertRoutes)
 // app.use('/api/users', userRoutes)
-app.use('/api/rates/trend', trendRoutes);  
+app.use('/api/rates/trend', trendRoutes);   
+app.use('/api/profile', profileRoutes);
 
 
 
