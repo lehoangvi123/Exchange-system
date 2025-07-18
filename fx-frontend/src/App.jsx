@@ -329,7 +329,7 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="pro-footer">
+     <footer className="pro-footer">
         <div className="pro-footer-container">
           <div className="pro-footer-brand">
             <h2>💱 FX Rate Dashboard</h2>
@@ -337,21 +337,31 @@ function App() {
           </div>
           <div className="pro-footer-links">
             <div>
-              <h4>Product</h4>
-              <a href="/">Dashboard</a>
-              <a href="/alerts">Alerts</a>
-              <a href="/setting">Settings</a>
+              <h4>Company</h4>
+              <a href="/about">About Us</a>
+              <a href="/careers">Careers</a>
+              <a href="/contact">Contact</a>
+              <a href="/press">Press</a>
             </div>
             <div>
-              <h4>Company</h4>
-              <a href="/about">About</a>
-              <a href="/contact">Contact</a>
-              <a href="/support">Support</a>
+              <h4>Resources</h4>
+              <a href="/api-docs">API Documentation</a>
+              <a href="/help-guide">Help Guide</a>
+              <a href="/faq">FAQ</a>
+              <a href="/blog">Blog</a>
+            </div>
+            <div>
+              <h4>Support</h4>
+              <a href="/help-center">Help Center</a>
+              <a href="/contact-support">Contact Support</a>
+              <a href="/report-issue">Report Issue</a>
+              <a href="/status">Service Status</a>
             </div>
             <div>
               <h4>Legal</h4>
-              <a href="/privacy">Privacy</a>
-              <a href="/terms">Terms</a>
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/terms">Terms of Service</a>
+              <a href="/disclaimer">Disclaimer</a>
             </div>
           </div>
         </div>
