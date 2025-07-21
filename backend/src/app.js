@@ -54,7 +54,7 @@ app.use(express.json());
 app.use('/api/history', historyRoutes);
 app.use('/api/users', userRoutes);   
 app.use('/api/rates', popularPairsRoute); 
-app.use('/api', alertRoutes)
+app.use('/api', alertRoutes);
 // app.use('/api/users', userRoutes)
 app.use('/api/rates/trend', trendRoutes);   
 app.use('/api/profile', profileRoutes);

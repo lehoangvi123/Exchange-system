@@ -40,22 +40,30 @@ function RateTable({ rates }) {
   const [usdAmount, setUsdAmount] = useState(1);
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-blue-700 mb-4">🌍 Exchange Rates</h2>
+    <div className="w-full bg-white rounded-2xl shadow-xl p-6 max-w-5xl mx-auto mt-8">
+      <h2 className="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-2">
+        🌍 Exchange Rates
+        <span className="text-base font-medium text-gray-600 ml-2">
+          (USD convert to: {usdAmount})
+        </span>
+      </h2>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">USD convert to:</label>
+      <div className="mb-6">
+        <label className="block text-sm font-semibold mb-1 text-gray-700">
+          Enter USD amount:
+        </label>
         <input
           type="number"
+          min="0"
           value={usdAmount}
           onChange={e => setUsdAmount(parseFloat(e.target.value) || 0)}
-          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
         />
       </div>
 
-      <div className="overflow-x-auto w-full">
-        <table className="w-full table-auto border border-gray-300 rounded overflow-hidden">
-          <thead className="bg-blue-600 text-white">
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="w-full table-auto">
+          <thead className="bg-blue-600 text-white text-sm">
             <tr>
               <th className="p-3 text-left">Country</th>
               <th className="p-3 text-right">Value</th>
@@ -64,23 +72,28 @@ function RateTable({ rates }) {
           </thead>
           <tbody>
             {Object.entries(rates).map(([currency, rate], index) => (
-              <tr key={currency} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                <td className="p-3">{currencyCountries[currency] || 'Unknown'}</td>
-                <td className="p-3 text-right">
+              <tr
+                key={currency}
+                className={`${index % 2 === 0 ? 'bg-blue-50' : 'bg-white'} hover:bg-blue-100 transition`}
+              >
+                <td className="p-3 font-medium text-gray-700">
+                  {currencyCountries[currency] || 'Unknown'}
+                </td>
+                <td className="p-3 text-right text-gray-800">
                   {(usdAmount * rate).toLocaleString('en-US', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                   })}
                 </td>
-                <td className="p-3 text-center font-semibold">{currency}</td>
+                <td className="p-3 text-center font-bold text-gray-900">{currency}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <p className="text-center text-sm text-gray-500 mt-4">
-        Data refreshed in real-time — Powered by your API
+      <p className="text-center text-xs text-gray-400 mt-6 italic">
+        Data auto-updates from real-time API
       </p>
     </div>
   );
