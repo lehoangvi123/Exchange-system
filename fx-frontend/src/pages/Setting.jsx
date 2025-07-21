@@ -1,29 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import '../css/Setting.css';
 
 function Setting() {
-  const [currency, setCurrency] = useState('USD');
   const [theme, setTheme] = useState('light');
 
+  // ⚡ Tự động gắn class "dark" vào body khi đổi theme
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Settings</h2>
+    <div className="settings-container">
+      <h2 className="settings-title">Settings</h2>
 
-      <div>
-        <label className="block mb-2 font-medium">Default Currency</label>
-        <select
-          value={currency}
-          onChange={e => setCurrency(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="USD">USD - United States Dollar</option>
-          <option value="EUR">EUR - Euro</option>
-          <option value="JPY">JPY - Japanese Yen</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block mb-2 font-medium">Theme</label>
-        <div className="flex space-x-4">
+      <div className="form-group">
+        <label className="label">Theme</label>
+        <div className="radio-group">
           <label>
             <input
               type="radio"
@@ -45,7 +41,7 @@ function Setting() {
         </div>
       </div>
 
-      <p className="text-gray-500 text-sm">
+      <p className="note">
         (These settings are for demo only and are not saved yet.)
       </p>
     </div>

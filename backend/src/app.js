@@ -60,6 +60,7 @@ app.use('/api/rates/trend', trendRoutes);
 app.use('/api/profile', profileRoutes);
 
 
+app.use('/api/feedback', require('./routes/feedback'));
 
 
 // ✅ WebSocket

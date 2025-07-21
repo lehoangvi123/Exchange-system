@@ -15,6 +15,17 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+} 
+
+/* Áp dụng cho toàn trang web */
+html.light {
+  background-color: white;
+  color: black;
+}
+
+html.dark {
+  background-color: #121212;
+  color: #f0f0f0;
 }
 
 /* CONTAINER SYSTEM - CÂN BẰNG LAYOUT */
@@ -54,7 +65,7 @@ header::before {
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  pointer-events: none;
+  pointer-events: none;  
 }
 
 header .container {
@@ -84,7 +95,7 @@ header .flex.items-center.space-x-2:hover {
 
 .items-center {
   display: flex;
-  align-items: center;
+  align-items: center; 
 }
 
 .space-x-2 > * + * {
@@ -484,10 +495,7 @@ svg {
   color: #1f2937;
 } 
 
-span{ 
-  color: white; 
-  
-}
+
 
 /* FOOTER */
 .pro-footer {

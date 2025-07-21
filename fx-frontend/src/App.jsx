@@ -276,8 +276,8 @@ function App() {
               <Link className="nav-link" to="/">Home</Link>
               <Link className="nav-link" to="/about">About</Link>        
               <Link className="nav-link" to="/alerts">Alert</Link>
-              <Link className="nav-link" to="/contact">Contact</Link>
-              <Link className="nav-link" to="/setting">Setting</Link>   
+              <Link className="nav-link" to="/contact">Contact</Link>   
+              <Link className="nav-link" to="/setting">Setting</Link>    
             </nav>
             <div className="auth-buttons ml-auto space-x-4">
               {user && (
@@ -348,10 +348,10 @@ function App() {
             </div>
             <div>
               <h4>Resources</h4>
-              <a href="/api-docs">API Documentation</a>
-              <a href="/help-guide">Help Guide</a>
-              <a href="/faq">FAQ</a>
-              <a href="/blog">Blog</a>
+              <a href="https://www.postman.com/api-platform/api-documentation/">API Documentation</a>
+              <a href="https://forextaker.com/understanding-exchange-rates-a-comprehensive-guide/">Help Guide</a>
+              <a href="https://acemoneytransfer.com/blog/exchange-rates-101-get-answers-to-10-common-questions">FAQ</a>
+              <a href="https://ebury.com/e-blog/blog/ebury_post/fx-101-understanding-exchange-rate-regimes/">Blog</a>
             </div>
             <div>
               <h4>Support</h4>
