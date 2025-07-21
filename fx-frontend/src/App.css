@@ -495,7 +495,17 @@ svg {
   color: #1f2937;
 } 
 
+span { 
+  color: white; 
+}
 
+span.text-base{ 
+  color: black;
+} 
+
+label span{ 
+  color: black; 
+}
 
 /* FOOTER */
 .pro-footer {
