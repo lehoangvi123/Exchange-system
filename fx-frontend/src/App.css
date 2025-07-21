@@ -29,7 +29,7 @@ a {
   margin: 0 auto;
   padding: 1rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   gap: 2rem;
 }
@@ -178,7 +178,8 @@ header .nav-link.active {
   border-radius: 25px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  
 }
 
 /* User button styles */

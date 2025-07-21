@@ -288,7 +288,8 @@ function App() {
         </div>
       </header>
 
-      {/* Main */}
+      {/* Main */} 
+    
       <main className="container mx-auto flex-1 p-6">
         <Routes>
           <Route path="/" element={
@@ -371,7 +372,8 @@ function App() {
           <p>© 2025 FX Rate Dashboard. All rights reserved.</p>
         </div>
       </footer>      
-    </div>    
+    </div>     
+    
   );
 }
 

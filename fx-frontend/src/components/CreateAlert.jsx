@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from 'axios'; 
+import '../css/CreateAlert.css'
 
 const CreateAlert = () => {
   const [form, setForm] = useState({
@@ -33,44 +34,49 @@ const CreateAlert = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>📢 Tạo Cảnh Báo Tỷ Giá</h2>
+  <div className="alert-form-container">
+    <h2>📢 Tạo Cảnh Báo Tỷ Giá</h2>
 
-      <form onSubmit={handleSubmit} style={{ maxWidth: '400px' }}>
-        <div>
-          <label>User ID:</label>
-          <input type="text" name="userId" value={form.userId} onChange={handleChange} required />
-        </div>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>User ID:</label>
+        <input type="text" name="userId" value={form.userId} onChange={handleChange} required />
+      </div>
 
-        <div>
-          <label>Từ (From):</label>
-          <input type="text" name="from" value={form.from} onChange={handleChange} required />
-        </div>
+      <div>
+        <label>Từ (From):</label>
+        <input type="text" name="from" value={form.from} onChange={handleChange} required />
+      </div>
 
-        <div>
-          <label>Đến (To):</label>
-          <input type="text" name="to" value={form.to} onChange={handleChange} required />
-        </div>
+      <div>
+        <label>Đến (To):</label>
+        <input type="text" name="to" value={form.to} onChange={handleChange} required />
+      </div>
 
-        <div>
-          <label>Ngưỡng tỷ giá (Target Rate):</label>
-          <input type="number" name="targetRate" value={form.targetRate} onChange={handleChange} required />
-        </div>
+      <div>
+        <label>Ngưỡng tỷ giá:</label>
+        <input type="number" name="targetRate" value={form.targetRate} onChange={handleChange} required />
+      </div>
 
-        <div>
-          <label>Loại cảnh báo:</label>
-          <select name="direction" value={form.direction} onChange={handleChange}>
-            <option value="above">Tỷ giá cao hơn</option>
-            <option value="below">Tỷ giá thấp hơn</option>
-          </select>
-        </div>
+      <div>
+        <label>Loại cảnh báo:</label>
+        <select name="direction" value={form.direction} onChange={handleChange}>
+          <option value="above">Tỷ giá cao hơn</option>
+          <option value="below">Tỷ giá thấp hơn</option>
+        </select>
+      </div>
 
-        <button type="submit" style={{ marginTop: '10px' }}>Tạo cảnh báo</button>
-      </form>
+      <button type="submit">Tạo cảnh báo</button>
+    </form>
 
-      {message && <p style={{ marginTop: '15px', color: 'green' }}>{message}</p>}
-    </div>
-  );
+    {message && (
+      <p className={`alert-message ${message.includes('✅') ? 'success' : 'error'}`}>
+        {message}
+      </p>
+    )}
+  </div>
+);
+
 };
 
 export default CreateAlert;
