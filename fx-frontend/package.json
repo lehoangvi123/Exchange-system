@@ -1,4 +1,5 @@
-{
+{ 
+  "homepage": "https://lehoangvi123.github.io/Exchange-system",
   "name": "fx-frontend",
   "version": "0.1.0",
   "private": true,
@@ -20,7 +21,9 @@
     "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
+  "scripts": { 
+     "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
