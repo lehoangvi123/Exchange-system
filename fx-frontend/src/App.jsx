@@ -33,7 +33,9 @@ import LogConversionForm from './components/LogConversionForm';
 import ArchiveRateForm from './components/ArchiveRateForm';
 import RateTrend from './components/RateTrend';
 import UpdatePreferences from './components/UpdatePreferences'; 
-import Profile from './pages/Profile'
+import Profile from './pages/Profile'; 
+import Terms from './pages/Terms'; 
+import Disclaimer from './pages/Disclamer';
 
 import './App.css';
 
@@ -295,27 +297,47 @@ function App() {
           <Route path="/" element={
             rate && Object.keys(rate).length > 0 ? (
               <div className="grid md:grid-cols-2 gap-6">
-                <RateTable rates={rate} />
-                <CurrencyConverter />
-                <CrossRateConverter />
-                <RatesFromSources />
-                <RateChart />
-                <ExchangeRateDisplay />
-                <TechnicalIndicators />
+                <RateTable rates={rate} /> 
+                <br />
+                <CurrencyConverter /> 
+                <br />
+                <CrossRateConverter /> 
+                <br />
+                <RatesFromSources /> 
+                <br />
+                <RateChart /> 
+                <br />
+                <ExchangeRateDisplay /> 
+                <br />
+                <TechnicalIndicators /> 
+                <br />
                 <MarketSummary />
+                <br />
                 <ClearCacheButton />
+                <br />
                 <CacheDashboard />
-                <SaveRateForm />
-                <RateTrend pair="AUD_BGN" period="30d" />
-                <CacheStats />
-                <WarmupButton />
-                <SaveUserForm />
-                <UpdateUserForm />
-                <ArchiveRateForm />
-                <ClearExpiredCacheButton />
-                <UpdatePreferences />
-                <HistoryChart period="24h" />
-                <LogConversionForm />
+                <br />
+                <SaveRateForm /> 
+                <br />
+                <RateTrend pair="AUD_BGN" period="30d" /> 
+                <br />
+                <CacheStats /> 
+                <br />
+                <WarmupButton /> 
+                <br />
+                <SaveUserForm /> 
+                <br />
+                <UpdateUserForm /> 
+                <br />
+                <ArchiveRateForm /> 
+                <br />
+                <ClearExpiredCacheButton /> 
+                <br />
+                <UpdatePreferences /> 
+                <br />
+                <HistoryChart period="24h" /> 
+                <br />
+                <LogConversionForm /> 
               </div>
             ) : (
               <div className="flex justify-center items-center h-64">
@@ -327,7 +349,10 @@ function App() {
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/setting" element={<Setting />} /> 
-           <Route path="/profile" element={<Profile />} />
+           <Route path="/profile" element={<Profile />} /> 
+           <Route path="/terms" element={<Terms />} /> 
+           <Route path="/disclamer" element={<Disclaimer />} />
+
         </Routes>
       </main>
 
@@ -355,14 +380,14 @@ function App() {
             </div>
             <div>
               <h4>Support</h4>
-              <a href="/help-center">Help Center</a>
-              <a href="/contact-support">Contact Support</a>
-              <a href="/report-issue">Report Issue</a>
-              <a href="/status">Service Status</a>
+              <a href="https://help.xe.com/hc/en-gb">Help Center</a>
+              <a href="https://support.microsoft.com/en-us/contactus">Contact Support</a>
+              <a href="https://clickup.com/blog/how-to-write-a-bug-report/">Report Issue</a>
+              <a href="https://portal.office.com/servicestatus/">Service Status</a>
             </div>
             <div>
               <h4>Legal</h4>
-              <a href="/privacy">Privacy Policy</a>
+              <a href="https://www.termsfeed.com/live/159dd57d-3d00-4060-b937-2c50e86903f9">Privacy Policy</a>
               <a href="/terms">Terms of Service</a>
               <a href="/disclaimer">Disclaimer</a>
             </div>
