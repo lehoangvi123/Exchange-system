@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const SaveUserForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); // ✅ Thêm password
+  const [password, setPassword] = useState('');
   const [preferredCurrencies, setPreferredCurrencies] = useState('');
   const [message, setMessage] = useState('');
 
@@ -22,7 +22,7 @@ const SaveUserForm = () => {
         body: JSON.stringify({
           name,
           email,
-          password, // ✅ Gửi password lên server
+          password,
           preferredCurrencies: currenciesArray
         })
       });
@@ -39,63 +39,111 @@ const SaveUserForm = () => {
     }
   };
 
-  return (
-    <div style={{
+  const styles = {
+    container: {
       maxWidth: '500px',
-      margin: '0 auto',
-      padding: '20px',
-      border: '1px solid #ccc',
-      borderRadius: '8px'
-    }}>
-      <h3>👤 Lưu thông tin người dùng</h3>
+      margin: '40px auto',
+      padding: '24px',
+      border: '1px solid #e5e7eb',
+      borderRadius: '12px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+      backgroundColor: '#f9fafb',
+      fontFamily: 'Segoe UI, sans-serif',
+    },
+    heading: {
+      fontSize: '20px',
+      fontWeight: '600',
+      marginBottom: '16px',
+      textAlign: 'center',
+      color: '#1f2937',
+    },
+    label: {
+      display: 'block',
+      marginBottom: '12px',
+      fontWeight: '500',
+      color: '#374151',
+    },
+    input: {
+      width: '100%',
+      padding: '10px',
+      marginTop: '4px',
+      border: '1px solid #d1d5db',
+      borderRadius: '8px',
+      fontSize: '16px',
+      boxSizing: 'border-box',
+    },
+    button: {
+      marginTop: '20px',
+      width: '100%',
+      padding: '12px',
+      fontSize: '16px',
+      fontWeight: '600',
+      backgroundColor: '#10b981',
+      color: 'white',
+      border: 'none',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s ease',
+    },
+    buttonHover: {
+      backgroundColor: '#059669'
+    },
+    message: {
+      marginTop: '16px',
+      fontSize: '15px',
+      textAlign: 'center',
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      <h3 style={styles.heading}>👤 Lưu thông tin người dùng</h3>
       <form onSubmit={handleSubmit}>
-        <label>
+        <label style={styles.label}>
           Tên:
           <input
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
             required
-            style={{ width: '100%', marginBottom: '10px' }}
+            style={styles.input}
           />
         </label>
-        <br />
-        <label>
+        <label style={styles.label}>
           Email:
           <input
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
-            style={{ width: '100%', marginBottom: '10px' }}
+            style={styles.input}
           />
         </label>
-        <br />
-        <label>
+        <label style={styles.label}>
           Mật khẩu:
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            style={{ width: '100%', marginBottom: '10px' }}
+            style={styles.input}
           />
         </label>
-        <br />
-        <label>
-          Tiền tệ ưa thích (ngăn cách bằng dấu phẩy, ví dụ: USD,VND,EUR):
+        <label style={styles.label}>
+          Tiền tệ ưa thích (VD: USD,VND,EUR):
           <input
             type="text"
             value={preferredCurrencies}
             onChange={e => setPreferredCurrencies(e.target.value)}
             required
-            style={{ width: '100%', marginBottom: '10px' }}
+            style={styles.input}
           />
         </label>
-        <br />
-        <button type="submit" style={{ padding: '8px 16px' }}>💾 Lưu người dùng</button>
+        <button type="submit" style={styles.button}>
+          💾 Lưu người dùng
+        </button>
       </form>
-      <p>{message}</p>
+      <p style={styles.message}>{message}</p>
     </div>
   );
 };

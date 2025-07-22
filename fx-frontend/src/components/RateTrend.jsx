@@ -22,24 +22,51 @@ const RateTrend = ({ pair = "USD_VND", period = "30d" }) => {
       });
   }, [pair, period]);
 
-  if (loading) return <p>⏳ Đang tải dữ liệu xu hướng...</p>;
-  if (!trendData) return <p>⚠️ Không có dữ liệu.</p>;
+  if (loading) return <p style={{ textAlign: 'center', padding: '20px' }}>⏳ Đang tải dữ liệu xu hướng...</p>;
+  if (!trendData) return <p style={{ textAlign: 'center', color: 'red' }}>⚠️ Không có dữ liệu.</p>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>📊 Phân Tích Xu Hướng Tỷ Giá</h2>
-      <p><strong>Cặp:</strong> {trendData.pair}</p>
-      <p><strong>Khoảng thời gian:</strong> {trendData.period}</p>
-      <p><strong>Xu hướng:</strong> {trendData.trend}</p>
+    <div
+      style={{
+        padding: '20px',
+        maxWidth: '900px',
+        margin: '40px auto',
+        backgroundColor: '#fefefe',
+        border: '1px solid #ddd',
+        borderRadius: '10px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        fontFamily: 'Arial, sans-serif'
+      }}
+    >
+      <h2 style={{ marginBottom: '10px', textAlign: 'center', color: '#333' }}>
+        📊 Phân Tích Xu Hướng Tỷ Giá
+      </h2>
+
+      <div style={{ marginBottom: '12px', fontSize: '15px', color: '#444', lineHeight: '1.5' }}>
+        <p><strong>Cặp:</strong> {trendData.pair}</p>
+        <p><strong>Khoảng thời gian:</strong> {trendData.period}</p>
+        <p><strong>Xu hướng:</strong> <span style={{ color: trendData.trend === 'Tăng' ? 'green' : trendData.trend === 'Giảm' ? 'red' : 'gray' }}>{trendData.trend}</span></p>
+      </div>
 
       <div style={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={trendData.values}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+            <XAxis
+              dataKey="date"
+              tickFormatter={(str) => new Date(str).toLocaleDateString()}
+              style={{ fontSize: '12px' }}
+            />
             <YAxis domain={['auto', 'auto']} />
             <Tooltip labelFormatter={(value) => new Date(value).toLocaleString()} />
-            <Line type="monotone" dataKey="rate" stroke="#8884d8" name="Tỷ giá" />
+            <Line
+              type="monotone"
+              dataKey="rate"
+              stroke="#8884d8"
+              strokeWidth={2}
+              name="Tỷ giá"
+              dot={false}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
