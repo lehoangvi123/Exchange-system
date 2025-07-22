@@ -305,7 +305,7 @@ function App() {
                 <br />
                 <RatesFromSources /> 
                 <br />
-                <RateChart /> 
+                <RateChart />   
                 <br />
                 <ExchangeRateDisplay /> 
                 <br />

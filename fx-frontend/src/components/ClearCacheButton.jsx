@@ -19,8 +19,31 @@ export default function ClearCacheButton() {
   };
 
   return (
-    <button onClick={handleClear}>
-      🧹 Xoá Cache USD → VND
-    </button>
+    <div style={styles.wrapper}>
+      <button onClick={handleClear} style={styles.button}>
+        🧹 Xoá Cache USD → VND
+      </button>
+    </div>
   );
 }
+
+const styles = {
+  wrapper: {
+    textAlign: 'center',
+    marginTop: '30px'
+  },
+  button: {
+    backgroundColor: '#2b6cb0',
+    color: '#fff',
+    border: 'none',
+    padding: '12px 24px',
+    fontSize: '16px',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+  },
+  buttonHover: {
+    backgroundColor: '#2c5282'
+  }
+};
