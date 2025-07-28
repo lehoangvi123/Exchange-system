@@ -4,7 +4,7 @@ export default function HistoryChart({ period }) {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/history/${period}`)
+    fetch(`https://backend-1-8b9z.onrender.com/api/history/${period}`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {

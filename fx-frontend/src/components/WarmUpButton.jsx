@@ -4,7 +4,7 @@ import React from 'react';
 export default function WarmupButton() {
   const handleWarmup = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/rates/cache/warmup', {
+      const res = await fetch('https://backend-1-8b9z.onrender.com/api/rates/cache/warmup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pairs: ['AUD_CAD', 'AUD_BRL'] })

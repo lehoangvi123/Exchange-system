@@ -4,7 +4,7 @@ import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import '../Login.css'; // bạn tự tạo file CSS riêng
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = 'https://backend-1-8b9z.onrender.com';
 
 const Login = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({

@@ -12,7 +12,7 @@ export default function CrossRateConverter() {
 
   const handleConvert = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/api/rates/convert-cross', {
+      const res = await axios.post('https://backend-1-8b9z.onrender.com/api/rates/convert-cross', {
         from: base,
         to: quote,
         via,

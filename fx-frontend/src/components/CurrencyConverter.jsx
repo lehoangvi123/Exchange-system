@@ -14,7 +14,7 @@ function CurrencyConverter() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/rates/convert', {
+      const res = await axios.post('https://backend-1-8b9z.onrender.com/api/rates/convert', {
         from: from.toUpperCase(),
         to: to.toUpperCase(),
         amount: parseFloat(amount),

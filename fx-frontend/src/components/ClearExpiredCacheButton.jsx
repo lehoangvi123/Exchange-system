@@ -6,7 +6,7 @@ export default function ClearExpiredCacheButton() {
   const handleClear = async () => {
     setStatus('Đang xoá cache hết hạn...');
     try {
-      const res = await fetch('http://localhost:5000/api/rates/cache/clear-expired', {
+      const res = await fetch('https://backend-1-8b9z.onrender.com/api/rates/cache/clear-expired', {
         method: 'POST',
       });
       const data = await res.json();

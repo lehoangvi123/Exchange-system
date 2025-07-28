@@ -13,7 +13,7 @@ const ArchiveRateForm = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/rates/archive', {
+      const response = await fetch('https://backend-1-8b9z.onrender.com/api/rates/archive', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

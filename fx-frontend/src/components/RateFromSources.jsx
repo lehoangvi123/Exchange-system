@@ -5,7 +5,7 @@ export default function RatesFromSources() {
   const [sources, setSources] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/rates/sources')
+    axios.get('https://backend-1-8b9z.onrender.com/api/rates/sources')
       .then(res => {
         if (res.data.success) {
           setSources(res.data.sources);

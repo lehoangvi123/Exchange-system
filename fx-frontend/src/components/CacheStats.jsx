@@ -4,7 +4,7 @@ export default function CacheStats() {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/rates/cache/stats')
+    fetch('https://backend-1-8b9z.onrender.com/api/rates/cache/stats')
       .then(res => res.json())
       .then(data => {
         if (data.success) {

@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function ClearCacheButton() {
   const handleClear = () => {
-    fetch('http://localhost:5000/api/rates/cache/invalidate', {
+    fetch('https://backend-1-8b9z.onrender.com/api/rates/cache/invalidate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ from: 'USD', to: 'VND' })

@@ -6,7 +6,7 @@ export default function CacheDashboard() {
 
   const handleOptimize = () => {
     setLoading(true);
-    fetch('http://localhost:5000/api/rates/cache/optimize', {
+    fetch('https://backend-1-8b9z.onrender.com/api/rates/cache/optimize', {
       method: 'POST',
     })
       .then(res => res.json())

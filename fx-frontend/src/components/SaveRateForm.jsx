@@ -11,7 +11,7 @@ const SaveRateForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/rates/save', {
+      const response = await fetch('https://backend-1-8b9z.onrender.com/api/rates/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

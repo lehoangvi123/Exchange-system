@@ -10,7 +10,7 @@ const TechnicalIndicators = () => {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/rates/indicators')
+    axios.get('https://backend-1-8b9z.onrender.com/api/rates/indicators')
       .then((res) => {
         if (res.data && res.data.success) {
           setData(res.data.indicators);

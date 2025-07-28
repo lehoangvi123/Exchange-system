@@ -15,7 +15,7 @@ const UpdateUserForm = () => {
       .filter(c => c);
 
     try {
-      const res = await fetch('http://localhost:5000/api/users/update', {
+      const res = await fetch('https://backend-1-8b9z.onrender.com/api/users/update', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

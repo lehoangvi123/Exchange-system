@@ -15,7 +15,7 @@ const RateTrend = ({ period = "30d" }) => {
     Promise.all(
       pairs.map(pair =>
         axios
-          .get(`http://localhost:5000/api/rates/trend/${pair}/${period}`)
+          .get(`https://backend-1-8b9z.onrender.com/api/rates/trend/${pair}/${period}`)
           .then(res => ({ pair, values: res.data.values }))
           .catch(() => ({ pair, values: [] }))
       )

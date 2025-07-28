@@ -24,7 +24,7 @@ const UpdatePreferences = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`http://localhost:5000/api/users/preferences`, {
+      const res = await axios.put(`https://backend-1-8b9z.onrender.com/api/users/preferences`, {
         email: form.email,
         preferences: {
           theme: form.theme,
