@@ -44,22 +44,28 @@ const RateTrend = ({ period = "30d" }) => {
             border: '1px solid #ddd',
             borderRadius: '10px',
             backgroundColor: '#fefefe',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+            overflowX: 'auto'  // 👈 Cho phép cuộn ngang nếu biểu đồ quá dài
           }}
         >
           <h3 style={{ textAlign: 'center', color: '#333' }}>{pair.replace('_', ' → ')}</h3>
           {dataMap[pair] && dataMap[pair].length > 0 ? (
-            <div style={{ height: 300 }}>
+            <div style={{ height: 300, minWidth: 1000 }}> {/* 👈 Tăng chiều rộng biểu đồ */}
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={dataMap[pair]}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
                     dataKey="date"
-                    tickFormatter={(d) => new Date(d).toLocaleDateString()}
+                    tickFormatter={(d) => new Date(d).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    minTickGap={20}
                     style={{ fontSize: '12px' }}
                   />
                   <YAxis domain={['auto', 'auto']} />
-                  <Tooltip labelFormatter={(value) => new Date(value).toLocaleString()} />
+                  <Tooltip
+                    labelFormatter={(value) =>
+                      new Date(value).toLocaleString('vi-VN', { hour12: false })
+                    }
+                  />
                   <Line
                     type="monotone"
                     dataKey="rate"
