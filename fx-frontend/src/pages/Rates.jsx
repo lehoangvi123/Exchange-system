@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const currencyCountries = {
   AED: "United Arab Emirates", AFN: "Afghanistan", ALL: "Albania", AMD: "Armenia",
@@ -36,7 +37,83 @@ const currencyCountries = {
   XPF: "French Polynesia", YER: "Yemen", ZAR: "South Africa", ZMW: "Zambia", ZWL: "Zimbabwe"
 };
 
-// Component Rates
+// Component hiển thị rates từ multiple sources
+function RatesFromSources() {
+  const [sources, setSources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSourceRates = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.get('http://localhost:5000/api/rates/sources');
+        
+        if (response.data.success) {
+          setSources(response.data.sources);
+        } else {
+          throw new Error('Failed to fetch source rates');
+        }
+      } catch (err) {
+        console.error('❌ Error fetching source rates:', err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSourceRates();
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={styles.container}>
+        <h2 style={styles.title}>📡 Raw Rates From All Providers</h2>
+        <div style={styles.loadingContainer}>
+          <div style={styles.spinner}></div>
+          <p>Đang tải dữ liệu từ các nguồn...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={styles.container}>
+        <h2 style={styles.title}>📡 Raw Rates From All Providers</h2>
+        <div style={styles.errorContainer}>
+          <p style={styles.errorText}>❌ Lỗi: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={styles.container}>
+      <h2 style={styles.title}>📡 Raw Rates From All Providers</h2>
+      {sources.length === 0 ? (
+        <p style={styles.noData}>Không có dữ liệu từ các nguồn.</p>
+      ) : (
+        sources.map((src, idx) => (
+          <div key={idx} style={styles.card}>
+            <h4 style={styles.provider}>🌐 Provider: {src.provider}</h4>
+            <div style={styles.rateGrid}>
+              {Object.entries(src.rates || {}).map(([currency, rate]) => (
+                <div key={currency} style={styles.rateItem}>
+                  <span style={styles.currency}>{currency}:</span>
+                  <span style={styles.value}>{rate}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
+// Component Rates chính
 function Rates({ rates, loading, error }) {
   const [usdAmount, setUsdAmount] = useState(1);
 
@@ -166,8 +243,9 @@ function Rates({ rates, loading, error }) {
   );
 }
 
-// Component chính để fetch dữ liệu
-function ExchangeRateApp() {
+// Component chính kết hợp cả hai
+function CombinedExchangeRateApp() {
+  const [activeTab, setActiveTab] = useState('rates');
   const [rates, setRates] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -209,34 +287,158 @@ function ExchangeRateApp() {
   useEffect(() => {
     fetchExchangeRates();
     
-    // Auto refresh mỗi 60 giây
-    const interval = setInterval(fetchExchangeRates, 60000);
+    // Auto refresh mỗi 60 giây (chỉ cho tab rates)
+    const interval = setInterval(() => {
+      if (activeTab === 'rates') {
+        fetchExchangeRates();
+      }
+    }, 60000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-gray-100">
-     
+      {/* Header Navigation */}
+      <div className="bg-white shadow-md">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center space-x-8 py-4">
+            <button
+              onClick={() => setActiveTab('rates')}
+              className={`px-6 py-2 rounded-lg font-semibold transition ${
+                activeTab === 'rates'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              🌍 Exchange Rates
+            </button>
+            <button
+              onClick={() => setActiveTab('sources')}
+              className={`px-6 py-2 rounded-lg font-semibold transition ${
+                activeTab === 'sources'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              📡 Raw Sources
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Main content */}
       <main className="container mx-auto px-4 py-8">
-       
-
-        <Rates rates={rates} loading={loading} error={error} />
-        
-        {/* Refresh button */}
-        <div className="text-center mt-6">
-          <button
-            onClick={fetchExchangeRates}
-            disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
-          >
-            {loading ? 'Đang tải...' : 'Làm mới dữ liệu'}
-          </button>
-        </div>
+        {activeTab === 'rates' ? (
+          <>
+            <Rates rates={rates} loading={loading} error={error} />
+            
+            {/* Refresh button */}
+            <div className="text-center mt-6">
+              <button
+                onClick={fetchExchangeRates}
+                disabled={loading}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
+              >
+                {loading ? 'Đang tải...' : 'Làm mới dữ liệu'}
+              </button>
+            </div>
+          </>
+        ) : (
+          <RatesFromSources />
+        )}
       </main>
     </div>
   );
 }
 
-export default ExchangeRateApp;
+// CSS styles cho RatesFromSources component
+const styles = {
+  container: {
+    maxWidth: '900px',
+    margin: '0 auto',
+    padding: '0 20px',
+    fontFamily: 'Segoe UI, sans-serif',
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: '30px',
+    fontSize: '26px',
+    color: '#1a202c',
+  },
+  loadingContainer: {
+    textAlign: 'center',
+    padding: '40px',
+  },
+  spinner: {
+    width: '40px',
+    height: '40px',
+    border: '4px solid #f3f3f3',
+    borderTop: '4px solid #3498db',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+    margin: '0 auto 20px',
+  },
+  errorContainer: {
+    textAlign: 'center',
+    padding: '40px',
+  },
+  errorText: {
+    color: '#e53e3e',
+    fontSize: '16px',
+  },
+  noData: {
+    textAlign: 'center',
+    color: '#718096',
+    fontSize: '16px',
+  },
+  card: {
+    backgroundColor: '#f9fafb',
+    padding: '20px',
+    borderRadius: '12px',
+    border: '1px solid #e2e8f0',
+    marginBottom: '20px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+  },
+  provider: {
+    marginBottom: '16px',
+    fontSize: '18px',
+    color: '#2b6cb0',
+  },
+  rateGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+    gap: '10px',
+  },
+  rateItem: {
+    backgroundColor: '#edf2f7',
+    padding: '10px 12px',
+    borderRadius: '6px',
+    textAlign: 'center',
+    fontSize: '14px',
+  },
+  currency: {
+    fontWeight: '600',
+    marginRight: '4px',
+  },
+  value: {
+    color: '#4a5568',
+  },
+};
+
+// CSS cho spinner animation
+const spinnerCSS = `
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+`;
+
+// Thêm CSS vào head
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = spinnerCSS;
+  document.head.appendChild(style);
+}
+
+export default CombinedExchangeRateApp;

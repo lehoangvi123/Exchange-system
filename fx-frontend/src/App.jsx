@@ -15,10 +15,10 @@ import Chart from './pages/Chart';
 import Rates from './pages/Rates'
 
 // Components
-import RateTable from './components/RateTable';
+// import RateTable from './components/RateTable';
 import CurrencyConverter from './components/CurrencyConverter';
 import CrossRateConverter from './components/CrossRateConverter';
-import RatesFromSources from './components/RateFromSources';
+// import RatesFromSources from './components/RateFromSources';
 // import RateChart from './components/RateChart';
 import ExchangeRateDisplay from './components/ExchangeRateDisplay';
 import TechnicalIndicators from './components/TechnicalIndicator';
@@ -304,56 +304,42 @@ function App() {
       <main className="container mx-auto flex-1 p-6">
         <Routes>
           <Route path="/" element={
-            rate && Object.keys(rate).length > 0 ? (
-              <div className="grid md:grid-cols-2 gap-6">
-                <RateTable rates={rate} /> 
-                <br />
-                <CurrencyConverter /> 
-                <br />
-                <CrossRateConverter /> 
-                <br />
-                <RatesFromSources /> 
-                <br />
-                {/* <RateChart />    */}
-                <br />
-                <ExchangeRateDisplay /> 
-                <br />
-                <TechnicalIndicators /> 
-                <br />
-                <MarketSummary />
-                <br />
-                <ClearCacheButton />
-                <br />
-                <CacheDashboard />
-                <br />
-                <SaveRateForm /> 
-                <br />
-                <RateTrend pair="AUD_BGN" period="30d" /> 
-                <br />
-                <CacheStats /> 
-                <br />
-                <WarmupButton /> 
-                <br />
-                <SaveUserForm /> 
-                <br />
-                <UpdateUserForm /> 
-                <br />
-                <ArchiveRateForm /> 
-                <br />
-                <ClearExpiredCacheButton /> 
-                <br />
-                <UpdatePreferences /> 
-                <br />
-                {/* <HistoryChart period="24h" />  */}
-                <br />
-                <LogConversionForm /> 
-              </div>
-            ) : (
-              <div className="flex justify-center items-center h-64">
-                <p className="text-lg text-gray-500 animate-pulse">Loading exchange rates...</p>
-              </div>
-            )
-          } />
+  rate && Object.keys(rate).length > 0 ? (
+    <div className="home-grid">
+      <section className="welcome-section">
+        <h2 className="home-title">Welcome to FX Rate Dashboard</h2>
+        <p className="home-subtitle">
+          Get real-time currency rates, insights, and analysis tools — all in one place.
+        </p>
+      </section>
+
+      <div className="card-grid">
+        <div className="home-card"><CurrencyConverter /></div>
+        <div className="home-card"><CrossRateConverter /></div>
+        <div className="home-card"><ExchangeRateDisplay /></div>
+        <div className="home-card"><TechnicalIndicators /></div>
+        <div className="home-card"><MarketSummary /></div>
+        <div className="home-card"><RateTrend pair="AUD_BGN" period="30d" /></div>
+        <div className="home-card"><SaveRateForm /></div>
+        <div className="home-card"><LogConversionForm /></div>
+        <div className="home-card"><SaveUserForm /></div>
+        <div className="home-card"><UpdateUserForm /></div>
+        <div className="home-card"><UpdatePreferences /></div>
+        <div className="home-card"><ArchiveRateForm /></div>
+        <div className="home-card"><ClearCacheButton /></div>
+        <div className="home-card"><ClearExpiredCacheButton /></div>
+        <div className="home-card"><WarmupButton /></div>
+        <div className="home-card"><CacheStats /></div>
+        <div className="home-card"><CacheDashboard /></div>
+      </div>
+    </div>
+  ) : (
+    <div className="flex justify-center items-center h-64">
+      <p className="text-lg text-gray-500 animate-pulse">Loading exchange rates...</p>
+    </div>
+  )
+} />
+
           <Route path="/about" element={<About />} />
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/contact" element={<Contact />} />
