@@ -10,17 +10,20 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Setting from './pages/Setting';
 import AlertsPage from './pages/AlertsPage';
+import History from './pages/History'
+import Chart from './pages/Chart'; 
+import Rates from './pages/Rates'
 
 // Components
 import RateTable from './components/RateTable';
 import CurrencyConverter from './components/CurrencyConverter';
 import CrossRateConverter from './components/CrossRateConverter';
 import RatesFromSources from './components/RateFromSources';
-import RateChart from './components/RateChart';
+// import RateChart from './components/RateChart';
 import ExchangeRateDisplay from './components/ExchangeRateDisplay';
 import TechnicalIndicators from './components/TechnicalIndicator';
 import MarketSummary from './components/MarketSummary';
-import HistoryChart from './components/HistoryChart';
+// import HistoryChart from './components/HistoryChart';
 import ClearCacheButton from './components/ClearCacheButton';
 import WarmupButton from './components/WarmUpButton';
 import CacheStats from './components/CacheStats';
@@ -35,7 +38,8 @@ import RateTrend from './components/RateTrend';
 import UpdatePreferences from './components/UpdatePreferences'; 
 import Profile from './pages/Profile'; 
 import Terms from './pages/Terms'; 
-import Disclaimer from './pages/Disclamer';
+import Disclaimer from './pages/Disclamer'; 
+
 
 import './App.css';
 
@@ -276,10 +280,15 @@ function App() {
           <div className="flex items-center space-x-6">
             <nav className="space-x-4">
               <Link className="nav-link" to="/">Home</Link>
-              <Link className="nav-link" to="/about">About</Link>        
+              <Link className="nav-link" to="/about">About</Link>  
+              <Link className="nav-link" to="/historyRate">History</Link>    
+                <Link className="nav-link" to="/chart">Chart</Link>    
+                 <Link className="nav-link" to="/rates">Rates</Link>  
+                 <Link className="nav-link" to="/Save">Form</Link>         
               <Link className="nav-link" to="/alerts">Alert</Link>
               <Link className="nav-link" to="/contact">Contact</Link>   
               <Link className="nav-link" to="/setting">Setting</Link>    
+               
             </nav>
             <div className="auth-buttons ml-auto space-x-4">
               {user && (
@@ -305,7 +314,7 @@ function App() {
                 <br />
                 <RatesFromSources /> 
                 <br />
-                <RateChart />   
+                {/* <RateChart />    */}
                 <br />
                 <ExchangeRateDisplay /> 
                 <br />
@@ -335,7 +344,7 @@ function App() {
                 <br />
                 <UpdatePreferences /> 
                 <br />
-                <HistoryChart period="24h" /> 
+                {/* <HistoryChart period="24h" />  */}
                 <br />
                 <LogConversionForm /> 
               </div>
@@ -352,6 +361,9 @@ function App() {
            <Route path="/profile" element={<Profile />} /> 
            <Route path="/terms" element={<Terms />} /> 
            <Route path="/disclamer" element={<Disclaimer />} />
+           <Route path="/historyRate" element={<History />} /> 
+           <Route path="/chart" element={<Chart />} />  
+           <Route path="/rates" element={<Rates />} />
 
         </Routes>
       </main>
