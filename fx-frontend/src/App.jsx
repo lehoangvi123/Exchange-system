@@ -12,7 +12,8 @@ import Setting from './pages/Setting';
 import AlertsPage from './pages/AlertsPage';
 import History from './pages/History'
 import Chart from './pages/Chart'; 
-import Rates from './pages/Rates'
+import Rates from './pages/Rates'; 
+import SaveForm from './pages/SaveForm';
 
 // Components
 // import RateTable from './components/RateTable';
@@ -24,11 +25,11 @@ import ExchangeRateDisplay from './components/ExchangeRateDisplay';
 import TechnicalIndicators from './components/TechnicalIndicator';
 import MarketSummary from './components/MarketSummary';
 // import HistoryChart from './components/HistoryChart';
-import ClearCacheButton from './components/ClearCacheButton';
-import WarmupButton from './components/WarmUpButton';
-import CacheStats from './components/CacheStats';
-import CacheDashboard from './components/CacheDashboard';
-import ClearExpiredCacheButton from './components/ClearExpiredCacheButton';
+// import ClearCacheButton from './components/ClearCacheButton';
+// import WarmupButton from './components/WarmUpButton';
+// import CacheStats from './components/CacheStats';
+// import CacheDashboard from './components/CacheDashboard';
+// import ClearExpiredCacheButton from './components/ClearExpiredCacheButton';
 import SaveRateForm from './components/SaveRateForm';
 import UpdateUserForm from './components/UpdateUserForm';
 import SaveUserForm from './components/SaveUserForm';
@@ -284,7 +285,7 @@ function App() {
               <Link className="nav-link" to="/historyRate">History</Link>    
                 <Link className="nav-link" to="/chart">Chart</Link>    
                  <Link className="nav-link" to="/rates">Rates</Link>  
-                 <Link className="nav-link" to="/Save">Form</Link>         
+                 <Link className="nav-link" to="/SaveForm">Form</Link>         
               <Link className="nav-link" to="/alerts">Alert</Link>
               <Link className="nav-link" to="/contact">Contact</Link>   
               <Link className="nav-link" to="/setting">Setting</Link>    
@@ -317,20 +318,22 @@ function App() {
         <div className="home-card"><CurrencyConverter /></div>
         <div className="home-card"><CrossRateConverter /></div>
         <div className="home-card"><ExchangeRateDisplay /></div>
-        <div className="home-card"><TechnicalIndicators /></div>
-        <div className="home-card"><MarketSummary /></div>
-        <div className="home-card"><RateTrend pair="AUD_BGN" period="30d" /></div>
+        <div className="home-card"><TechnicalIndicators /></div> 
+        {/* Không đụng tới technicalIndicators */}
+        <div className="home-card"><MarketSummary /></div> 
+        <div className="home-card"><RateTrend pair="AUD_BGN" period="30d" /></div>  
+        {/* Không đụng tới RateTrend */}
         <div className="home-card"><SaveRateForm /></div>
         <div className="home-card"><LogConversionForm /></div>
         <div className="home-card"><SaveUserForm /></div>
         <div className="home-card"><UpdateUserForm /></div>
         <div className="home-card"><UpdatePreferences /></div>
         <div className="home-card"><ArchiveRateForm /></div>
-        <div className="home-card"><ClearCacheButton /></div>
-        <div className="home-card"><ClearExpiredCacheButton /></div>
-        <div className="home-card"><WarmupButton /></div>
-        <div className="home-card"><CacheStats /></div>
-        <div className="home-card"><CacheDashboard /></div>
+        {/* <div className="home-card"><ClearCacheButton /></div> */}
+        {/* <div className="home-card"><ClearExpiredCacheButton /></div> */}
+        {/* <div className="home-card"><WarmupButton /></div> */}
+        {/* <div className="home-card"><CacheStats /></div> */}
+        {/* <div className="home-card"><CacheDashboard /></div> */}
       </div>
     </div>
   ) : (
@@ -349,7 +352,9 @@ function App() {
            <Route path="/disclamer" element={<Disclaimer />} />
            <Route path="/historyRate" element={<History />} /> 
            <Route path="/chart" element={<Chart />} />  
-           <Route path="/rates" element={<Rates />} />
+           <Route path="/rates" element={<Rates />} />  
+           <Route path="/SaveForm" element={<SaveForm />} />
+
 
         </Routes>
       </main>
