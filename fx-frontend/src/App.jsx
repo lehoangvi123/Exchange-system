@@ -3,7 +3,8 @@ import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 import io from 'socket.io-client';
 import axios from 'axios';
 
-// Pages
+// Pages 
+import Home from './pages/Home'
 import Register from './pages/Register';
 import Login from './pages/Login';
 import About from './pages/About';
@@ -279,8 +280,9 @@ function App() {
             <h4 className="text-2xl font-extrabold text-blue-700">FX Rate Dashboard</h4>
           </div>
           <div className="flex items-center space-x-6">
-            <nav className="space-x-4">
-              <Link className="nav-link" to="/">Home</Link>
+            <nav className="space-x-4">  
+              <Link className="nav-link" to="/home">Home</Link>
+              <Link className="nav-link" to="/">Explore</Link>
               <Link className="nav-link" to="/about">About</Link>  
               <Link className="nav-link" to="/historyRate">History</Link>    
                 <Link className="nav-link" to="/chart">Chart</Link>    
@@ -288,7 +290,6 @@ function App() {
                  <Link className="nav-link" to="/SaveForm">Form</Link>         
               <Link className="nav-link" to="/alerts">Alert</Link>
               <Link className="nav-link" to="/contact">Contact</Link>   
-              <Link className="nav-link" to="/setting">Setting</Link>    
                
             </nav>
             <div className="auth-buttons ml-auto space-x-4">
@@ -343,6 +344,7 @@ function App() {
   )
 } />
 
+            <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/contact" element={<Contact />} />
