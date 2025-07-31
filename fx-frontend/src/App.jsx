@@ -17,20 +17,11 @@ import Rates from './pages/Rates';
 import SaveForm from './pages/SaveForm';
 
 // Components
-// import RateTable from './components/RateTable';
 import CurrencyConverter from './components/CurrencyConverter';
 import CrossRateConverter from './components/CrossRateConverter';
-// import RatesFromSources from './components/RateFromSources';
-// import RateChart from './components/RateChart';
 import ExchangeRateDisplay from './components/ExchangeRateDisplay';
 import TechnicalIndicators from './components/TechnicalIndicator';
 import MarketSummary from './components/MarketSummary';
-// import HistoryChart from './components/HistoryChart';
-// import ClearCacheButton from './components/ClearCacheButton';
-// import WarmupButton from './components/WarmUpButton';
-// import CacheStats from './components/CacheStats';
-// import CacheDashboard from './components/CacheDashboard';
-// import ClearExpiredCacheButton from './components/ClearExpiredCacheButton';
 import SaveRateForm from './components/SaveRateForm';
 import UpdateUserForm from './components/UpdateUserForm';
 import SaveUserForm from './components/SaveUserForm';
@@ -41,7 +32,6 @@ import UpdatePreferences from './components/UpdatePreferences';
 import Profile from './pages/Profile'; 
 import Terms from './pages/Terms'; 
 import Disclaimer from './pages/Disclamer'; 
-
 
 import './App.css';
 
@@ -80,16 +70,14 @@ const UserInfoButton = ({ user, onLogout }) => {
                    transition-all duration-200 rounded-lg px-4 py-2 text-white
                    border border-blue-500 hover:border-blue-600"
       >
- 
-  <div className="w-4 h-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-    <span className="text-sm font-bold text-white">
-      {user?.name?.charAt(0)?.toUpperCase() || 'User profile'}
-    </span>
-  </div>
-  <span className="text-sm text-white font-semibold"> 
-    {user?.name || user?.email}
-  </span>
-
+        <div className="w-4 h-4 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+          <span className="text-sm font-bold text-white">
+            {user?.name?.charAt(0)?.toUpperCase() || 'User profile'}
+          </span>
+        </div>
+        <span className="text-sm text-white font-semibold"> 
+          {user?.name || user?.email}
+        </span>
 
         <div className="hidden sm:flex flex-col items-start">
           <span className="text-sm font-medium">{user?.name || user?.email}</span>
@@ -132,44 +120,42 @@ const UserInfoButton = ({ user, onLogout }) => {
 
           {/* Menu items */}
           <div className="py-1">
-           {/* Thông tin cá nhân */}
-<Link
-  to="/profile"
-  onClick={() => setIsDropdownOpen(false)}
-  className="link-button"
->
-  <svg className="custom-icon text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-  </svg>
-  <span>Thông tin cá nhân</span>
-</Link>
+            {/* Thông tin cá nhân */}
+            <Link
+              to="/profile"
+              onClick={() => setIsDropdownOpen(false)}
+              className="link-button"
+            >
+              <svg className="custom-icon text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span>Thông tin cá nhân</span>
+            </Link>
 
-{/* Cài đặt */}
-<Link
-  to="/setting"
-  onClick={() => setIsDropdownOpen(false)}
-  className="link-button"
->
-  <svg className="custom-icon text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c...z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-  <span>Cài đặt</span>
-</Link>
+            {/* Cài đặt */}
+            <Link
+              to="/setting"
+              onClick={() => setIsDropdownOpen(false)}
+              className="link-button"
+            >
+              <svg className="custom-icon text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c...z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Cài đặt</span>
+            </Link>
 
-
-{/* Đăng xuất */}
-<button
-  onClick={handleLogout}
-  className="logout-btn w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
-           hover:bg-red-50 transition-colors"
->
-  <svg className="custom-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1..." />
-  </svg>
-  <span>Đăng xuất</span>
-</button>
-
+            {/* Đăng xuất */}
+            <button
+              onClick={handleLogout}
+              className="logout-btn w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
+                       hover:bg-red-50 transition-colors"
+            >
+              <svg className="custom-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1..." />
+              </svg>
+              <span>Đăng xuất</span>
+            </button>
           </div>
         </div>
       )}
@@ -181,8 +167,54 @@ function App() {
   const [rate, setRate] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
   const [user, setUser] = useState(null);
+  
+  // ✅ SCROLL HEADER STATES
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState('up');
+  
   const location = useLocation();
   const navigate = useNavigate();
+
+  // ✅ SCROLL HEADER EFFECT
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY < 10) {
+        // Ở đầu trang, luôn hiển thị header
+        setIsHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Cuộn xuống và đã cuộn quá 100px -> ẩn header
+        setIsHeaderVisible(false);
+        setScrollDirection('down');
+      } else if (currentScrollY < lastScrollY) {
+        // Cuộn lên -> hiện header
+        setIsHeaderVisible(true);
+        setScrollDirection('up');
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    // Throttle scroll event để tối ưu performance
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Chỉ add scroll listener khi đã authenticated
+    if (isAuthenticated) {
+      window.addEventListener('scroll', throttledScroll, { passive: true });
+      return () => window.removeEventListener('scroll', throttledScroll);
+    }
+  }, [lastScrollY, isAuthenticated]);
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('token');
@@ -270,10 +302,33 @@ function App() {
     }
   }
 
+  // ✅ HEADER STYLES WITH SCROLL EFFECT
+  const headerStyles = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 50,
+    background: 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)', // Safari support
+    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
+    opacity: isHeaderVisible ? 1 : 0
+  };
+
+  // ✅ MAIN CONTENT PADDING FOR FIXED HEADER
+  const mainStyles = {
+    paddingTop: '5rem', // Tương đương với h-20 (80px)
+    minHeight: 'calc(100vh - 5rem)'
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 text-gray-800">
-      {/* Header */}
-      <header className="bg-white shadow sticky top-0 z-50">
+      {/* ✅ HEADER WITH SCROLL EFFECT */}
+      <header style={headerStyles}>
         <div className="container mx-auto flex justify-between items-center p-4">
           <div className="flex items-center space-x-2">
             <span className="text-3xl">💱</span>
@@ -285,12 +340,11 @@ function App() {
               <Link className="nav-link" to="/">Explore</Link>
               <Link className="nav-link" to="/about">About</Link>  
               <Link className="nav-link" to="/historyRate">History</Link>    
-                <Link className="nav-link" to="/chart">Chart</Link>    
-                 <Link className="nav-link" to="/rates">Rates</Link>  
-                 <Link className="nav-link" to="/SaveForm">Form</Link>         
+              <Link className="nav-link" to="/chart">Chart</Link>    
+              <Link className="nav-link" to="/rates">Rates</Link>  
+              <Link className="nav-link" to="/SaveForm">Form</Link>         
               <Link className="nav-link" to="/alerts">Alert</Link>
               <Link className="nav-link" to="/contact">Contact</Link>   
-               
             </nav>
             <div className="auth-buttons ml-auto space-x-4">
               {user && (
@@ -299,70 +353,111 @@ function App() {
             </div>
           </div>
         </div>
+        
+        {/* ✅ SCROLL INDICATOR (OPTIONAL) */}
+        {!isHeaderVisible && (
+          <div style={{
+            position: 'absolute',
+            bottom: '-2px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '40px',
+            height: '2px',
+            background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)',
+            borderRadius: '1px',
+            opacity: 0.7
+          }} />
+        )}
       </header>
 
-      {/* Main */} 
-    
-      <main className="container mx-auto flex-1 p-6">
+      {/* ✅ MAIN WITH PROPER PADDING */} 
+      <main className="container mx-auto flex-1 p-6" style={mainStyles}>
         <Routes>
           <Route path="/" element={
-  rate && Object.keys(rate).length > 0 ? (
-    <div className="home-grid">
-      <section className="welcome-section">
-        <h2 className="home-title">Welcome to FX Rate Dashboard</h2>
-        <p className="home-subtitle">
-          Get real-time currency rates, insights, and analysis tools — all in one place.
-        </p>
-      </section>
+            rate && Object.keys(rate).length > 0 ? (
+              <div className="home-grid">
+                <section className="welcome-section">
+                  <h2 className="home-title">Welcome to FX Rate Dashboard</h2>
+                  <p className="home-subtitle">
+                    Get real-time currency rates, insights, and analysis tools — all in one place.
+                  </p>
+                </section>
 
-      <div className="card-grid">
-        <div className="home-card"><CurrencyConverter /></div>
-        <div className="home-card"><CrossRateConverter /></div>
-        <div className="home-card"><ExchangeRateDisplay /></div>
-        <div className="home-card"><TechnicalIndicators /></div> 
-        {/* Không đụng tới technicalIndicators */}
-        <div className="home-card"><MarketSummary /></div> 
-        <div className="home-card"><RateTrend pair="AUD_BGN" period="30d" /></div>  
-        {/* Không đụng tới RateTrend */}
-        <div className="home-card"><SaveRateForm /></div>
-        <div className="home-card"><LogConversionForm /></div>
-        <div className="home-card"><SaveUserForm /></div>
-        <div className="home-card"><UpdateUserForm /></div>
-        <div className="home-card"><UpdatePreferences /></div>
-        <div className="home-card"><ArchiveRateForm /></div>
-        {/* <div className="home-card"><ClearCacheButton /></div> */}
-        {/* <div className="home-card"><ClearExpiredCacheButton /></div> */}
-        {/* <div className="home-card"><WarmupButton /></div> */}
-        {/* <div className="home-card"><CacheStats /></div> */}
-        {/* <div className="home-card"><CacheDashboard /></div> */}
-      </div>
-    </div>
-  ) : (
-    <div className="flex justify-center items-center h-64">
-      <p className="text-lg text-gray-500 animate-pulse">Loading exchange rates...</p>
-    </div>
-  )
-} />
+                <div className="card-grid">
+                  <div className="home-card"><CurrencyConverter /></div>
+                  <div className="home-card"><CrossRateConverter /></div>
+                  <div className="home-card"><ExchangeRateDisplay /></div>
+                  <div className="home-card"><TechnicalIndicators /></div> 
+                  <div className="home-card"><MarketSummary /></div> 
+                  <div className="home-card"><RateTrend pair="AUD_BGN" period="30d" /></div>  
+                  <div className="home-card"><SaveRateForm /></div>
+                  <div className="home-card"><LogConversionForm /></div>
+                  <div className="home-card"><SaveUserForm /></div>
+                  <div className="home-card"><UpdateUserForm /></div>
+                  <div className="home-card"><UpdatePreferences /></div>
+                  <div className="home-card"><ArchiveRateForm /></div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-lg text-gray-500 animate-pulse">Loading exchange rates...</p>
+              </div>
+            )
+          } />
 
-            <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/setting" element={<Setting />} /> 
-           <Route path="/profile" element={<Profile />} /> 
-           <Route path="/terms" element={<Terms />} /> 
-           <Route path="/disclamer" element={<Disclaimer />} />
-           <Route path="/historyRate" element={<History />} /> 
-           <Route path="/chart" element={<Chart />} />  
-           <Route path="/rates" element={<Rates />} />  
-           <Route path="/SaveForm" element={<SaveForm />} />
-
-
+          <Route path="/profile" element={<Profile />} /> 
+          <Route path="/terms" element={<Terms />} /> 
+          <Route path="/disclamer" element={<Disclaimer />} />
+          <Route path="/historyRate" element={<History />} /> 
+          <Route path="/chart" element={<Chart />} />  
+          <Route path="/rates" element={<Rates />} />  
+          <Route path="/SaveForm" element={<SaveForm />} />
         </Routes>
       </main>
 
+      {/* ✅ SCROLL TO TOP BUTTON (BONUS) */}
+      {!isHeaderVisible && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{
+            position: 'fixed',
+            bottom: '2rem',
+            right: '2rem',
+            width: '3rem',
+            height: '3rem',
+            background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '50%',
+            boxShadow: '0 10px 25px rgba(59, 130, 246, 0.3)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1.2rem',
+            transition: 'all 0.3s ease',
+            zIndex: 40
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 15px 35px rgba(59, 130, 246, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 10px 25px rgba(59, 130, 246, 0.3)';
+          }}
+        >
+          ↑
+        </button>
+      )}
+
       {/* Footer */}
-     <footer className="pro-footer">
+      <footer className="pro-footer">
         <div className="pro-footer-container">
           <div className="pro-footer-brand">
             <h2>💱 FX Rate Dashboard</h2>
@@ -403,7 +498,6 @@ function App() {
         </div>
       </footer>      
     </div>     
-    
   );
 }
 

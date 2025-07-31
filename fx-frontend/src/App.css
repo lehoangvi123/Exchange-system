@@ -5,12 +5,25 @@
   padding: 0;
 }
 
-body {
+/* ✅ FULL WIDTH - LOẠI BỎ VIỀN HAI BÊN */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to bottom right, #f0f9ff, #e0f2fe);
   color: #333;
   line-height: 1.6;
-} 
+}
+
+/* ✅ ROOT CONTAINER FULL WIDTH */
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  min-height: 100vh;
+}
 
 a {
   text-decoration: none;
@@ -28,16 +41,18 @@ html.dark {
   color: #f0f0f0;
 }
 
-/* CONTAINER SYSTEM - CÂN BẰNG LAYOUT */
+/* ✅ CONTAINER SYSTEM - FULL WIDTH */
 .app-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-  max-width: 4000px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 1rem;
   display: flex;
   justify-content: space-around;
@@ -45,43 +60,56 @@ html.dark {
   gap: 2rem;
 }
 
-/* ===== PURPLE HEADER STYLES ===== */
+/* ===== SCROLL HEADER STYLES ===== */
 
-/* Main Header Container */
+/* ✅ Main Header Container với Scroll Effect */
 header {
   background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
   box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
-  position: sticky;
+  /* ✅ SCROLL EFFECT PROPERTIES */
+  position: fixed;
   top: 0;
-  z-index: 50;
-  transition: all 0.3s ease;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease;
+  transform: translateY(0);
+  opacity: 1;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-header.bg-white {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
+/* ✅ HEADER HIDDEN STATE */
+header.header-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
 }
 
-header.shadow {
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+/* ✅ HEADER SCROLLED STATE */
+header.header-scrolled {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.95) 0%, rgba(168, 85, 247, 0.95) 50%, rgba(192, 132, 252, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.4);
 }
 
-header.sticky {
-  position: sticky;
+/* ✅ HEADER COMPACT MODE */
+header.header-compact {
+  padding: 0.5rem 0;
+  transform: scale(0.95);
 }
 
-header.top-0 {
-  top: 0;
-}
-
-header.z-50 {
-  z-index: 50;
-}
-
-/* Header Container */
+/* Header Container FULL WIDTH */
 header .container {
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 header .mx-auto {
@@ -398,6 +426,53 @@ header .dropdown-menu {
   }
 }
 
+/* ✅ SCROLL TO TOP BUTTON */
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100px);
+}
+
+.scroll-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(124, 58, 237, 0.4);
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+}
+
+/* ✅ MAIN CONTENT PADDING FOR FIXED HEADER */
+main {
+  padding-top: 6rem; /* Space for fixed header */
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  flex: 1;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   header .container {
@@ -440,6 +515,12 @@ header .dropdown-menu {
     justify-content: center;
     max-width: 300px;
   }
+  
+  main {
+    padding-top: 8rem; /* More space on mobile */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -476,6 +557,10 @@ header .dropdown-menu {
     width: calc(100vw - 1.5rem);
     right: -0.75rem;
   }
+  
+  main {
+    padding-top: 10rem; /* Even more space on small mobile */
+  }
 }
 
 /* Accessibility */
@@ -488,6 +573,10 @@ header .user-button:focus {
 
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+  header {
+    transition: none;
+  }
+  
   header .nav-link::before,
   header nav a::before {
     display: none;
@@ -499,6 +588,10 @@ header .user-button:focus {
   
   header .user-avatar::after {
     animation: none;
+  }
+  
+  .scroll-to-top {
+    transition: none;
   }
 }
 
@@ -512,7 +605,6 @@ header .user-button:focus {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2); 
-  
 }
 
 /* User button styles */
@@ -582,24 +674,21 @@ header .user-button:focus {
   border-radius: 10px;
 }
 
-/* MAIN CONTENT - CÂN BẰNG */
+/* ✅ MAIN CONTENT - FULL WIDTH */
 .main-container {
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100vw;
+  max-width: none;
+  margin: 0;
   padding: 20px;
 }
 
-main {
-  padding: 2rem 0;
-  flex: 1;
-}
-
-/* Dashboard Grid - Cân bằng */
+/* Dashboard Grid - Full width */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 24px;
   margin-top: 20px;
+  width: 100%;
 }
 
 .component-card {
@@ -618,12 +707,12 @@ main {
 
 /* Hero Section */
 .hero-section {
- 
   text-align: center;
   padding: 3rem 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
   border-radius: 20px;
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 .hero-section h1 {
@@ -822,20 +911,23 @@ span {
 }
 
 span.text-base{ 
-  color: black;
-} 
+  color: black; 
+}
 
 label span{ 
   color: black; 
 }
 
-/* FOOTER */
+/* ✅ FOOTER - FULL WIDTH */
 .pro-footer {
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   color: #f1f5f9;
   padding: 40px 0 20px;
   font-family: 'Segoe UI', sans-serif;
   margin-top: auto;
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(-50vw + 50%);
 }
 
 .pro-footer-container {
@@ -896,10 +988,11 @@ label span{
   grid-column: 1 / -1;
 }
 
-/* UTILITY CLASSES */
+/* ✅ UTILITY CLASSES - FULL WIDTH */
 .centered-content {
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding: 0 20px;
 }
 
@@ -917,12 +1010,13 @@ label span{
   margin-left: 1.5rem;
 }
 
-/* RESPONSIVE DESIGN */
+/* ✅ RESPONSIVE DESIGN - FULL WIDTH */
 @media (max-width: 1024px) {
   .app-container,
   .main-container,
   .centered-content {
-    max-width: 100%;
+    width: 100vw;
+    max-width: none;
     padding: 0 16px;
   }
   
@@ -1033,12 +1127,39 @@ label span{
   }
 }
 
-/* SMOOTH TRANSITIONS */
-* {
-  transition: all 0.2s ease;
+/* ✅ SCROLL ANIMATIONS */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-/* CUSTOM SCROLLBAR */
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+/* ✅ HEADER SCROLL VARIANTS */
+.header-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.header-slide-down {
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ✅ CUSTOM SCROLLBAR */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -1057,7 +1178,7 @@ label span{
   background: #94a3b8;
 }
 
-/* GLASSMORPHISM EFFECTS */
+/* ✅ GLASSMORPHISM EFFECTS */
 .glass-effect {
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.1);
@@ -1068,7 +1189,7 @@ button {
   margin: 0 5px;
 }
 
-/* ANIMATIONS */
+/* ✅ ANIMATIONS */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1085,6 +1206,30 @@ button {
 
 .animate-slide-in {
   animation: slideIn 0.4s ease-out;
-}  
+}
 
+/* ✅ PERFORMANCE OPTIMIZATIONS */
+header {
+  will-change: transform, opacity;
+}
 
+.scroll-to-top {
+  will-change: transform, opacity;
+}
+
+header .container { 
+  background-color: #1d4ed8;
+}
+
+/* ✅ DEBUGGING UTILITIES (comment out in production) */
+/*
+.debug-container {
+  outline: 2px solid red !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.debug-full-width {
+  outline: 2px solid blue !important;
+  background: rgba(0, 0, 255, 0.1) !important;
+}
+*/

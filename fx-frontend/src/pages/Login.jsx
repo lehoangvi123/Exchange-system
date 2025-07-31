@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import '../Login.css'; // bạn tự tạo file CSS riêng
+import '../Login.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
@@ -14,7 +14,17 @@ const Login = ({ onLoginSuccess }) => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // ✅ Kiểm tra nếu user đã đăng nhập, redirect về home
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Nếu đã có token, redirect về home ngay lập tức
+      navigate('/home', { replace: true });
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -27,28 +37,44 @@ const Login = ({ onLoginSuccess }) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setIsLoading(true);
 
     try {
       const res = await axios.post(`${BACKEND_URL}/api/users/login`, formData);
 
-      // ✅ Lưu token
       if (res.data?.token) {
+        // ✅ Lưu token và thông tin user
         localStorage.setItem('token', res.data.token);
+        
+        // Lưu thêm thông tin user nếu có
+        if (res.data.user) {
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+        }
+
         setSuccess('✅ Đăng nhập thành công!');
 
+        // ✅ Gọi callback nếu có
         if (onLoginSuccess) {
-          onLoginSuccess();
-        } else {
-          setTimeout(() => navigate('/'), 500);
+          onLoginSuccess(res.data);
         }
+
+        // ✅ Redirect về trang Home sau 500ms
+        setTimeout(() => {
+          navigate('/home', { replace: true });
+        }, 500);
+
       } else {
         setError('❌ Không nhận được token từ máy chủ');
       }
 
     } catch (err) {
-      const msg = err.response?.data?.message || '❌ Đăng nhập thất bại';
+      const msg = err.response?.data?.message || 
+                  err.response?.data?.error || 
+                  '❌ Đăng nhập thất bại. Vui lòng thử lại!';
       setError(msg);
       console.error('Lỗi đăng nhập:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +104,7 @@ const Login = ({ onLoginSuccess }) => {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               />
             </div>
             <div className="input-group">
@@ -89,10 +116,17 @@ const Login = ({ onLoginSuccess }) => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               />
             </div>
 
-            <button type="submit" className="login-button">Đăng nhập</button>
+            <button 
+              type="submit" 
+              className="login-button"
+              disabled={isLoading}
+            >
+              {isLoading ? '⏳ Đang đăng nhập...' : 'Đăng nhập'}
+            </button>
           </form>
 
           {error && <p className="message error">{error}</p>}
