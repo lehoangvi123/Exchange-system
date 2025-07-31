@@ -38,6 +38,7 @@ import './App.css';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 // User Info Button Component
+// User Info Button Component
 const UserInfoButton = ({ user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -68,19 +69,18 @@ const UserInfoButton = ({ user, onLogout }) => {
       >
         <div className="user-avatar">
           <span className="user-initials">
-            {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+            {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'User Profile'}
           </span>
         </div>
         <span className="user-name"> 
           {user?.name || user?.email}
         </span>
         <svg 
-          className={`dropdown-arrow ${isDropdownOpen ? 'rotate-180' : ''}`} 
+          className={`dropdown-arrow ${isDropdownOpen ? 'rotate-180' : 'aa'}`} 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
@@ -89,15 +89,17 @@ const UserInfoButton = ({ user, onLogout }) => {
           <div className="user-dropdown-header">
             <div className="user-dropdown-avatar">
               <span className="user-dropdown-initials">
-                {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'Hi!'}
               </span>
             </div>
             <div>
-              <p className="user-dropdown-name">{user?.name || ''}</p>
+              <p className="user-dropdown-name">{user?.name || 'Xin Chào Bạn Yêu Dấu!'}</p>
               <p className="user-dropdown-email">{user?.email}</p>
             </div>
           </div>
 
+          {/* Thêm phần hiển thị tên user ở đây */}
+         
           <div className="user-dropdown-items">
             <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="user-dropdown-item">
               <svg className="dropdown-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +128,6 @@ const UserInfoButton = ({ user, onLogout }) => {
     </div>
   );
 };
-
 // Navigation Menu Component
 const NavigationMenu = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -135,7 +136,7 @@ const NavigationMenu = () => {
   const navigationItems = [
     {
       title: "Dashboard",
-      icon: "📊",
+      icon: "▼",
       submenu: [
         { title: "Tổng quan", icon: "🏠", link: "/home", desc: "Xem tổng quan hệ thống" },
         { title: "Explore", icon: "🔍", link: "/", desc: "Khám phá tính năng" },
@@ -145,7 +146,7 @@ const NavigationMenu = () => {
     },
     {
       title: "Tỷ giá",
-      icon: "💱",
+      icon: "▼",
       submenu: [
         { title: "Tỷ giá hiện tại", icon: "💰", link: "/rates", desc: "Xem tỷ giá thời gian thực" },
         { title: "Lịch sử tỷ giá", icon: "📊", link: "/historyRate", desc: "Dữ liệu tỷ giá theo thời gian" },
@@ -155,7 +156,7 @@ const NavigationMenu = () => {
     },
     {
       title: "Công cụ",
-      icon: "🔧",
+      icon: "▼",
       submenu: [
         { title: "Form dữ liệu", icon: "📝", link: "/SaveForm", desc: "Nhập và lưu dữ liệu" },
         { title: "Quy đổi tiền tệ", icon: "🔄", link: "/converter", desc: "Chuyển đổi tiền tệ nhanh" },
@@ -164,8 +165,8 @@ const NavigationMenu = () => {
       ]
     },
     {
-      title: "ℹThông tin",
-      icon: "ℹ️",
+      title: "Thông tin",
+      icon: "▼",
       submenu: [
         { title: "Giới thiệu", icon: "📄", link: "/about", desc: "Thông tin về hệ thống" },
         { title: "Liên hệ", icon: "📞", link: "/contact", desc: "Liên hệ hỗ trợ" },
@@ -356,21 +357,21 @@ function App() {
   }
 
   // HEADER STYLES WITH SCROLL EFFECT
-  const headerStyles = {
+ const headerStyles = {
     position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: '#ffffffff',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
-    borderBottom: '1px solid rgba(255,255,255,0.1)',
-    boxShadow: '0 4px 20px rgba(102, 126, 234, 0.3)',
+    borderBottom: '1px solid rgba(0,0,0,0.1)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
     opacity: isHeaderVisible ? 1 : 0
-  };
+};
 
   // MAIN CONTENT PADDING FOR FIXED HEADER
   const mainStyles = {
@@ -411,7 +412,6 @@ function App() {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           overflow: hidden;
-          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
           cursor: pointer;
         }
 
@@ -538,28 +538,26 @@ function App() {
         }
 
         /* User Profile Styles */
-        .user-profile-button {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          padding: 0.5rem 1rem;
-          background: rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(10px);
-          color: white;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          text-decoration: none;
+       .user-profile-button {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: black;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
-        .user-profile-button:hover {
-          background: rgba(255, 255, 255, 0.25);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
+.user-profile-button:hover {
+  color: #1e40af; /* màu xanh đậm */
+  text-decoration: underline;
+}
         .user-avatar {
           width: 32px;
           height: 32px;
@@ -728,7 +726,7 @@ function App() {
 
       <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 text-gray-800">
         {/* HEADER WITH SCROLL EFFECT */}
-        <header style={headerStyles}>
+        <header style={headerStyles} class="header-dashboard">
           <div className="container mx-auto flex justify-between items-center p-4">
             {/* Logo */}
             <div className="flex items-center space-x-2">

@@ -105,7 +105,7 @@
 }
 
 /* ✅ FULL WIDTH - LOẠI BỎ VIỀN HAI BÊN */
-html, body {
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -113,7 +113,8 @@ html, body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(to bottom right, var(--gray-50), var(--gray-100));
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.6; 
+  
 }
 
 /* ✅ ROOT CONTAINER FULL WIDTH */
@@ -122,7 +123,7 @@ html, body {
   padding: 0;
   width: 100vw;
   min-height: 100vh;
-}
+} 
 
 a {
   text-decoration: none;
@@ -193,7 +194,11 @@ header.header-scrolled {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 8px 32px rgba(30, 64, 175, 0.4);
-}
+} 
+
+
+
+
 
 /* ✅ HEADER COMPACT MODE */
 header.header-compact {
@@ -273,11 +278,12 @@ header .text-3xl {
 /* Logo Title */
 header h4,
 header .text-2xl.font-extrabold {
-  color: var(--text-inverse) !important;
+  /* color: var(--text-inverse) !important; */
   font-size: 1.75rem;
   font-weight: 800;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  letter-spacing: -0.025em;
+  /* text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); */
+  letter-spacing: -0.025em; 
+  color: black;
   margin: 0;
 }
 
@@ -319,7 +325,7 @@ header nav a {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  /* text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); */
 }
 
 /* Shimmer Effect for Nav Links */
@@ -450,8 +456,9 @@ header .user-avatar::after {
 header .user-initials {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--text-inverse);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  /* color: var(--text-inverse); */ 
+  color: rgb(84, 115, 255); 
+ 
 }
 
 /* User Text Info */
