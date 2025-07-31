@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 
 const Home = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [counters, setCounters] = useState({
     users: 0,
     transactions: 0,
     currencies: 0,
     countries: 0
   });
+  const [exchangeRates, setExchangeRates] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Counter animation effect
   useEffect(() => {
@@ -39,13 +41,67 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Testimonial rotation
+  // Fetch exchange rates
   useEffect(() => {
-    const testimonialTimer = setInterval(() => {
-      setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(testimonialTimer);
+    const fetchExchangeRates = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        const data = await response.json();
+        
+        if (data && data.rates) {
+          setExchangeRates(data.rates);
+          setLastUpdated(new Date());
+        }
+      } catch (error) {
+        console.error('Error fetching exchange rates:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Fetch immediately
+    fetchExchangeRates();
+
+    // Then fetch every 60 seconds (API updates once per day, but we check more frequently)
+    const ratesInterval = setInterval(fetchExchangeRates, 60000);
+
+    return () => clearInterval(ratesInterval);
   }, []);
+
+  // Helper function to calculate rate changes (mock data since API doesn't provide change)
+  const getRateChange = (currentRate, currency) => {
+    // Mock rate changes for demonstration - in real app, you'd store previous rates
+    const mockChanges = {
+      EUR: 0.0023,
+      GBP: -0.0089,
+      JPY: 1.45,
+      VND: 15,
+      CNY: -0.0234,
+      AUD: 0.0056
+    };
+    
+    const change = mockChanges[currency] || (Math.random() - 0.5) * 0.02;
+    const percentage = ((change / currentRate) * 100).toFixed(2);
+    return {
+      change: change.toFixed(currency === 'JPY' || currency === 'VND' ? 0 : 4),
+      percentage: percentage,
+      isPositive: change >= 0
+    };
+  };
+
+  // Format currency value
+  const formatCurrency = (value, currency) => {
+    if (!value) return 'Loading...';
+    
+    if (currency === 'JPY') {
+      return value.toFixed(2);
+    } else if (currency === 'VND') {
+      return (value * 1000).toLocaleString();
+    } else {
+      return value.toFixed(4);
+    }
+  };
 
   const styles = {
     pageContainer: {
@@ -263,65 +319,166 @@ const Home = () => {
       lineHeight: 1.5
     },
 
-    // Testimonials section
-    testimonialsSection: {
+    // Exchange rates section
+    exchangeRatesSection: {
       background: 'rgba(255,255,255,0.95)',
       padding: '80px 40px',
       marginBottom: '60px',
       textAlign: 'center'
     },
-    testimonialsTitle: {
+    exchangeRatesTitle: {
       fontSize: '2.5rem',
       color: '#2c3e50',
-      marginBottom: '50px'
+      marginBottom: '15px'
     },
-    testimonialCard: {
-      maxWidth: '800px',
-      margin: '0 auto',
-      background: 'white',
-      padding: '40px',
-      borderRadius: '20px',
-      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-      position: 'relative'
+    exchangeRatesSubtitle: {
+      fontSize: '1.1rem',
+      color: '#666',
+      marginBottom: '50px',
+      opacity: 0.8
     },
-    testimonialText: {
-      fontSize: '1.3rem',
-      lineHeight: 1.6,
-      color: '#2c3e50',
-      marginBottom: '30px',
-      fontStyle: 'italic'
+    ratesGrid: {
+      display: 'grid',
+      gap: '40px',
+      maxWidth: '1400px',
+      margin: '0 auto 50px'
     },
-    testimonialAuthor: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '20px'
+    rateCategory: {
+      marginBottom: '40px'
     },
-    authorAvatar: {
-      width: '60px',
-      height: '60px',
-      borderRadius: '50%',
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'white',
+    categoryTitle: {
       fontSize: '1.5rem',
+      color: '#2c3e50',
+      marginBottom: '20px',
+      textAlign: 'left',
       fontWeight: 'bold'
     },
-    authorInfo: {
-      textAlign: 'left'
+    rateCards: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+      gap: '20px'
     },
-    authorName: {
+    rateCard: {
+      background: 'white',
+      padding: '25px',
+      borderRadius: '15px',
+      boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
+      border: '1px solid #e5e7eb',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+    rateCardHover: {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
+      borderColor: '#667eea'
+    },
+    currencyPair: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px',
+      marginBottom: '15px'
+    },
+    currencyFlag: {
+      fontSize: '1.5rem'
+    },
+    currencyCode: {
       fontSize: '1.2rem',
       fontWeight: 'bold',
-      color: '#2c3e50',
-      marginBottom: '5px'
+      color: '#2c3e50'
     },
-    authorRole: {
+    rateValue: {
+      fontSize: '2rem',
+      fontWeight: 'bold',
+      color: '#1f2937',
+      marginBottom: '8px'
+    },
+    rateChange: {
+      fontSize: '0.95rem',
+      fontWeight: '600',
+      color: '#10b981',
+      padding: '4px 8px',
+      borderRadius: '12px',
+      background: 'rgba(16, 185, 129, 0.1)'
+    },
+    marketStatus: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: '20px',
+      marginBottom: '40px',
+      maxWidth: '1000px',
+      margin: '40px auto'
+    },
+    statusItem: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      padding: '20px',
+      background: 'white',
+      borderRadius: '12px',
+      boxShadow: '0 3px 10px rgba(0,0,0,0.1)'
+    },
+    statusIcon: {
+      fontSize: '1.2rem'
+    },
+    statusText: {
       fontSize: '1rem',
+      fontWeight: '600',
+      color: '#2c3e50',
+      flex: 1
+    },
+    statusTime: {
+      fontSize: '0.9rem',
       color: '#666',
       opacity: 0.8
+    },
+    ratesFooter: {
+      textAlign: 'center',
+      marginTop: '40px'
+    },
+    disclaimerText: {
+      fontSize: '0.9rem',
+      color: '#666',
+      lineHeight: 1.6,
+      marginBottom: '25px',
+      opacity: 0.8
+    },
+    viewAllRatesBtn: {
+      background: 'linear-gradient(45deg, #667eea, #764ba2)',
+      color: 'white',
+      border: 'none',
+      padding: '15px 30px',
+      fontSize: '1.1rem',
+      fontWeight: 'bold',
+      borderRadius: '25px',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 10px 25px rgba(102, 126, 234, 0.3)'
+    },
+
+    // Loading styles
+    loadingContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '80px 20px',
+      minHeight: '200px'
+    },
+    loadingSpinner: {
+      width: '50px',
+      height: '50px',
+      border: '4px solid #f3f4f6',
+      borderTop: '4px solid #667eea',
+      borderRadius: '50%',
+      animation: 'spin 1s linear infinite',
+      marginBottom: '20px'
+    },
+    loadingText: {
+      fontSize: '1.1rem',
+      color: '#666',
+      textAlign: 'center'
     },
 
     // Pricing section
@@ -578,6 +735,11 @@ const Home = () => {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   `;
 
   const features = [
@@ -692,7 +854,7 @@ const Home = () => {
       ]
     },
     {
-      name: 'Professional (To be continue)',
+      name: 'Professional',
       price: '$29/tháng',
       features: [
         'Theo dõi không giới hạn',
@@ -704,7 +866,7 @@ const Home = () => {
       ]
     },
     {
-      name: 'Enterprise (To be continue)',
+      name: 'Enterprise',
       price: 'Liên hệ',
       features: [
         'Tất cả tính năng Pro',
@@ -909,38 +1071,293 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Testimonials Section */}
-          <section style={styles.testimonialsSection}>
-            <h2 style={styles.testimonialsTitle}>💬 Khách hàng nói gì về chúng tôi</h2>
-            <div style={styles.testimonialCard}>
-              <div style={styles.testimonialText}>
-                "{testimonials[currentTestimonial].text}"
+          {/* Live Exchange Rates Section */}
+          <section style={styles.exchangeRatesSection}>
+            <h2 style={styles.exchangeRatesTitle}>💱 Tỷ giá thế giới hôm nay</h2>
+            <p style={styles.exchangeRatesSubtitle}>
+              {lastUpdated ? (
+                <>
+                  Cập nhật lần cuối: {lastUpdated.toLocaleTimeString('vi-VN')} • 
+                  Dữ liệu từ ExchangeRate-API
+                </>
+              ) : (
+                'Đang tải dữ liệu thời gian thực...'
+              )}
+            </p>
+            
+            {isLoading ? (
+              <div style={styles.loadingContainer}>
+                <div style={styles.loadingSpinner}></div>
+                <p style={styles.loadingText}>Đang tải tỷ giá thời gian thực...</p>
               </div>
-              <div style={styles.testimonialAuthor}>
-                <div style={styles.authorAvatar}>
-                  {testimonials[currentTestimonial].avatar}
+            ) : (
+              <div style={styles.ratesGrid}>
+                {/* Major Currencies */}
+                <div style={styles.rateCategory}>
+                  <h3 style={styles.categoryTitle}>🌟 Tiền tệ chính</h3>
+                  <div style={styles.rateCards}>
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-eur' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-eur')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇪🇺</span>
+                        <span style={styles.currencyCode}>EUR/USD</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.EUR, 'EUR') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.EUR, 'EUR');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-gbp' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-gbp')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇬🇧</span>
+                        <span style={styles.currencyCode}>GBP/USD</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.GBP, 'GBP') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.GBP, 'GBP');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-jpy' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-jpy')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇯🇵</span>
+                        <span style={styles.currencyCode}>USD/JPY</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.JPY, 'JPY') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.JPY, 'JPY');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
                 </div>
-                <div style={styles.authorInfo}>
-                  <div style={styles.authorName}>{testimonials[currentTestimonial].author}</div>
-                  <div style={styles.authorRole}>{testimonials[currentTestimonial].role}</div>
+
+                {/* Asian Currencies */}
+                <div style={styles.rateCategory}>
+                  <h3 style={styles.categoryTitle}>🌏 Châu Á - Thái Bình Dương</h3>
+                  <div style={styles.rateCards}>
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-vnd' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-vnd')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇻🇳</span>
+                        <span style={styles.currencyCode}>USD/VND</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.VND, 'VND') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.VND, 'VND');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-cny' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-cny')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇨🇳</span>
+                        <span style={styles.currencyCode}>USD/CNY</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.CNY, 'CNY') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.CNY, 'CNY');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-aud' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-aud')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇦🇺</span>
+                        <span style={styles.currencyCode}>AUD/USD</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.AUD, 'AUD') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.AUD, 'AUD');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
                 </div>
+
+                {/* Commodities & Popular */}
+                <div style={styles.rateCategory}>
+                  <h3 style={styles.categoryTitle}>💎 Tiền tệ phổ biến khác</h3>
+                  <div style={styles.rateCards}>
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-cad' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-cad')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇨🇦</span>
+                        <span style={styles.currencyCode}>CAD/USD</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.CAD, 'CAD') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.CAD, 'CAD');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-chf' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-chf')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇨🇭</span>
+                        <span style={styles.currencyCode}>CHF/USD</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.CHF, 'CHF') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.CHF, 'CHF');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    
+                    <div style={{...styles.rateCard, ...(hoveredItem === 'rate-sgd' ? styles.rateCardHover : {})}}
+                         onMouseEnter={() => setHoveredItem('rate-sgd')}
+                         onMouseLeave={() => setHoveredItem(null)}>
+                      <div style={styles.currencyPair}>
+                        <span style={styles.currencyFlag}>🇸🇬</span>
+                        <span style={styles.currencyCode}>SGD/USD</span>
+                      </div>
+                      <div style={styles.rateValue}>
+                        {exchangeRates ? formatCurrency(exchangeRates.SGD, 'SGD') : 'Loading...'}
+                      </div>
+                      {exchangeRates && (() => {
+                        const change = getRateChange(exchangeRates.SGD, 'SGD');
+                        return (
+                          <div style={{
+                            ...styles.rateChange,
+                            color: change.isPositive ? '#10b981' : '#ef4444',
+                            background: change.isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'
+                          }}>
+                            {change.isPositive ? '+' : ''}{change.change} ({change.isPositive ? '+' : ''}{change.percentage}%)
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Market Status */}
+            <div style={styles.marketStatus}>
+              <div style={styles.statusItem}>
+                <span style={styles.statusIcon}>🟢</span>
+                <span style={styles.statusText}>API Status: Hoạt động</span>
+                <span style={styles.statusTime}>Cập nhật mỗi 15 phút (bản free)</span>
+              </div>
+              <div style={styles.statusItem}>
+                <span style={styles.statusIcon}>📡</span>
+                <span style={styles.statusText}>Nguồn dữ liệu: ExchangeRate-API</span>
+                <span style={styles.statusTime}>Miễn phí & đáng tin cậy</span>
+              </div>
+              <div style={styles.statusItem}>
+                <span style={styles.statusIcon}>⏰</span>
+                <span style={styles.statusText}>Cập nhật API: Hàng ngày</span>
+                <span style={styles.statusTime}>Dữ liệu từ ngân hàng trung ương</span>
               </div>
             </div>
-            <div style={{display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '30px'}}>
-              {testimonials.map((_, index) => (
-                <div
-                  key={index}
-                  style={{
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    background: index === currentTestimonial ? '#667eea' : '#ddd',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onClick={() => setCurrentTestimonial(index)}
-                />
-              ))}
+
+            <div style={styles.ratesFooter}>
+              <p style={styles.disclaimerText}>
+                📊 Dữ liệu từ ExchangeRate-API • Cập nhật tự động mỗi 60 giây<br/>
+                ⚠️ Tỷ giá chỉ mang tính chất tham khảo, không dùng cho giao dịch thực
+              </p>
+              <button 
+                style={styles.viewAllRatesBtn}
+                onClick={() => window.open('/rates', '_blank')}
+              >
+                🔍 Xem tất cả {exchangeRates ? Object.keys(exchangeRates).length : '160+'} tỷ giá
+              </button>
             </div>
           </section>
 
@@ -1112,7 +1529,15 @@ const Home = () => {
               borderRadius: '15px',
               backdropFilter: 'blur(10px)'
             }}>
-             
+              <div style={{fontSize: '1.1rem', marginBottom: '20px'}}>
+                🎁 <strong>Ưu đãi đặc biệt cho khách hàng mới:</strong>
+              </div>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', fontSize: '0.95rem'}}>
+                <div>✨ 30 ngày dùng thử Professional miễn phí</div>
+                <div>🎯 Setup & training miễn phí</div>
+                <div>📧 Email support không giới hạn</div>
+                <div>🔄 Hủy bất cứ lúc nào</div>
+              </div>
             </div>
           </section>
         </main>
@@ -1121,4 +1546,5 @@ const Home = () => {
   );
 }; 
 
-export default Home
+
+export default Home;

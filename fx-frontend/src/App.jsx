@@ -14,7 +14,8 @@ import AlertsPage from './pages/AlertsPage';
 import History from './pages/History'
 import Chart from './pages/Chart'; 
 import Rates from './pages/Rates'; 
-import SaveForm from './pages/SaveForm';
+import SaveForm from './pages/SaveForm'; 
+import Converter from './pages/Converter'
 
 // Components
 import CurrencyConverter from './components/CurrencyConverter';
@@ -807,7 +808,8 @@ function App() {
             <Route path="/historyRate" element={<History />} /> 
             <Route path="/chart" element={<Chart />} />  
             <Route path="/rates" element={<Rates />} />  
-            <Route path="/SaveForm" element={<SaveForm />} />
+            <Route path="/SaveForm" element={<SaveForm />} /> 
+            <Route path="/converter" element={<Converter />} />
           </Routes>
         </main>
 
