@@ -171,7 +171,7 @@ function App() {
   // ✅ SCROLL HEADER STATES
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState('up');
+  // const [scrollDirection, setScrollDirection] = useState('up');
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -187,11 +187,11 @@ function App() {
       } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
         // Cuộn xuống và đã cuộn quá 100px -> ẩn header
         setIsHeaderVisible(false);
-        setScrollDirection('down');
+        // setScrollDirection('down');
       } else if (currentScrollY < lastScrollY) {
         // Cuộn lên -> hiện header
         setIsHeaderVisible(true);
-        setScrollDirection('up');
+        // setScrollDirection('up');
       }
       
       setLastScrollY(currentScrollY);
