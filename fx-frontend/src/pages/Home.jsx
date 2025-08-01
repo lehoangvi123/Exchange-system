@@ -807,32 +807,7 @@ const Home = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      text: "FX Rate Dashboard đã thay đổi hoàn toàn cách chúng tôi quản lý rủi ro tỷ giá. Interface trực quan và dữ liệu real-time giúp chúng tôi đưa ra quyết định nhanh chóng và chính xác.",
-      author: "Nguyễn Văn Minh",
-      role: "CFO - Công ty TNHH ABC Import-Export",
-      avatar: "M"
-    },
-    {
-      text: "Là một trader chuyên nghiệp, tôi đã thử rất nhiều platform khác nhau. FX Rate Dashboard nổi bật với độ chính xác cao và các công cụ phân tích kỹ thuật mạnh mẽ.",
-      author: "Trần Thị Linh",
-      role: "Senior Forex Trader - VietCapital",
-      avatar: "L"
-    },
-    {
-      text: "API của FX Rate Dashboard rất dễ tích hợp và documentation chi tiết. Chúng tôi đã tích hợp thành công vào hệ thống ERP chỉ trong 2 tuần.",
-      author: "Lê Hoàng Nam",
-      role: "Lead Developer - TechViet Solutions",
-      avatar: "N"
-    },
-    {
-      text: "Dashboard này giúp chúng tôi tiết kiệm hàng giờ mỗi ngày trong việc thu thập và phân tích dữ liệu tỷ giá. ROI rất ấn tượng!",
-      author: "Phạm Thu Hằng",
-      role: "Head of Finance - Global Trade Corp",
-      avatar: "H"
-    }
-  ];
+  
 
   const steps = [
     { title: 'Đăng ký tài khoản', desc: 'Tạo tài khoản miễn phí chỉ trong 2 phút với email.' },
@@ -854,7 +829,7 @@ const Home = () => {
       ]
     },
     {
-      name: 'Professional',
+      name: 'Professional (to be countinue...)',
       price: '$29/tháng',
       features: [
         'Theo dõi không giới hạn',
@@ -866,7 +841,7 @@ const Home = () => {
       ]
     },
     {
-      name: 'Enterprise',
+      name: 'Enterprise (to be countinue...)',
       price: 'Liên hệ',
       features: [
         'Tất cả tính năng Pro',

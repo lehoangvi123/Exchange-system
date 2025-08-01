@@ -1,58 +1,33 @@
 // 📁 components/RateChart.jsx
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer
 } from 'recharts';
 
 export default function RateChart() {
   const [data, setData] = useState([]);
-  const [isActive, setIsActive] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(60); // 1 minute = 60 seconds
+  const [isRunning, setIsRunning] = useState(true);
   const intervalRef = useRef(null);
-  const countdownRef = useRef(null);
 
   useEffect(() => {
+    // Bắt đầu tự động khi component mount
+    startAutoTracking();
+    
     return () => {
       // Cleanup on unmount
       if (intervalRef.current) clearInterval(intervalRef.current);
-      if (countdownRef.current) clearInterval(countdownRef.current);
     };
   }, []);
 
-  const startTracking = () => {
-    setIsActive(true);
-    setData([]); // Reset data
-    setTimeRemaining(60); // Reset countdown to 1 minute
+  const startAutoTracking = () => {
+    setIsRunning(true);
     
     // Fetch ngay lập tức
     fetchRates();
     
-    // Fetch mỗi 1 giây (1000ms)
-    intervalRef.current = setInterval(fetchRates, 1000);
-    
-    // Countdown timer
-    countdownRef.current = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev <= 1) {
-          stopTracking();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const stopTracking = () => {
-    setIsActive(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    if (countdownRef.current) {
-      clearInterval(countdownRef.current);
-      countdownRef.current = null;
-    }
+    // Fetch mỗi 10 giây
+    intervalRef.current = setInterval(fetchRates, 10000);
   };
 
   const fetchRates = async () => {
@@ -74,8 +49,8 @@ export default function RateChart() {
         CNY: 7.2456
       };
 
-      // Tạo biến động random mạnh hơn để thấy rõ trên biểu đồ 1 giây
-      const strongVariation = () => (Math.random() - 0.5) * 0.01; // ±0.5% variation
+      // Tạo biến động random mạnh hơn để thấy rõ trên biểu đồ
+      const strongVariation = () => (Math.random() - 0.5) * 0.008; // ±0.4% variation
 
       const newPoint = {
         time,
@@ -96,23 +71,17 @@ export default function RateChart() {
 
       setData(prev => {
         const newData = [...prev, newPoint];
-        // Giữ tối đa 60 điểm (60 giây = 1 phút)
-        return newData.slice(-60);
+        // Giữ tối đa 100 điểm để có đủ dữ liệu hiển thị
+        return newData.slice(-100);
       });
 
       // Log ít hơn để tránh spam console
-      if (newPoint.timestamp % 5000 < 1000) { // Log mỗi 5 giây
+      if (newPoint.timestamp % 30000 < 10000) { // Log mỗi 30 giây
         console.log(`📊 Rates updated at ${time} - Points: ${data.length + 1}`);
       }
     } catch (err) {
       console.error('❌ Generate rate failed:', err);
     }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const styles = {
@@ -141,61 +110,29 @@ export default function RateChart() {
       color: '#1e293b',
       margin: 0
     },
-    controls: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '15px',
-      flexWrap: 'wrap'
-    },
-    button: {
-      padding: '12px 24px',
-      border: 'none',
-      borderRadius: '8px',
-      fontSize: '14px',
-      fontWeight: '600',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
-    },
-    startButton: {
-      backgroundColor: '#10b981',
-      color: 'white',
-      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-    },
-    stopButton: {
-      backgroundColor: '#ef4444',
-      color: 'white',
-      boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
-    },
-    disabledButton: {
-      backgroundColor: '#9ca3af',
-      color: 'white',
-      cursor: 'not-allowed'
-    },
-    timer: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      backgroundColor: '#f3f4f6',
-      padding: '8px 16px',
-      borderRadius: '8px',
-      fontSize: '14px',
-      fontWeight: '600',
-      color: '#374151'
-    },
     status: {
       display: 'flex',
       alignItems: 'center',
-      gap: '8px',
+      gap: '12px',
       fontSize: '14px',
-      fontWeight: '500'
-    },
-    activeStatus: {
+      fontWeight: '500',
       color: '#10b981'
     },
-    inactiveStatus: {
-      color: '#6b7280'
+    liveIndicator: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      backgroundColor: '#f0fdf4',
+      padding: '8px 16px',
+      borderRadius: '8px',
+      border: '1px solid #bbf7d0'
+    },
+    pulsingDot: {
+      width: '8px',
+      height: '8px',
+      borderRadius: '50%',
+      backgroundColor: '#10b981',
+      animation: 'pulse 2s infinite'
     },
     chartContainer: {
       height: '450px',
@@ -204,7 +141,7 @@ export default function RateChart() {
       padding: '20px',
       border: '1px solid #e5e7eb'
     },
-    noData: {
+    loadingState: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -221,165 +158,126 @@ export default function RateChart() {
       fontSize: '12px',
       color: '#6b7280',
       borderTop: '1px solid #e5e7eb',
-      paddingTop: '15px'
+      paddingTop: '15px',
+      flexWrap: 'wrap',
+      gap: '10px'
     }
   };
 
+  // CSS animation for pulsing dot
+  const pulseKeyframes = `
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  `;
+
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h3 style={styles.title}>⚡ Tỷ giá thời gian thực (1 phút)</h3>
-        
-        <div style={styles.controls}>
-          <div style={{...styles.status, ...(isActive ? styles.activeStatus : styles.inactiveStatus)}}>
-            <span style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              backgroundColor: isActive ? '#10b981' : '#6b7280',
-              display: 'inline-block'
-            }}></span>
-            {isActive ? 'Đang theo dõi' : 'Tạm dừng'}
+    <>
+      <style>{pulseKeyframes}</style>
+      <div style={styles.container}>
+        <div style={styles.header}>
+          <h3 style={styles.title}>⚡ Tỷ giá thời gian thực</h3>
+          
+          <div style={styles.liveIndicator}>
+            <div style={styles.pulsingDot}></div>
+            <span style={{color: '#059669', fontWeight: '600'}}>
+              🔴 LIVE • Cập nhật mỗi 10 giây
+            </span>
           </div>
-          
-          {isActive && (
-            <div style={styles.timer}>
-              ⏱️ {formatTime(timeRemaining)}
-            </div>
-          )}
-          
-          <button
-            onClick={startTracking}
-            disabled={isActive}
-            style={{
-              ...styles.button,
-              ...(isActive ? styles.disabledButton : styles.startButton)
-            }}
-          >
-            {isActive ? 'Đang chạy...' : '▶️ Bắt đầu'}
-          </button>
-          
-          <button
-            onClick={stopTracking}
-            disabled={!isActive}
-            style={{
-              ...styles.button,
-              ...(!isActive ? styles.disabledButton : styles.stopButton)
-            }}
-          >
-            ⏹️ Dừng
-          </button>
         </div>
-      </div>
 
-      <div style={styles.chartContainer}>
-        {data.length === 0 ? (
-          <div style={styles.noData}>
-            <div style={{fontSize: '48px', marginBottom: '16px'}}>📊</div>
-            <div>Nhấn "Bắt đầu" để theo dõi tỷ giá trong 1 phút</div>
-            <div style={{fontSize: '14px', marginTop: '8px', opacity: 0.7}}>
-              Dữ liệu sẽ được cập nhật mỗi 1 giây (60 điểm dữ liệu)
+        <div style={styles.chartContainer}>
+          {data.length === 0 ? (
+            <div style={styles.loadingState}>
+              <div style={{fontSize: '48px', marginBottom: '16px'}}>📊</div>
+              <div>Đang tải dữ liệu tỷ giá...</div>
+              <div style={{fontSize: '14px', marginTop: '8px', opacity: 0.7}}>
+                Biểu đồ sẽ hiển thị trong vài giây
+              </div>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                <XAxis 
+                  dataKey="time" 
+                  tick={{fontSize: 10}}
+                  interval={Math.max(1, Math.floor(data.length / 8))} // Show ~8 ticks max
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
+                <YAxis tick={{fontSize: 12}} />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }}
+                />
+                <Legend />
+                <CartesianGrid stroke="#e5e7eb" strokeDasharray="2 2" />
+
+                {/* EUR */}
+                <Line 
+                  dataKey="EUR" 
+                  stroke="#10b981" 
+                  name="EUR/USD" 
+                  dot={false} 
+                  strokeWidth={2}
+                  connectNulls={false}
+                />
+                <Line 
+                  dataKey="EUR_smooth" 
+                  stroke="#10b981" 
+                  strokeDasharray="5 5" 
+                  name="EUR Smoothed" 
+                  dot={false}
+                  strokeWidth={1}
+                  opacity={0.6}
+                />
+
+                {/* GBP */}
+                <Line 
+                  dataKey="GBP" 
+                  stroke="#3b82f6" 
+                  name="GBP/USD" 
+                  dot={false}
+                  strokeWidth={2}
+                />
+                <Line 
+                  dataKey="GBP_smooth" 
+                  stroke="#3b82f6" 
+                  strokeDasharray="5 5" 
+                  name="GBP Smoothed" 
+                  dot={false}
+                  strokeWidth={1}
+                  opacity={0.6}
+                />
+
+                {/* JPY - Ẩn để tránh scale khác biệt quá lớn */}
+                {/* Có thể thêm toggle để hiển thị JPY trên chart riêng */}
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+
+        {data.length > 0 && (
+          <div style={styles.dataInfo}>
+            <div>
+              📊 Điểm dữ liệu: {data.length}/100 • 
+              Bắt đầu: {data[0]?.time} • 
+              Mới nhất: {data[data.length - 1]?.time}
+            </div>
+            <div>
+              🌐 Nguồn: Mock Data • 
+              Base: USD • 
+              Biến động: ±0.4%
             </div>
           </div>
-        ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-              <XAxis 
-                dataKey="time" 
-                tick={{fontSize: 10}}
-                interval={Math.max(1, Math.floor(data.length / 10))} // Show ~10 ticks max
-                angle={-45}
-                textAnchor="end"
-                height={60}
-              />
-              <YAxis tick={{fontSize: 12}} />
-              <Tooltip 
-                contentStyle={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                }}
-              />
-              <Legend />
-              <CartesianGrid stroke="#e5e7eb" strokeDasharray="2 2" />
-
-              {/* EUR */}
-              <Line 
-                dataKey="EUR" 
-                stroke="#10b981" 
-                name="EUR Raw" 
-                dot={{r: 3}} 
-                strokeWidth={2}
-                connectNulls={false}
-              />
-              <Line 
-                dataKey="EUR_smooth" 
-                stroke="#10b981" 
-                strokeDasharray="5 5" 
-                name="EUR Smoothed" 
-                dot={false}
-                strokeWidth={1}
-                opacity={0.7}
-              />
-
-              {/* JPY - Scale khác nên dùng separate Y-axis */}
-              <Line 
-                dataKey="JPY" 
-                stroke="#f59e0b" 
-                name="JPY Raw" 
-                dot={{r: 3}}
-                strokeWidth={2}
-                yAxisId="jpy"
-              />
-              <Line 
-                dataKey="JPY_smooth" 
-                stroke="#f59e0b" 
-                strokeDasharray="5 5" 
-                name="JPY Smoothed" 
-                dot={false}
-                strokeWidth={1}
-                opacity={0.7}
-                yAxisId="jpy"
-              />
-
-              {/* GBP */}
-              <Line 
-                dataKey="GBP" 
-                stroke="#3b82f6" 
-                name="GBP Raw" 
-                dot={{r: 3}}
-                strokeWidth={2}
-              />
-              <Line 
-                dataKey="GBP_smooth" 
-                stroke="#3b82f6" 
-                strokeDasharray="5 5" 
-                name="GBP Smoothed" 
-                dot={false}
-                strokeWidth={1}
-                opacity={0.7}
-              />
-            </LineChart>
-          </ResponsiveContainer>
         )}
       </div>
-
-      {data.length > 0 && (
-        <div style={styles.dataInfo}>
-          <div>
-            📊 Điểm dữ liệu: {data.length}/30 • 
-            Cập nhật mỗi 2 phút • 
-            Bắt đầu: {data[0]?.time} • 
-            Mới nhất: {data[data.length - 1]?.time}
-          </div>
-          <div>
-            🌐 Nguồn: ExchangeRate-API • 
-            Base: USD • 
-            Biến động: ±0.05%
-          </div>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
