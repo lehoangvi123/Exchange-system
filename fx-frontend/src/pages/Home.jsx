@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import  CurrencyConverter  from './CurrencyConverterHome'
+// import Home, { CurrencyConverter } from './Home';
+// Currency Converter Component
 
 const Home = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -7,11 +10,34 @@ const Home = () => {
     transactions: 0,
     currencies: 0,
     countries: 0
-  });
+  }); 
+
+  // code of converter 
   const [exchangeRates, setExchangeRates] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+ 
 
+  // Popular currencies for quick access
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
   // Counter animation effect
   useEffect(() => {
     const targets = {
@@ -908,38 +934,16 @@ const Home = () => {
             </div>
           </section>
 
-          {/* Statistics Section */}
-          <section style={styles.statsSection}>
-            <h2 style={{fontSize: '2.5rem', color: '#2c3e50', marginBottom: '50px'}}>
-              📊 Được tin tưởng bởi hàng nghìn doanh nghiệp
-            </h2>
-            <div style={styles.statsGrid}>
-              <div style={{...styles.statCard, ...(hoveredItem === 'stat-users' ? {transform: 'translateY(-10px)', animation: 'pulse 1s infinite'} : {})}}
-                   onMouseEnter={() => setHoveredItem('stat-users')}
-                   onMouseLeave={() => setHoveredItem(null)}>
-                <span style={styles.statNumber}>{counters.users.toLocaleString()}+</span>
-                <span style={styles.statLabel}>Người dùng hoạt động</span>
-              </div>
-              <div style={{...styles.statCard, ...(hoveredItem === 'stat-transactions' ? {transform: 'translateY(-10px)', animation: 'pulse 1s infinite'} : {})}}
-                   onMouseEnter={() => setHoveredItem('stat-transactions')}
-                   onMouseLeave={() => setHoveredItem(null)}>
-                <span style={styles.statNumber}>{counters.transactions.toLocaleString()}+</span>
-                <span style={styles.statLabel}>Giao dịch xử lý</span>
-              </div>
-              <div style={{...styles.statCard, ...(hoveredItem === 'stat-currencies' ? {transform: 'translateY(-10px)', animation: 'pulse 1s infinite'} : {})}}
-                   onMouseEnter={() => setHoveredItem('stat-currencies')}
-                   onMouseLeave={() => setHoveredItem(null)}>
-                <span style={styles.statNumber}>{counters.currencies}+</span>
-                <span style={styles.statLabel}>Loại tiền tệ</span>
-              </div>
-              <div style={{...styles.statCard, ...(hoveredItem === 'stat-countries' ? {transform: 'translateY(-10px)', animation: 'pulse 1s infinite'} : {})}}
-                   onMouseEnter={() => setHoveredItem('stat-countries')}
-                   onMouseLeave={() => setHoveredItem(null)}>
-                <span style={styles.statNumber}>{counters.countries}+</span>
-                <span style={styles.statLabel}>Quốc gia hỗ trợ</span>
-              </div>
-            </div>
-          </section>
+          {/* Lồng đoạn quy đổi tiền tệ vô trong đây*/}
+         {/* Currency converter add in this blank */}
+        <section style={styles.converterSection}>
+          <div class="Section_converter">
+          <CurrencyConverter /> 
+          </div>
+        </section>
+
+
+
 
           {/* Technology Section */}
           <section style={styles.techSection}>
@@ -1523,3 +1527,4 @@ const Home = () => {
 
 
 export default Home;
+export { CurrencyConverter };

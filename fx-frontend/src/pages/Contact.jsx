@@ -32,7 +32,8 @@ function Contact() {
       <input
         type="text"
         name="name"
-        placeholder="Your Name"
+        placeholder="Your Name" 
+        class="Yourname"
         value={form.name}
         onChange={handleChange}
         required
@@ -41,13 +42,15 @@ function Contact() {
         type="email"
         name="email"
         placeholder="Your Email"
+        class="YourEmail"
         value={form.email}
         onChange={handleChange}
         required
       />
       <textarea
         name="message"
-        placeholder="Your Message"
+        placeholder="Your Message" 
+        class="YourMessage"
         value={form.message}
         onChange={handleChange}
         required

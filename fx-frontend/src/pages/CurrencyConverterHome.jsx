@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+// Currency Converter Component
 function CurrencyConverter() {
   const [from, setFrom] = useState('USD');
   const [to, setTo] = useState('VND');
@@ -283,9 +284,9 @@ function CurrencyConverter() {
     const selectedCurrency = allCurrencies.find(c => c.code === value);
     
     return (
-      <div style={styles.selectWithSearch} className="currency-selector">
+      <div style={converterStyles.selectWithSearch} className="currency-selector">
         <div 
-          style={styles.select}
+          style={converterStyles.select}
           onClick={() => setShowDropdown(!showDropdown)}
         >
           {selectedCurrency && (
@@ -297,18 +298,18 @@ function CurrencyConverter() {
         </div>
         
         {showDropdown && (
-          <div style={styles.optionsList}>
+          <div style={converterStyles.optionsList}>
             <input
               type="text"
               placeholder={`Search ${placeholder}...`}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={styles.searchInput}
+              style={converterStyles.searchInput}
               autoFocus
             />
             
             {search === '' && (
-              <div style={styles.popularSection}>
+              <div style={converterStyles.popularSection}>
                 🌟 Popular Currencies
               </div>
             )}
@@ -320,8 +321,8 @@ function CurrencyConverter() {
               <div
                 key={currency.code}
                 style={{
-                  ...styles.option,
-                  ...(currency.code === value ? styles.optionSelected : {})
+                  ...converterStyles.option,
+                  ...(currency.code === value ? converterStyles.optionSelected : {})
                 }}
                 onClick={() => {
                   onChange(currency.code);
@@ -331,12 +332,12 @@ function CurrencyConverter() {
                 }}
                 onMouseEnter={(e) => {
                   if (currency.code !== value) {
-                    Object.assign(e.target.style, styles.optionHover);
+                    Object.assign(e.target.style, converterStyles.optionHover);
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (currency.code !== value) {
-                    Object.assign(e.target.style, styles.option);
+                    Object.assign(e.target.style, converterStyles.option);
                   }
                 }}
               >
@@ -346,7 +347,7 @@ function CurrencyConverter() {
             ))}
             
             {filteredCurrencies.length === 0 && search !== '' && (
-              <div style={{...styles.option, color: '#9ca3af', cursor: 'default'}}>
+              <div style={{...converterStyles.option, color: '#9ca3af', cursor: 'default'}}>
                 No currencies found
               </div>
             )}
@@ -356,7 +357,7 @@ function CurrencyConverter() {
     );
   };
 
-  const styles = {
+  const converterStyles = {
     container: {
       maxWidth: '500px',
       margin: '0 auto',
@@ -596,18 +597,18 @@ function CurrencyConverter() {
   return (
     <>
       <style>{keyframes}</style>
-      <div style={styles.container}>
-        <h2 style={styles.title}>💱 Currency Converter</h2>
+      <div style={converterStyles.container}>
+        <h2 style={converterStyles.title}>💱 Currency Converter</h2>
         
         {lastUpdated && (
-          <p style={styles.lastUpdated}>
+          <p style={converterStyles.lastUpdated}>
             Last updated: {lastUpdated.toLocaleTimeString('vi-VN')}
           </p>
         )}
 
         {/* From Currency */}
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>From:</label>
+        <div style={converterStyles.inputGroup}>
+          <label style={converterStyles.label}>From:</label>
           <CurrencySelector
             value={from}
             onChange={setFrom}
@@ -622,21 +623,21 @@ function CurrencyConverter() {
 
         {/* Swap Button */}
         <div
-          style={styles.swapButton}
+          style={converterStyles.swapButton}
           onClick={swapCurrencies}
           onMouseEnter={(e) => {
-            Object.assign(e.target.style, styles.swapButtonHover);
+            Object.assign(e.target.style, converterStyles.swapButtonHover);
           }}
           onMouseLeave={(e) => {
-            Object.assign(e.target.style, styles.swapButton);
+            Object.assign(e.target.style, converterStyles.swapButton);
           }}
         >
           🔄
         </div>
 
         {/* To Currency */}
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>To:</label>
+        <div style={converterStyles.inputGroup}>
+          <label style={converterStyles.label}>To:</label>
           <CurrencySelector
             value={to}
             onChange={setTo}
@@ -650,18 +651,18 @@ function CurrencyConverter() {
         </div>
 
         {/* Amount Input */}
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Amount:</label>
+        <div style={converterStyles.inputGroup}>
+          <label style={converterStyles.label}>Amount:</label>
           
           {/* Quick Amount Buttons */}
-          <div style={styles.quickAmounts}>
+          <div style={converterStyles.quickAmounts}>
             {[1, 10, 100, 1000, 10000].map(value => (
               <button
                 key={value}
                 onClick={() => handleQuickAmount(value)}
                 style={{
-                  ...styles.quickAmountBtn,
-                  ...(amount == value ? styles.quickAmountBtnActive : {})
+                  ...converterStyles.quickAmountBtn,
+                  ...(amount == value ? converterStyles.quickAmountBtnActive : {})
                 }}
               >
                 {value.toLocaleString()}
@@ -673,9 +674,9 @@ function CurrencyConverter() {
             type="number"
             value={amount}
             onChange={(e) => {setAmount(e.target.value); setConvertedAmount(null);}}
-            style={styles.input}
-            onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
-            onBlur={(e) => Object.assign(e.target.style, styles.input)}
+            style={converterStyles.input}
+            onFocus={(e) => Object.assign(e.target.style, converterStyles.inputFocus)}
+            onBlur={(e) => Object.assign(e.target.style, converterStyles.input)}
             placeholder="Enter amount"
             min="0"
             step="any"
@@ -687,21 +688,21 @@ function CurrencyConverter() {
           onClick={handleConvert}
           disabled={isLoading || !exchangeRates || !amount}
           style={{
-            ...styles.convertButton,
-            ...(isLoading || !exchangeRates || !amount ? styles.convertButtonDisabled : {})
+            ...converterStyles.convertButton,
+            ...(isLoading || !exchangeRates || !amount ? converterStyles.convertButtonDisabled : {})
           }}
           onMouseEnter={(e) => {
             if (!isLoading && exchangeRates && amount) {
-              Object.assign(e.target.style, {...styles.convertButton, ...styles.convertButtonHover});
+              Object.assign(e.target.style, {...converterStyles.convertButton, ...converterStyles.convertButtonHover});
             }
           }}
           onMouseLeave={(e) => {
-            Object.assign(e.target.style, styles.convertButton);
+            Object.assign(e.target.style, converterStyles.convertButton);
           }}
         >
           {isLoading ? (
             <>
-              <span style={styles.loadingSpinner}></span>
+              <span style={converterStyles.loadingSpinner}></span>
               <span style={{marginLeft: '10px'}}>Converting...</span>
             </>
           ) : (
@@ -711,15 +712,15 @@ function CurrencyConverter() {
 
         {/* Error Message */}
         {error && (
-          <div style={styles.error}>
+          <div style={converterStyles.error}>
             ❌ {error}
           </div>
         )}
 
         {/* Result */}
         {convertedAmount && (
-          <div style={styles.result}>
-            <div style={styles.resultAmount}>
+          <div style={converterStyles.result}>
+            <div style={converterStyles.resultAmount}>
               {convertedAmount.amount.toLocaleString()} {convertedAmount.from} = 
               <br />
               <strong>{convertedAmount.result.toLocaleString(undefined, {
@@ -727,28 +728,459 @@ function CurrencyConverter() {
                 maximumFractionDigits: 6
               })} {convertedAmount.to}</strong>
             </div>
-            <div style={styles.resultRate}>
+            <div style={converterStyles.resultRate}>
               1 {convertedAmount.from} = {convertedAmount.rate.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 6
               })} {convertedAmount.to}
             </div>
-            <div style={styles.resultTime}>
+            <div style={converterStyles.resultTime}>
               💡 Converted at {new Date().toLocaleTimeString('vi-VN')}
             </div>
           </div>
         )}
 
         {/* Footer Info */}
-        <div style={{marginTop: '20px', fontSize: '12px', color: '#9ca3af', textAlign: 'center'}}>
-          📊 Rates from ExchangeRate-API • Updates every 5 minutes<br/>
-          🌍 Supporting {allCurrencies.length} currencies worldwide<br/>
-          ⚠️ For reference only, not for trading
-        </div>
+        
       </div>
     </>
   );
 }
 
-export default CurrencyConverter; 
-export { CurrencyConverter }; // Add this line
+// Main Dashboard Component
+function FXRateDashboard() {
+  const [hoveredItem, setHoveredItem] = useState(null);
+
+  const features = [
+    {
+      icon: '📊',
+      title: 'Theo dõi Real-time',
+      description: 'Cập nhật tỷ giá liên tục từ hơn 150 ngân hàng và sàn giao dịch'
+    },
+    {
+      icon: '📈',
+      title: 'Phân tích kỹ thuật',
+      description: 'Biểu đồ chuyên nghiệp với hơn 50 chỉ báo kỹ thuật'
+    },
+    {
+      icon: '🔔',
+      title: 'Cảnh báo thông minh',
+      description: 'Thông báo tức thời khi tỷ giá đạt ngưỡng mong muốn'
+    },
+    {
+      icon: '💼',
+      title: 'Quản lý danh mục',
+      description: 'Theo dõi và phân tích hiệu suất đầu tư ngoại tệ'
+    },
+    {
+      icon: '🌐',
+      title: 'API mạnh mẽ',
+      description: 'Tích hợp dễ dàng với hệ thống của bạn qua REST API'
+    },
+    {
+      icon: '🛡️',
+      title: 'Bảo mật cao',
+      description: 'Mã hóa end-to-end và tuân thủ các tiêu chuẩn bảo mật quốc tế'
+    }
+  ];
+
+  const stats = [
+    { number: '2M+', label: 'Người dùng tin tưởng' },
+    { number: '168', label: 'Loại tiền tệ' },
+    { number: '99.9%', label: 'Uptime đảm bảo' },
+    { number: '24/7', label: 'Hỗ trợ khách hàng' }
+  ];
+
+  const technologies = [
+    {
+      icon: '⚡',
+      name: 'React 18',
+      description: 'Giao diện người dùng hiện đại với hiệu suất cao'
+    },
+    {
+      icon: '🚀',
+      name: 'Node.js',
+      description: 'Backend mạnh mẽ xử lý hàng triệu giao dịch'
+    },
+    {
+      icon: '🔥',
+      name: 'Redis Cache',
+      description: 'Tốc độ truy xuất dữ liệu siêu nhanh'
+    },
+    {
+      icon: '☁️',
+      name: 'AWS Cloud',
+      description: 'Hạ tầng đám mây đáng tin cậy toàn cầu'
+    }
+  ];
+
+  const styles = {
+    container: {
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+    },
+    
+    // Header styles
+    header: {
+      padding: '20px 0',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(10px)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+      position: 'sticky',
+      top: 0,
+      zIndex: 100
+    },
+    nav: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '0 20px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    logo: {
+      fontSize: '24px',
+      fontWeight: '800',
+      color: 'white',
+      textDecoration: 'none'
+    },
+    navLinks: {
+      display: 'flex',
+      gap: '30px',
+      alignItems: 'center'
+    },
+    navLink: {
+      color: 'rgba(255, 255, 255, 0.9)',
+      textDecoration: 'none',
+      fontWeight: '500',
+      transition: 'all 0.3s ease',
+      padding: '8px 16px',
+      borderRadius: '20px'
+    },
+    navLinkHover: {
+      color: 'white',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)'
+    },
+    loginButton: {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      color: 'white',
+      padding: '10px 20px',
+      borderRadius: '25px',
+      textDecoration: 'none',
+      fontWeight: '600',
+      transition: 'all 0.3s ease',
+      border: '1px solid rgba(255, 255, 255, 0.3)'
+    },
+    loginButtonHover: {
+      backgroundColor: 'white',
+      color: '#667eea'
+    },
+
+    // Main content styles
+    mainContent: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '0 20px'
+    },
+
+    // Hero section styles
+    heroSection: {
+      textAlign: 'center',
+      padding: '80px 0',
+      color: 'white'
+    },
+    heroTitle: {
+      fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+      fontWeight: '800',
+      marginBottom: '20px',
+      lineHeight: '1.2'
+    },
+    heroIcon: {
+      fontSize: '4rem',
+      display: 'block',
+      marginBottom: '20px'
+    },
+    heroSubtitle: {
+      fontSize: 'clamp(1.1rem, 2vw, 1.3rem)',
+      lineHeight: '1.6',
+      marginBottom: '40px',
+      opacity: '0.95',
+      maxWidth: '700px',
+      margin: '0 auto 40px'
+    },
+    heroButtons: {
+      display: 'flex',
+      gap: '20px',
+      justifyContent: 'center',
+      flexWrap: 'wrap'
+    },
+    primaryButton: {
+      backgroundColor: 'white',
+      color: '#667eea',
+      padding: '15px 30px',
+      borderRadius: '30px',
+      textDecoration: 'none',
+      fontWeight: '700',
+      fontSize: '16px',
+      transition: 'all 0.3s ease',
+      boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)'
+    },
+    primaryButtonHover: {
+      transform: 'translateY(-3px)',
+      boxShadow: '0 12px 35px rgba(0, 0, 0, 0.3)'
+    },
+    secondaryButton: {
+      backgroundColor: 'transparent',
+      color: 'white',
+      padding: '15px 30px',
+      borderRadius: '30px',
+      textDecoration: 'none',
+      fontWeight: '600',
+      fontSize: '16px',
+      border: '2px solid rgba(255, 255, 255, 0.3)',
+      transition: 'all 0.3s ease'
+    },
+    secondaryButtonHover: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderColor: 'white'
+    },
+
+    // Currency converter section - added styling for integration
+    converterSection: {
+      margin: '60px 0',
+      padding: '40px 0',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: '20px',
+      backdropFilter: 'blur(10px)'
+    },
+    
+    // Currency converter introduction styles
+    converterIntro: {
+      textAlign: 'center',
+      marginBottom: '40px',
+      color: 'white'
+    },
+    converterIntroTitle: {
+      fontSize: '2rem',
+      fontWeight: '700',
+      marginBottom: '15px',
+      color: 'white'
+    },
+    converterIntroText: {
+      fontSize: '1.1rem',
+      lineHeight: '1.6',
+      marginBottom: '25px',
+      color: 'rgba(255, 255, 255, 0.9)',
+      maxWidth: '700px',
+      margin: '0 auto 25px'
+    },
+    converterFeatures: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '20px',
+      flexWrap: 'wrap',
+      marginBottom: '30px'
+    },
+    converterFeature: {
+      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      padding: '8px 16px',
+      borderRadius: '20px',
+      fontSize: '0.9rem',
+      fontWeight: '500',
+      color: 'white',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      backdropFilter: 'blur(5px)'
+    },
+
+    // Features section styles
+    featuresSection: {
+      padding: '80px 0',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: '30px',
+      margin: '40px 0',
+      backdropFilter: 'blur(10px)'
+    },
+    featuresTitle: {
+      fontSize: '2.5rem',
+      fontWeight: '700',
+      textAlign: 'center',
+      marginBottom: '20px',
+      color: 'white'
+    },
+    featuresSubtitle: {
+      fontSize: '1.2rem',
+      textAlign: 'center',
+      marginBottom: '50px',
+      color: 'rgba(255, 255, 255, 0.9)',
+      maxWidth: '600px',
+      margin: '0 auto 50px'
+    },
+    featuresGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+      gap: '30px',
+      padding: '0 20px'
+    },
+    featureCard: {
+      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      padding: '30px',
+      borderRadius: '20px',
+      textAlign: 'center',
+      transition: 'all 0.3s ease',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      backdropFilter: 'blur(5px)'
+    },
+    featureCardHover: {
+      transform: 'translateY(-10px)',
+      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
+    },
+    featureIcon: {
+      fontSize: '3rem',
+      marginBottom: '20px',
+      display: 'block'
+    },
+    featureTitle: {
+      fontSize: '1.3rem',
+      fontWeight: '700',
+      marginBottom: '15px',
+      color: 'white'
+    },
+    featureDescription: {
+      color: 'rgba(255, 255, 255, 0.9)',
+      lineHeight: '1.6'
+    },
+
+    // Stats section styles
+    statsSection: {
+      padding: '60px 0',
+      textAlign: 'center'
+    },
+    statsGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '40px',
+      marginTop: '40px'
+    },
+    statCard: {
+      color: 'white'
+    },
+    statNumber: {
+      fontSize: '3rem',
+      fontWeight: '800',
+      marginBottom: '10px',
+      background: 'linear-gradient(45deg, #fff, #f0f8ff)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
+    },
+    statLabel: {
+      fontSize: '1.1rem',
+      opacity: '0.9'
+    },
+
+    // Technology section styles
+    techSection: {
+      padding: '80px 0',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderRadius: '30px',
+      margin: '40px 0',
+      backdropFilter: 'blur(10px)'
+    },
+    techTitle: {
+      fontSize: '2.5rem',
+      fontWeight: '700',
+      textAlign: 'center',
+      marginBottom: '20px',
+      color: 'white'
+    },
+    techSubtitle: {
+      fontSize: '1.2rem',
+      textAlign: 'center',
+      marginBottom: '50px',
+      color: 'rgba(255, 255, 255, 0.9)',
+      maxWidth: '600px',
+      margin: '0 auto 50px'
+    },
+    techGrid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+      gap: '25px',
+      padding: '0 20px'
+    },
+    techCard: {
+      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      padding: '25px',
+      borderRadius: '15px',
+      textAlign: 'center',
+      transition: 'all 0.3s ease',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      backdropFilter: 'blur(5px)'
+    },
+    techIcon: {
+      fontSize: '2.5rem',
+      marginBottom: '15px',
+      display: 'block'
+    },
+    techName: {
+      fontSize: '1.2rem',
+      fontWeight: '700',
+      marginBottom: '10px',
+      color: 'white'
+    },
+    techDesc: {
+      color: 'rgba(255, 255, 255, 0.9)',
+      fontSize: '0.95rem',
+      lineHeight: '1.5'
+    },
+
+    // Footer styles
+    footer: {
+      padding: '60px 0 30px',
+      textAlign: 'center',
+      borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+      marginTop: '80px'
+    },
+    footerContent: {
+      color: 'rgba(255, 255, 255, 0.8)',
+      fontSize: '0.95rem',
+      lineHeight: '1.6'
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      {/* Header */}
+   
+      {/* Main Content */}
+      <main style={styles.mainContent}>
+        {/* Hero Section */}
+    
+
+        {/* Currency Converter Section */}
+        <section style={styles.converterSection}>
+          <div style={styles.converterIntro}>
+            <h3 style={styles.converterIntroTitle}>🎯 Trải nghiệm ngay công cụ quy đổi tiền tệ</h3>
+            <p style={styles.converterIntroText}>
+              Khám phá tính năng chuyển đổi tiền tệ thời gian thực với <strong>168 loại tiền tệ</strong> từ khắp thế giới. 
+              Dữ liệu được cập nhật liên tục từ các nguồn đáng tin cậy, đảm bảo độ chính xác cao cho mọi giao dịch của bạn.
+            </p>
+          </div>
+          <CurrencyConverter />
+        </section>
+
+   
+
+        
+      </main>
+
+     
+      
+    </div>
+  );
+}
+
+// Export the main component as default and CurrencyConverter as named export
+export default FXRateDashboard;
+export { CurrencyConverter };

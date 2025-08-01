@@ -442,29 +442,8 @@ header .user-button:hover .user-avatar {
 }
 
 /* Online Status Indicator */
-header .user-avatar::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 0.75rem;
-  height: 0.75rem;
-  background: var(--success);
-  border-radius: 50%;
-  border: 2px solid var(--white);
-  animation: pulse 2s infinite;
-}
 
-@keyframes pulse {
-  0%, 100% { 
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% { 
-    opacity: 0.8;
-    transform: scale(1.1);
-  }
-}
+
 
 /* User Initials */
 header .user-initials {
@@ -1501,4 +1480,8 @@ header .user-button:focus {
 
 main.container.mx-auto.flex-1.p-6{ 
     padding: 0;
+} 
+
+.section_converter{ 
+  margin-bottom: 100px;
 }

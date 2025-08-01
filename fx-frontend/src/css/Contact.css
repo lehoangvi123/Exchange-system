@@ -54,3 +54,7 @@
 .contact-form button:hover {
   background-color: #2b6cb0;
 }
+
+input { 
+  margin-bottom: 20px;
+}
