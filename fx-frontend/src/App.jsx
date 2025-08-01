@@ -395,7 +395,12 @@ function App() {
           border-radius: 16px;
           border: 1px solid rgba(255, 255, 255, 0.15);
           padding: 0.5rem;
-        }
+        } 
+
+        /* Trong CSS */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
 
         .nav-item {
           position: relative;

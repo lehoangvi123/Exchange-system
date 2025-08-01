@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import  CurrencyConverter  from './CurrencyConverterHome'
 // import Home, { CurrencyConverter } from './Home';
 // Currency Converter Component
-
+import '../css/Home.css'
 const Home = () => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [counters, setCounters] = useState({
@@ -683,7 +683,9 @@ const Home = () => {
       fontSize: '1.2rem',
       marginBottom: '40px',
       opacity: 0.9
-    },
+    }, 
+
+    
     ctaButton: {
       background: 'white',
       color: '#2c3e50',
