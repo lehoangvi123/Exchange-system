@@ -1497,4 +1497,8 @@ header .user-button:focus {
   outline: 2px solid blue !important;
   background: rgba(0, 0, 255, 0.1) !important;
 }
-*/
+*/ 
+
+main.container.mx-auto.flex-1.p-6{ 
+    padding: 0;
+}
