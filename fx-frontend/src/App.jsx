@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
+import { ThemeProvider } from './contexts/themeContexts';
+import { BrowserRouter  } from 'react-router-dom';
 
 // Pages 
 import Home from './pages/Home'
@@ -764,6 +766,7 @@ function App() {
 
         {/* MAIN WITH PROPER PADDING */} 
         <main className="container mx-auto flex-1 p-6" style={mainStyles}>
+          <ThemeProvider>
           <Routes>
             <Route path="/" element={
               rate && Object.keys(rate).length > 0 ? (
@@ -810,7 +813,8 @@ function App() {
             <Route path="/rates" element={<Rates />} />  
             <Route path="/SaveForm" element={<SaveForm />} /> 
             <Route path="/converter" element={<Converter />} />
-          </Routes>
+          </Routes> 
+          </ThemeProvider>
         </main>
 
         {/* SCROLL TO TOP BUTTON */}
