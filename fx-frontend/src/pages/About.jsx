@@ -11,7 +11,7 @@ function About() {
         </p>
         <p>
           Whether you're a traveler planning your next trip, an entrepreneur managing international payments, or simply someone who wants to stay informed — FX Rate Dashboard delivers accurate, live data when it matters most.
-        </p>
+        </p> 
       </section>
 
       <section className="about-section section-purple">
