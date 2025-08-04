@@ -36,6 +36,7 @@ import Profile from './pages/Profile';
 import Terms from './pages/Terms'; 
 import Disclaimer from './pages/Disclamer'; 
 
+import './css/theme.css'
 import './App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
@@ -807,6 +808,7 @@ body {
             <Route path="/rates" element={<Rates />} />  
             <Route path="/SaveForm" element={<SaveForm />} /> 
             <Route path="/converter" element={<Converter />} />
+            
           </Routes> 
           </ThemeProvider>
         </main>

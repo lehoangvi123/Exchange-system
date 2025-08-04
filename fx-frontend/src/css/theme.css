@@ -1,285 +1,41 @@
-/* 1. Tạo file global CSS variables - styles/themes.css */
-
-:root {
-  /* Light Theme Colors */
+/* Light Theme */
+.light-theme {
   --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #2c3e50;
-  --text-secondary: #6c757d;
-  --text-muted: #868e96;
-  --border-color: #dee2e6;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-secondary: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --glass-bg: rgba(255, 255, 255, 0.1);
+  --bg-secondary: #f8fafc;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --card-bg: #ffffff;
+  --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Dark Theme Colors */
-[data-theme="dark"] {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #404040;
-  --text-primary: #ffffff;
-  --text-secondary: #b8b8b8;
-  --text-muted: #888888;
-  --border-color: #404040;
-  --shadow: rgba(0, 0, 0, 0.3);
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-secondary: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  --card-bg: rgba(45, 45, 45, 0.95);
-  --glass-bg: rgba(0, 0, 0, 0.3);
+/* Dark Theme */
+.dark-theme {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border-color: #334155;
+  --card-bg: #1e293b;
+  --gradient: linear-gradient(135deg, #4c1d95 0%, #581c87 100%);
 }
 
-/* 2. Base styles sử dụng CSS variables */
-* {
-  box-sizing: border-box;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
+/* Apply theme variables */
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
   margin: 0;
   padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
-/* 3. Component styles với CSS variables */
-
-/* Cards */
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 15px;
-  box-shadow: 0 10px 30px var(--shadow);
-  backdrop-filter: blur(10px);
-}
-
-/* Text elements */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-primary);
-}
-
-p, span, div {
+.text-secondary {
   color: var(--text-secondary);
-}
-
-/* Inputs */
-input, select, textarea {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  padding: 12px;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: #667eea;
-  background: var(--bg-primary);
-}
-
-/* Buttons */
-.btn-primary {
-  background: var(--gradient-primary);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-secondary {
-  background: transparent;
-  color: var(--text-primary);
-  border: 2px solid var(--border-color);
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* Tables */
-table {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-}
-
-th {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-td {
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* Navigation */
-.navbar {
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--border-color);
-  backdrop-filter: blur(10px);
-}
-
-.nav-link {
-  color: var(--text-secondary);
-}
-
-.nav-link:hover {
-  color: var(--text-primary);
-}
-
-/* Modals */
-.modal {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-}
-
-.modal-overlay {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-[data-theme="dark"] .modal-overlay {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-/* Scrollbars for dark theme */
-[data-theme="dark"] ::-webkit-scrollbar {
-  width: 8px;
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: var(--bg-tertiary);
-  border-radius: 4px;
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* 4. Specific component overrides */
-
-/* Exchange Rate Cards */
-.rate-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 5px 15px var(--shadow);
-}
-
-.rate-card:hover {
-  box-shadow: 0 15px 35px var(--shadow);
-  transform: translateY(-2px);
-}
-
-/* Stats Cards */
-.stat-card {
-  background: var(--gradient-primary);
-  color: white;
-}
-
-/* Feature Cards */
-.feature-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-}
-
-.feature-item {
-  background: var(--bg-secondary);
-  border-left: 4px solid #4ecdc4;
-}
-
-/* Tech Cards */
-.tech-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--border-color);
-  backdrop-filter: blur(10px);
-}
-
-/* FAQ Items */
-.faq-item {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-}
-
-.faq-question {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.faq-answer {
-  color: var(--text-secondary);
-}
-
-/* Loading Spinner */
-.loading-spinner {
-  border: 4px solid var(--bg-secondary);
-  border-top: 4px solid #667eea;
-}
-
-/* Messages */
-.message-success {
-  background: linear-gradient(90deg, #10b981, #34d399);
-  color: white;
-}
-
-.message-error {
-  background: linear-gradient(90deg, #ef4444, #f87171);
-  color: white;
-}
-
-/* 5. Dark theme specific adjustments */
-[data-theme="dark"] {
-  /* Adjust gradient backgrounds for better dark theme visibility */
-  --gradient-hero: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-}
-
-[data-theme="dark"] .hero-section {
-  background: var(--gradient-hero);
-}
-
-[data-theme="dark"] .background-shape {
-  background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-}
-
-/* 6. Animation cho theme transition */
-* {
-  transition: 
-    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* 7. Print styles (dark theme should not affect printing) */
-@media print {
-  * {
-    background: white !important;
-    color: black !important;
-    box-shadow: none !important;
-  }
-}
-
-/* 8. High contrast mode support */
-@media (prefers-contrast: high) {
-  [data-theme="dark"] {
-    --text-primary: #ffffff;
-    --text-secondary: #e0e0e0;
-    --border-color: #666666;
-  }
-}
-
-/* 9. Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation: none !important;
-  }
 }

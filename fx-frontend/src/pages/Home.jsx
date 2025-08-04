@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import  CurrencyConverter  from './CurrencyConverterHome'
+// import  CurrencyConverter  from './CurrencyConverterHome'
 // import Home, { CurrencyConverter } from './Home';
+import { useTheme } from '../contexts/themeContexts';
+import ThemeToggle from '../components/ThemeToggle';
+import { CurrencyConverter } from './CurrencyConverterHome';
+
 // Currency Converter Component
 import '../css/Home.css'
 const Home = () => {
