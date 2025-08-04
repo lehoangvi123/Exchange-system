@@ -21,12 +21,11 @@ const Home = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
  
-
+  // Get theme from context
+  const { isDark } = useTheme();
+ 
   // Popular currencies for quick access
- 
   
- 
- 
  
  
  
@@ -137,10 +136,27 @@ const Home = () => {
     pageContainer: {
       minHeight: '100vh',
       width: '100%',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: isDark 
+        ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+        : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       margin: 0,
-      padding: 0
+      padding: 0,
+      transition: 'all 0.3s ease'
+    },
+
+    // Theme Toggle Position
+    themeToggleContainer: {
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      zIndex: 1000,
+      background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+      borderRadius: '50px',
+      padding: '10px',
+      backdropFilter: 'blur(10px)',
+      border: `1px solid ${isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'}`,
+      transition: 'all 0.3s ease'
     },
 
     // Main content styles
@@ -156,22 +172,26 @@ const Home = () => {
       textAlign: 'center',
       marginBottom: '60px',
       padding: '80px 40px',
-      background: 'rgba(255,255,255,0.1)',
+      background: isDark 
+        ? 'rgba(255,255,255,0.05)' 
+        : 'rgba(255,255,255,0.1)',
       backdropFilter: 'blur(15px)',
-      border: '1px solid rgba(255,255,255,0.2)',
+      border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.2)'}`,
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      transition: 'all 0.3s ease'
     },
     heroTitle: {
       fontSize: 'clamp(3rem, 6vw, 5rem)',
-      color: 'white',
+      color: isDark ? '#ffffff' : 'white',
       fontWeight: 'bold',
       marginBottom: '30px',
       textShadow: '0 4px 20px rgba(0,0,0,0.3)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '20px'
+      gap: '20px',
+      transition: 'all 0.3s ease'
     },
     heroIcon: {
       fontSize: '4rem',
@@ -179,10 +199,11 @@ const Home = () => {
     },
     heroSubtitle: {
       fontSize: '1.4rem',
-      color: 'rgba(255,255,255,0.9)',
+      color: isDark ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.9)',
       lineHeight: 1.6,
       maxWidth: '800px',
-      margin: '0 auto 40px'
+      margin: '0 auto 40px',
+      transition: 'all 0.3s ease'
     },
     heroButtons: {
       display: 'flex',
@@ -192,7 +213,9 @@ const Home = () => {
       marginTop: '40px'
     },
     primaryButton: {
-      background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
+      background: isDark 
+        ? 'linear-gradient(45deg, #e74c3c, #3498db)'
+        : 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
       color: 'white',
       border: 'none',
       padding: '15px 30px',
@@ -207,8 +230,8 @@ const Home = () => {
     },
     secondaryButton: {
       background: 'transparent',
-      color: 'white',
-      border: '2px solid white',
+      color: isDark ? '#ffffff' : 'white',
+      border: `2px solid ${isDark ? '#ffffff' : 'white'}`,
       padding: '15px 30px',
       fontSize: '1.1rem',
       fontWeight: 'bold',
@@ -221,10 +244,13 @@ const Home = () => {
 
     // Statistics section
     statsSection: {
-      background: 'rgba(255,255,255,0.95)',
+      background: isDark 
+        ? 'rgba(30,30,30,0.95)' 
+        : 'rgba(255,255,255,0.95)',
       padding: '60px 40px',
       marginBottom: '60px',
-      textAlign: 'center'
+      textAlign: 'center',
+      transition: 'all 0.3s ease'
     },
     statsGrid: {
       display: 'grid',
@@ -234,7 +260,9 @@ const Home = () => {
       margin: '0 auto'
     },
     statCard: {
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      background: isDark 
+        ? 'linear-gradient(135deg, #2c3e50, #34495e)'
+        : 'linear-gradient(135deg, #667eea, #764ba2)',
       color: 'white',
       padding: '40px 20px',
       borderRadius: '20px',
@@ -261,22 +289,27 @@ const Home = () => {
       padding: '0 40px'
     },
     featureCard: {
-      background: 'rgba(255,255,255,0.95)',
+      background: isDark 
+        ? 'rgba(30,30,30,0.95)' 
+        : 'rgba(255,255,255,0.95)',
       borderRadius: '20px',
       padding: '40px',
-      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+      boxShadow: isDark 
+        ? '0 20px 40px rgba(0,0,0,0.3)'
+        : '0 20px 40px rgba(0,0,0,0.1)',
       transition: 'all 0.4s ease',
-      border: '1px solid rgba(255,255,255,0.3)',
+      border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.3)'}`,
       position: 'relative',
       overflow: 'hidden'
     },
     featureTitle: {
       fontSize: '2rem',
-      color: '#2c3e50',
+      color: isDark ? '#ffffff' : '#2c3e50',
       marginBottom: '25px',
       display: 'flex',
       alignItems: 'center',
-      gap: '15px'
+      gap: '15px',
+      transition: 'all 0.3s ease'
     },
     featureIcon: {
       fontSize: '2.5rem'
@@ -287,24 +320,30 @@ const Home = () => {
       margin: 0
     },
     featureItem: {
-      background: 'linear-gradient(90deg, #f8f9fa, #e9ecef)',
+      background: isDark 
+        ? 'linear-gradient(90deg, #2c3e50, #34495e)'
+        : 'linear-gradient(90deg, #f8f9fa, #e9ecef)',
       margin: '15px 0',
       padding: '18px 25px',
       borderRadius: '12px',
-      borderLeft: '4px solid #4ecdc4',
+      borderLeft: `4px solid ${isDark ? '#3498db' : '#4ecdc4'}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       fontSize: '1rem',
-      lineHeight: 1.5
+      lineHeight: 1.5,
+      color: isDark ? '#ffffff' : '#2c3e50'
     },
 
     // Technology section
     techSection: {
-      background: 'rgba(0,0,0,0.8)',
+      background: isDark 
+        ? 'rgba(10,10,10,0.9)' 
+        : 'rgba(0,0,0,0.8)',
       color: 'white',
       padding: '80px 40px',
       marginBottom: '60px',
-      textAlign: 'center'
+      textAlign: 'center',
+      transition: 'all 0.3s ease'
     },
     techTitle: {
       fontSize: '2.5rem',
@@ -326,11 +365,13 @@ const Home = () => {
       margin: '0 auto'
     },
     techCard: {
-      background: 'rgba(255,255,255,0.1)',
+      background: isDark 
+        ? 'rgba(255,255,255,0.05)'
+        : 'rgba(255,255,255,0.1)',
       backdropFilter: 'blur(10px)',
       padding: '30px',
       borderRadius: '15px',
-      border: '1px solid rgba(255,255,255,0.2)',
+      border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.2)'}`,
       transition: 'all 0.3s ease'
     },
     techIcon: {
@@ -351,21 +392,26 @@ const Home = () => {
 
     // Exchange rates section
     exchangeRatesSection: {
-      background: 'rgba(255,255,255,0.95)',
+      background: isDark 
+        ? 'rgba(30,30,30,0.95)' 
+        : 'rgba(255,255,255,0.95)',
       padding: '80px 40px',
       marginBottom: '60px',
-      textAlign: 'center'
+      textAlign: 'center',
+      transition: 'all 0.3s ease'
     },
     exchangeRatesTitle: {
       fontSize: '2.5rem',
-      color: '#2c3e50',
-      marginBottom: '15px'
+      color: isDark ? '#ffffff' : '#2c3e50',
+      marginBottom: '15px',
+      transition: 'all 0.3s ease'
     },
     exchangeRatesSubtitle: {
       fontSize: '1.1rem',
-      color: '#666',
+      color: isDark ? 'rgba(255,255,255,0.7)' : '#666',
       marginBottom: '50px',
-      opacity: 0.8
+      opacity: 0.8,
+      transition: 'all 0.3s ease'
     },
     ratesGrid: {
       display: 'grid',
@@ -378,10 +424,11 @@ const Home = () => {
     },
     categoryTitle: {
       fontSize: '1.5rem',
-      color: '#2c3e50',
+      color: isDark ? '#ffffff' : '#2c3e50',
       marginBottom: '20px',
       textAlign: 'left',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      transition: 'all 0.3s ease'
     },
     rateCards: {
       display: 'grid',
@@ -389,11 +436,13 @@ const Home = () => {
       gap: '20px'
     },
     rateCard: {
-      background: 'white',
+      background: isDark ? '#2c3e50' : 'white',
       padding: '25px',
       borderRadius: '15px',
-      boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
-      border: '1px solid #e5e7eb',
+      boxShadow: isDark 
+        ? '0 5px 15px rgba(0,0,0,0.3)'
+        : '0 5px 15px rgba(0,0,0,0.1)',
+      border: `1px solid ${isDark ? '#34495e' : '#e5e7eb'}`,
       transition: 'all 0.3s ease',
       cursor: 'pointer',
       position: 'relative',
@@ -401,8 +450,10 @@ const Home = () => {
     },
     rateCardHover: {
       transform: 'translateY(-5px)',
-      boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
-      borderColor: '#667eea'
+      boxShadow: isDark 
+        ? '0 15px 35px rgba(0,0,0,0.4)'
+        : '0 15px 35px rgba(0,0,0,0.15)',
+      borderColor: isDark ? '#3498db' : '#667eea'
     },
     currencyPair: {
       display: 'flex',
@@ -416,13 +467,15 @@ const Home = () => {
     currencyCode: {
       fontSize: '1.2rem',
       fontWeight: 'bold',
-      color: '#2c3e50'
+      color: isDark ? '#ffffff' : '#2c3e50',
+      transition: 'all 0.3s ease'
     },
     rateValue: {
       fontSize: '2rem',
       fontWeight: 'bold',
-      color: '#1f2937',
-      marginBottom: '8px'
+      color: isDark ? '#ffffff' : '#1f2937',
+      marginBottom: '8px',
+      transition: 'all 0.3s ease'
     },
     rateChange: {
       fontSize: '0.95rem',
@@ -445,9 +498,12 @@ const Home = () => {
       alignItems: 'center',
       gap: '12px',
       padding: '20px',
-      background: 'white',
+      background: isDark ? '#2c3e50' : 'white',
       borderRadius: '12px',
-      boxShadow: '0 3px 10px rgba(0,0,0,0.1)'
+      boxShadow: isDark 
+        ? '0 3px 10px rgba(0,0,0,0.3)'
+        : '0 3px 10px rgba(0,0,0,0.1)',
+      transition: 'all 0.3s ease'
     },
     statusIcon: {
       fontSize: '1.2rem'
@@ -455,13 +511,15 @@ const Home = () => {
     statusText: {
       fontSize: '1rem',
       fontWeight: '600',
-      color: '#2c3e50',
-      flex: 1
+      color: isDark ? '#ffffff' : '#2c3e50',
+      flex: 1,
+      transition: 'all 0.3s ease'
     },
     statusTime: {
       fontSize: '0.9rem',
-      color: '#666',
-      opacity: 0.8
+      color: isDark ? 'rgba(255,255,255,0.7)' : '#666',
+      opacity: 0.8,
+      transition: 'all 0.3s ease'
     },
     ratesFooter: {
       textAlign: 'center',
@@ -469,13 +527,16 @@ const Home = () => {
     },
     disclaimerText: {
       fontSize: '0.9rem',
-      color: '#666',
+      color: isDark ? 'rgba(255,255,255,0.7)' : '#666',
       lineHeight: 1.6,
       marginBottom: '25px',
-      opacity: 0.8
+      opacity: 0.8,
+      transition: 'all 0.3s ease'
     },
     viewAllRatesBtn: {
-      background: 'linear-gradient(45deg, #667eea, #764ba2)',
+      background: isDark 
+        ? 'linear-gradient(45deg, #e74c3c, #3498db)'
+        : 'linear-gradient(45deg, #667eea, #764ba2)',
       color: 'white',
       border: 'none',
       padding: '15px 30px',
@@ -484,7 +545,9 @@ const Home = () => {
       borderRadius: '25px',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
-      boxShadow: '0 10px 25px rgba(102, 126, 234, 0.3)'
+      boxShadow: isDark 
+        ? '0 10px 25px rgba(231, 76, 60, 0.3)'
+        : '0 10px 25px rgba(102, 126, 234, 0.3)'
     },
 
     // Loading styles
@@ -499,16 +562,17 @@ const Home = () => {
     loadingSpinner: {
       width: '50px',
       height: '50px',
-      border: '4px solid #f3f4f6',
-      borderTop: '4px solid #667eea',
+      border: `4px solid ${isDark ? '#34495e' : '#f3f4f6'}`,
+      borderTop: `4px solid ${isDark ? '#3498db' : '#667eea'}`,
       borderRadius: '50%',
       animation: 'spin 1s linear infinite',
       marginBottom: '20px'
     },
     loadingText: {
       fontSize: '1.1rem',
-      color: '#666',
-      textAlign: 'center'
+      color: isDark ? 'rgba(255,255,255,0.7)' : '#666',
+      textAlign: 'center',
+      transition: 'all 0.3s ease'
     },
 
     // Pricing section
@@ -516,18 +580,23 @@ const Home = () => {
       padding: '80px 40px',
       marginBottom: '60px',
       textAlign: 'center',
-      background: 'rgba(255,255,255,0.1)',
-      backdropFilter: 'blur(10px)'
+      background: isDark 
+        ? 'rgba(255,255,255,0.05)' 
+        : 'rgba(255,255,255,0.1)',
+      backdropFilter: 'blur(10px)',
+      transition: 'all 0.3s ease'
     },
     pricingTitle: {
       fontSize: '2.5rem',
-      color: 'white',
-      marginBottom: '20px'
+      color: isDark ? '#ffffff' : 'white',
+      marginBottom: '20px',
+      transition: 'all 0.3s ease'
     },
     pricingSubtitle: {
       fontSize: '1.2rem',
-      color: 'rgba(255,255,255,0.8)',
-      marginBottom: '50px'
+      color: isDark ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.8)',
+      marginBottom: '50px',
+      transition: 'all 0.3s ease'
     },
     pricingGrid: {
       display: 'grid',
@@ -537,24 +606,28 @@ const Home = () => {
       margin: '0 auto'
     },
     pricingCard: {
-      background: 'white',
+      background: isDark ? '#2c3e50' : 'white',
       padding: '40px 30px',
       borderRadius: '20px',
-      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+      boxShadow: isDark 
+        ? '0 20px 40px rgba(0,0,0,0.3)'
+        : '0 20px 40px rgba(0,0,0,0.1)',
       position: 'relative',
       transition: 'all 0.3s ease'
     },
     planName: {
       fontSize: '1.5rem',
       fontWeight: 'bold',
-      color: '#2c3e50',
-      marginBottom: '10px'
+      color: isDark ? '#ffffff' : '#2c3e50',
+      marginBottom: '10px',
+      transition: 'all 0.3s ease'
     },
     planPrice: {
       fontSize: '3rem',
       fontWeight: 'bold',
-      color: '#667eea',
-      marginBottom: '20px'
+      color: isDark ? '#3498db' : '#667eea',
+      marginBottom: '20px',
+      transition: 'all 0.3s ease'
     },
     planFeatures: {
       listStyle: 'none',
@@ -564,27 +637,34 @@ const Home = () => {
     },
     planFeature: {
       padding: '10px 0',
-      borderBottom: '1px solid #eee',
-      color: '#666'
+      borderBottom: `1px solid ${isDark ? '#34495e' : '#eee'}`,
+      color: isDark ? 'rgba(255,255,255,0.8)' : '#666',
+      transition: 'all 0.3s ease'
     },
 
     // Steps section
     stepsSection: {
       width: '100%',
-      background: 'rgba(255,255,255,0.95)',
+      background: isDark 
+        ? 'rgba(30,30,30,0.95)' 
+        : 'rgba(255,255,255,0.95)',
       padding: '80px 40px',
       marginBottom: '60px',
-      boxShadow: '0 25px 50px rgba(0,0,0,0.1)'
+      boxShadow: isDark 
+        ? '0 25px 50px rgba(0,0,0,0.3)'
+        : '0 25px 50px rgba(0,0,0,0.1)',
+      transition: 'all 0.3s ease'
     },
     stepsTitle: {
       fontSize: '2.5rem',
-      color: '#2c3e50',
+      color: isDark ? '#ffffff' : '#2c3e50',
       textAlign: 'center',
       marginBottom: '50px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '15px'
+      gap: '15px',
+      transition: 'all 0.3s ease'
     },
     stepsGrid: {
       display: 'grid',
@@ -592,7 +672,9 @@ const Home = () => {
       gap: '30px'
     },
     stepCard: {
-      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+      background: isDark 
+        ? 'linear-gradient(135deg, #2c3e50, #34495e)'
+        : 'linear-gradient(135deg, #667eea, #764ba2)',
       color: 'white',
       padding: '35px',
       borderRadius: '20px',
@@ -608,7 +690,9 @@ const Home = () => {
       transform: 'translateX(-50%)',
       width: '50px',
       height: '50px',
-      background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
+      background: isDark 
+        ? 'linear-gradient(45deg, #e74c3c, #3498db)'
+        : 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
       borderRadius: '50%',
       display: 'flex',
       alignItems: 'center',
@@ -631,52 +715,65 @@ const Home = () => {
 
     // FAQ section
     faqSection: {
-      background: 'rgba(255,255,255,0.95)',
+      background: isDark 
+        ? 'rgba(30,30,30,0.95)' 
+        : 'rgba(255,255,255,0.95)',
       padding: '80px 40px',
-      marginBottom: '60px'
+      marginBottom: '60px',
+      transition: 'all 0.3s ease'
     },
     faqTitle: {
       fontSize: '2.5rem',
-      color: '#2c3e50',
+      color: isDark ? '#ffffff' : '#2c3e50',
       textAlign: 'center',
-      marginBottom: '50px'
+      marginBottom: '50px',
+      transition: 'all 0.3s ease'
     },
     faqContainer: {
       maxWidth: '800px',
       margin: '0 auto'
     },
     faqItem: {
-      background: 'white',
+      background: isDark ? '#2c3e50' : 'white',
       marginBottom: '20px',
       borderRadius: '15px',
-      boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
-      overflow: 'hidden'
+      boxShadow: isDark 
+        ? '0 5px 15px rgba(0,0,0,0.3)'
+        : '0 5px 15px rgba(0,0,0,0.1)',
+      overflow: 'hidden',
+      transition: 'all 0.3s ease'
     },
     faqQuestion: {
       padding: '25px',
       cursor: 'pointer',
       fontSize: '1.2rem',
       fontWeight: 'bold',
-      color: '#2c3e50',
-      background: 'linear-gradient(90deg, #f8f9fa, #e9ecef)',
+      color: isDark ? '#ffffff' : '#2c3e50',
+      background: isDark 
+        ? 'linear-gradient(90deg, #34495e, #2c3e50)'
+        : 'linear-gradient(90deg, #f8f9fa, #e9ecef)',
       transition: 'all 0.3s ease'
     },
     faqAnswer: {
       padding: '25px',
-      color: '#666',
+      color: isDark ? 'rgba(255,255,255,0.8)' : '#666',
       lineHeight: 1.6,
-      borderTop: '1px solid #eee'
+      borderTop: `1px solid ${isDark ? '#34495e' : '#eee'}`,
+      transition: 'all 0.3s ease'
     },
 
     // CTA section
     ctaSection: {
       width: '100%',
-      background: 'linear-gradient(135deg, #ff6b6b, #4ecdc4)',
+      background: isDark 
+        ? 'linear-gradient(135deg, #e74c3c, #3498db)'
+        : 'linear-gradient(135deg, #ff6b6b, #4ecdc4)',
       padding: '80px 40px',
       textAlign: 'center',
       color: 'white',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      transition: 'all 0.3s ease'
     },
     ctaTitle: {
       fontSize: '2.8rem',
@@ -709,8 +806,11 @@ const Home = () => {
     backgroundShape: {
       position: 'absolute',
       borderRadius: '50%',
-      background: 'linear-gradient(45deg, rgba(255,107,107,0.1), rgba(78,205,196,0.1))',
-      animation: 'float 8s ease-in-out infinite'
+      background: isDark 
+        ? 'linear-gradient(45deg, rgba(231,76,60,0.1), rgba(52,152,219,0.1))'
+        : 'linear-gradient(45deg, rgba(255,107,107,0.1), rgba(78,205,196,0.1))',
+      animation: 'float 8s ease-in-out infinite',
+      transition: 'all 0.3s ease'
     },
     shape1: {
       width: '200px',
@@ -913,6 +1013,8 @@ const Home = () => {
     <>
       <style>{keyframes}</style>
       <div style={styles.pageContainer}>
+       
+
         {/* Background shapes */}
         <div style={{...styles.backgroundShape, ...styles.shape1}}></div>
         <div style={{...styles.backgroundShape, ...styles.shape2}}></div>
@@ -937,13 +1039,13 @@ const Home = () => {
               <a href="#demo" style={styles.secondaryButton}>
                 📺 Xem demo
               </a>
-            </div>
+            </div> 
           </section>
 
           {/* Lồng đoạn quy đổi tiền tệ vô trong đây*/}
          {/* Currency converter add in this blank */}
         <section style={styles.converterSection}>
-          <div class="Section_converter">
+          <div className="Section_converter">
           <CurrencyConverter /> 
           </div>
         </section>
@@ -965,7 +1067,9 @@ const Home = () => {
                     ...styles.techCard,
                     ...(hoveredItem === `tech-${index}` ? {
                       transform: 'translateY(-5px) scale(1.05)',
-                      background: 'rgba(255,255,255,0.2)'
+                      background: isDark 
+                        ? 'rgba(255,255,255,0.1)'
+                        : 'rgba(255,255,255,0.2)'
                     } : {})
                   }}
                   onMouseEnter={() => setHoveredItem(`tech-${index}`)}
@@ -987,7 +1091,9 @@ const Home = () => {
                 ...styles.featureCard,
                 ...(hoveredItem === 'feature-card' ? {
                   transform: 'translateY(-10px)',
-                  boxShadow: '0 30px 60px rgba(0,0,0,0.2)'
+                  boxShadow: isDark 
+                    ? '0 30px 60px rgba(0,0,0,0.4)'
+                    : '0 30px 60px rgba(0,0,0,0.2)'
                 } : {})
               }}
               onMouseEnter={() => setHoveredItem('feature-card')}
@@ -1005,8 +1111,10 @@ const Home = () => {
                       ...styles.featureItem,
                       ...(hoveredItem === `feature-${index}` ? {
                         transform: 'translateX(10px)',
-                        borderLeftColor: '#ff6b6b',
-                        boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+                        borderLeftColor: isDark ? '#3498db' : '#ff6b6b',
+                        boxShadow: isDark 
+                          ? '0 5px 15px rgba(0,0,0,0.3)'
+                          : '0 5px 15px rgba(0,0,0,0.1)'
                       } : {})
                     }}
                     onMouseEnter={() => setHoveredItem(`feature-${index}`)}
@@ -1024,7 +1132,9 @@ const Home = () => {
                 ...styles.featureCard,
                 ...(hoveredItem === 'audience-card' ? {
                   transform: 'translateY(-10px)',
-                  boxShadow: '0 30px 60px rgba(0,0,0,0.2)'
+                  boxShadow: isDark 
+                    ? '0 30px 60px rgba(0,0,0,0.4)'
+                    : '0 30px 60px rgba(0,0,0,0.2)'
                 } : {})
               }}
               onMouseEnter={() => setHoveredItem('audience-card')}
@@ -1042,8 +1152,10 @@ const Home = () => {
                       ...styles.featureItem,
                       ...(hoveredItem === `audience-${index}` ? {
                         transform: 'translateX(10px)',
-                        borderLeftColor: '#ff6b6b',
-                        boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+                        borderLeftColor: isDark ? '#3498db' : '#ff6b6b',
+                        boxShadow: isDark 
+                          ? '0 5px 15px rgba(0,0,0,0.3)'
+                          : '0 5px 15px rgba(0,0,0,0.1)'
                       } : {})
                     }}
                     onMouseEnter={() => setHoveredItem(`audience-${index}`)}
@@ -1360,12 +1472,14 @@ const Home = () => {
                     ...styles.pricingCard,
                     ...(index === 1 ? {
                       transform: 'scale(1.05)',
-                      border: '3px solid #667eea',
+                      border: `3px solid ${isDark ? '#3498db' : '#667eea'}`,
                       position: 'relative'
                     } : {}),
                     ...(hoveredItem === `plan-${index}` ? {
                       transform: index === 1 ? 'scale(1.1)' : 'translateY(-10px)',
-                      boxShadow: '0 30px 60px rgba(0,0,0,0.2)'
+                      boxShadow: isDark 
+                        ? '0 30px 60px rgba(0,0,0,0.4)'
+                        : '0 30px 60px rgba(0,0,0,0.2)'
                     } : {})
                   }}
                   onMouseEnter={() => setHoveredItem(`plan-${index}`)}
@@ -1377,7 +1491,9 @@ const Home = () => {
                       top: '-15px',
                       left: '50%',
                       transform: 'translateX(-50%)',
-                      background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
+                      background: isDark 
+                        ? 'linear-gradient(45deg, #e74c3c, #3498db)'
+                        : 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
                       color: 'white',
                       padding: '8px 20px',
                       borderRadius: '20px',
@@ -1400,7 +1516,13 @@ const Home = () => {
                     ...styles.primaryButton,
                     width: '100%',
                     marginTop: '20px',
-                    background: index === 1 ? 'linear-gradient(45deg, #667eea, #764ba2)' : 'linear-gradient(45deg, #ff6b6b, #4ecdc4)'
+                    background: index === 1 
+                      ? (isDark 
+                          ? 'linear-gradient(45deg, #2c3e50, #34495e)' 
+                          : 'linear-gradient(45deg, #667eea, #764ba2)')
+                      : (isDark 
+                          ? 'linear-gradient(45deg, #e74c3c, #3498db)'
+                          : 'linear-gradient(45deg, #ff6b6b, #4ecdc4)')
                   }}>
                     {index === 2 ? 'Liên hệ' : 'Bắt đầu ngay'}
                   </button>
@@ -1447,7 +1569,9 @@ const Home = () => {
                     style={{
                       ...styles.faqQuestion,
                       ...(hoveredItem === `faq-${index}` ? {
-                        background: 'linear-gradient(90deg, #667eea, #764ba2)',
+                        background: isDark 
+                          ? 'linear-gradient(90deg, #2c3e50, #34495e)'
+                          : 'linear-gradient(90deg, #667eea, #764ba2)',
                         color: 'white'
                       } : {})
                     }}
@@ -1510,9 +1634,12 @@ const Home = () => {
             <div style={{
               marginTop: '40px',
               padding: '30px',
-              background: 'rgba(255,255,255,0.1)',
+              background: isDark 
+                ? 'rgba(255,255,255,0.05)'
+                : 'rgba(255,255,255,0.1)',
               borderRadius: '15px',
-              backdropFilter: 'blur(10px)'
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.3s ease'
             }}>
               <div style={{fontSize: '1.1rem', marginBottom: '20px'}}>
                 🎁 <strong>Ưu đãi đặc biệt cho khách hàng mới:</strong>

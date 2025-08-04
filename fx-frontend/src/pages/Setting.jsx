@@ -393,13 +393,13 @@ function Setting() {
               <p style={styles.headerSubtitle}>
                 Tùy chỉnh giao diện và ngôn ngữ theo sở thích của bạn
               </p>
-              <div style={styles.userInfo}>
+              {/* <div style={styles.userInfo}>
                 <div style={styles.avatar}>{user.avatar}</div>
                 <div style={styles.userDetails}>
                   <div style={styles.userName}>{user.name}</div>
                   <div style={styles.userEmail}>{user.email}</div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -414,8 +414,8 @@ function Setting() {
           )}
 
           {/* Content */}
-          <div style={styles.content}>
-            {/* Theme Section */}
+          {/* <div style={styles.content}>
+            
             <div style={styles.section}>
               <h3 style={styles.sectionTitle}>
                 🎨 Chọn giao diện
@@ -453,7 +453,7 @@ function Setting() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Language Section */}
             <div style={styles.section}>
@@ -531,7 +531,7 @@ function Setting() {
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </>
   );
 }

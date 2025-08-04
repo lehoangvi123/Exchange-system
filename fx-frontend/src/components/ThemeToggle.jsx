@@ -8,8 +8,8 @@ const ThemeToggle = ({ className = '' }) => {
     container: {
       display: 'flex',
       alignItems: 'center',
-      gap: '12px',
-      padding: '8px 16px',
+      gap: '4px',
+      padding: '4px 4px',
       backgroundColor: isDark ? '#334155' : '#f1f5f9',
       border: `1px solid ${isDark ? '#475569' : '#cbd5e1'}`,
       borderRadius: '25px',

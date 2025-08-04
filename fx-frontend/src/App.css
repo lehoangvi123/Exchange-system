@@ -335,7 +335,7 @@ header .nav-link,
 header nav a {
   display: inline-flex;
   align-items: center;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 0.25rem;
   color: var(--text-inverse);
   font-weight: 600;
   font-size: 0.95rem;
@@ -1489,4 +1489,8 @@ main.container.mx-auto.flex-1.p-6{
 
 .section_converter{ 
   margin-bottom: 100px;
+} 
+
+svg.nav-arrow{ 
+   color: black;
 }

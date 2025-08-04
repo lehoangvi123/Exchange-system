@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import axios from 'axios';
-import { ThemeProvider } from './contexts/themeContexts';
+import { ThemeProvider, useTheme } from './contexts/themeContexts';
 import { BrowserRouter  } from 'react-router-dom';
 
 // Pages 
@@ -35,6 +35,7 @@ import UpdatePreferences from './components/UpdatePreferences';
 import Profile from './pages/Profile'; 
 import Terms from './pages/Terms'; 
 import Disclaimer from './pages/Disclamer'; 
+import ThemeToggle from './components/ThemeToggle'; 
 
 import './css/theme.css'
 import './App.css';
@@ -42,10 +43,10 @@ import './App.css';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 // User Info Button Component
-// User Info Button Component
 const UserInfoButton = ({ user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -70,6 +71,14 @@ const UserInfoButton = ({ user, onLogout }) => {
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         className="user-profile-button"
+        style={{
+          background: isDark 
+            ? 'rgba(255, 255, 255, 0.1)' 
+            : 'rgba(255, 255, 255, 0.15)',
+          color: isDark ? '#ffffff' : 'black',
+          border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.2)'}`,
+          transition: 'all 0.3s ease'
+        }}
       >
         <div className="user-avatar">
           <span className="user-initials">
@@ -89,30 +98,53 @@ const UserInfoButton = ({ user, onLogout }) => {
       </button>
 
       {isDropdownOpen && (
-        <div className="user-dropdown-menu">
-          <div className="user-dropdown-header">
+        <div className="user-dropdown-menu" style={{
+          background: isDark 
+            ? 'rgba(30, 30, 30, 0.98)' 
+            : 'rgba(255, 255, 255, 0.98)',
+          border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)'}`,
+          transition: 'all 0.3s ease'
+        }}>
+          <div className="user-dropdown-header" style={{
+            borderBottom: `1px solid ${isDark ? '#374151' : '#e5e7eb'}`,
+            transition: 'all 0.3s ease'
+          }}>
             <div className="user-dropdown-avatar">
               <span className="user-dropdown-initials">
                 {user?.name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'Hi!'}
               </span>
             </div>
             <div>
-              <p className="user-dropdown-name">{user?.name || 'Xin Chào Bạn Yêu Dấu!'}</p>
-              <p className="user-dropdown-email">{user?.email}</p>
+              <p className="user-dropdown-name" style={{
+                color: isDark ? '#ffffff' : '#1f2937',
+                transition: 'all 0.3s ease'
+              }}>{user?.name || 'Xin Chào Bạn Yêu Dấu!'}</p>
+              <p className="user-dropdown-email" style={{
+                color: isDark ? 'rgba(255, 255, 255, 0.7)' : '#6b7280',
+                transition: 'all 0.3s ease'
+              }}>{user?.email}</p>
             </div>
           </div>
 
-          {/* Thêm phần hiển thị tên user ở đây */}
-         
           <div className="user-dropdown-items">
-            <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="user-dropdown-item">
+            <Link to="/profile" onClick={() => setIsDropdownOpen(false)} 
+                  className="user-dropdown-item"
+                  style={{
+                    color: isDark ? '#ffffff' : '#374151',
+                    transition: 'all 0.3s ease'
+                  }}>
               <svg className="dropdown-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
               <span>Thông tin cá nhân</span>
             </Link>
 
-            <Link to="/setting" onClick={() => setIsDropdownOpen(false)} className="user-dropdown-item">
+            <Link to="/setting" onClick={() => setIsDropdownOpen(false)} 
+                  className="user-dropdown-item"
+                  style={{
+                    color: isDark ? '#ffffff' : '#374151',
+                    transition: 'all 0.3s ease'
+                  }}>
               <svg className="dropdown-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -120,7 +152,12 @@ const UserInfoButton = ({ user, onLogout }) => {
               <span>Cài đặt</span>
             </Link>
 
-            <button onClick={handleLogout} className="user-dropdown-item logout-item">
+            <button onClick={handleLogout} 
+                    className="user-dropdown-item logout-item"
+                    style={{
+                      color: isDark ? '#ff6b6b' : '#dc2626',
+                      transition: 'all 0.3s ease'
+                    }}>
               <svg className="dropdown-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h1m10-4v2.5" />
               </svg>
@@ -132,15 +169,17 @@ const UserInfoButton = ({ user, onLogout }) => {
     </div>
   );
 };
+
 // Navigation Menu Component
 const NavigationMenu = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const { isDark } = useTheme();
 
   // Navigation structure with 4 main categories
   const navigationItems = [
     {
       title: "Dashboard",
-      icon: "▼",
+      icon: "",
       submenu: [
         { title: "Tổng quan", icon: "🏠", link: "/home", desc: "Xem tổng quan hệ thống" },
         { title: "Explore", icon: "🔍", link: "/", desc: "Khám phá tính năng" },
@@ -150,7 +189,7 @@ const NavigationMenu = () => {
     },
     {
       title: "Tỷ giá",
-      icon: "▼",
+      icon: "",
       submenu: [
         { title: "Tỷ giá hiện tại", icon: "💰", link: "/rates", desc: "Xem tỷ giá thời gian thực" },
         { title: "Lịch sử tỷ giá", icon: "📊", link: "/historyRate", desc: "Dữ liệu tỷ giá theo thời gian" },
@@ -160,7 +199,7 @@ const NavigationMenu = () => {
     },
     {
       title: "Công cụ",
-      icon: "▼",
+      icon: "",
       submenu: [
         { title: "Form dữ liệu", icon: "📝", link: "/SaveForm", desc: "Nhập và lưu dữ liệu" },
         { title: "Quy đổi tiền tệ", icon: "🔄", link: "/converter", desc: "Chuyển đổi tiền tệ nhanh" },
@@ -170,7 +209,7 @@ const NavigationMenu = () => {
     },
     {
       title: "Thông tin",
-      icon: "▼",
+      icon: "",
       submenu: [
         { title: "Giới thiệu", icon: "📄", link: "/about", desc: "Thông tin về hệ thống" },
         { title: "Liên hệ", icon: "📞", link: "/contact", desc: "Liên hệ hỗ trợ" },
@@ -189,7 +228,13 @@ const NavigationMenu = () => {
   };
 
   return (
-    <nav className="main-navigation">
+    <nav className="main-navigation" style={{
+      background: isDark 
+        ? 'rgba(255, 255, 255, 0.05)' 
+        : 'rgba(255, 255, 255, 0.12)',
+      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.15)'}`,
+      transition: 'all 0.3s ease'
+    }}>
       {navigationItems.map((item, index) => (
         <div 
           key={index}
@@ -197,7 +242,10 @@ const NavigationMenu = () => {
           onMouseEnter={() => handleMouseEnter(index)}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="nav-link">
+          <div className="nav-link" style={{
+            color: isDark ? '#ffffff' : 'white',
+            transition: 'all 0.3s ease'
+          }}>
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-text">{item.title}</span>
             <svg className="nav-arrow" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
@@ -206,8 +254,18 @@ const NavigationMenu = () => {
           </div>
 
           {/* Dropdown Menu */}
-          <div className={`nav-dropdown ${activeDropdown === index ? 'active' : ''}`}>
-            <div className="dropdown-header">
+          <div className={`nav-dropdown ${activeDropdown === index ? 'active' : ''}`} style={{
+            background: isDark 
+              ? 'rgba(30, 30, 30, 0.98)' 
+              : 'rgba(255, 255, 255, 0.98)',
+            border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)'}`,
+            transition: 'all 0.3s ease'
+          }}>
+            <div className="dropdown-header" style={{
+              color: isDark ? '#ffffff' : '#2c3e50',
+              borderBottom: `2px solid ${isDark ? '#374151' : '#e9ecef'}`,
+              transition: 'all 0.3s ease'
+            }}>
               <span className="dropdown-header-icon">{item.icon}</span>
               <span className="dropdown-header-text">{item.title}</span>
             </div>
@@ -217,11 +275,21 @@ const NavigationMenu = () => {
                 key={subIndex}
                 to={subItem.link}
                 className="dropdown-item"
+                style={{
+                  color: isDark ? '#ffffff' : '#374151',
+                  transition: 'all 0.3s ease'
+                }}
               >
                 <span className="dropdown-item-icon">{subItem.icon}</span>
                 <div className="dropdown-item-content">
-                  <div className="dropdown-item-title">{subItem.title}</div>
-                  <div className="dropdown-item-desc">{subItem.desc}</div>
+                  <div className="dropdown-item-title" style={{
+                    color: isDark ? '#ffffff' : '#1f2937',
+                    transition: 'all 0.3s ease'
+                  }}>{subItem.title}</div>
+                  <div className="dropdown-item-desc" style={{
+                    color: isDark ? 'rgba(255, 255, 255, 0.7)' : '#6b7280',
+                    transition: 'all 0.3s ease'
+                  }}>{subItem.desc}</div>
                 </div>
               </Link>
             ))}
@@ -232,7 +300,8 @@ const NavigationMenu = () => {
   );
 };
 
-function App() {
+// App Component wrapped with ThemeProvider
+function AppContent() {
   const [rate, setRate] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
   const [user, setUser] = useState(null);
@@ -243,6 +312,7 @@ function App() {
   
   const location = useLocation();
   const navigate = useNavigate();
+  const { isDark } = useTheme();
 
   // SCROLL HEADER EFFECT
   useEffect(() => {
@@ -361,26 +431,34 @@ function App() {
   }
 
   // HEADER STYLES WITH SCROLL EFFECT
- const headerStyles = {
+  const headerStyles = {
     position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
-    background: '#ffffffff',
+    background: isDark 
+      ? 'rgba(20, 20, 20, 0.95)' 
+      : '#ffffffff',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
-    borderBottom: '1px solid rgba(0,0,0,0.1)',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+    boxShadow: isDark 
+      ? '0 4px 20px rgba(0, 0, 0, 0.3)' 
+      : '0 4px 20px rgba(0, 0, 0, 0.1)',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
     opacity: isHeaderVisible ? 1 : 0
-};
+  };
 
   // MAIN CONTENT PADDING FOR FIXED HEADER
   const mainStyles = {
     paddingTop: '6rem',
-    minHeight: 'calc(100vh - 6rem)'
+    minHeight: 'calc(100vh - 6rem)',
+    background: isDark 
+      ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' 
+      : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    transition: 'all 0.3s ease'
   };
 
   return (
@@ -391,17 +469,19 @@ function App() {
         .main-navigation {
           display: flex;
           gap: 0.5rem;
-          background: rgba(255, 255, 255, 0.12);
           backdrop-filter: blur(8px);
           border-radius: 16px;
-          border: 1px solid rgba(255, 255, 255, 0.15);
           padding: 0.5rem;
         } 
 
         /* Trong CSS */
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
+        body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: ${isDark 
+            ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' 
+            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'};
+          transition: all 0.3s ease;
+        }
 
         .nav-item {
           position: relative;
@@ -413,7 +493,6 @@ body {
           align-items: center;
           gap: 0.5rem;
           padding: 0.875rem 1.5rem;
-          color: white;
           font-weight: 600;
           font-size: 1rem;
           text-decoration: none;
@@ -440,7 +519,9 @@ body {
         }
 
         .nav-link:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: ${isDark 
+            ? 'rgba(255, 255, 255, 0.1)' 
+            : 'rgba(255, 255, 255, 0.2)'};
           transform: translateY(-2px);
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
@@ -467,13 +548,11 @@ body {
           top: calc(100% + 10px);
           left: 50%;
           transform: translateX(-50%);
-          background: rgba(255, 255, 255, 0.98);
           backdrop-filter: blur(20px);
           border-radius: 16px;
           box-shadow: 
             0 20px 40px rgba(0, 0, 0, 0.15),
             0 8px 32px rgba(102, 126, 234, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.3);
           padding: 1rem;
           min-width: 300px;
           opacity: 0;
@@ -492,10 +571,8 @@ body {
         .dropdown-header {
           font-size: 1.1rem;
           font-weight: 700;
-          color: #2c3e50;
           margin-bottom: 0.75rem;
           padding-bottom: 0.5rem;
-          border-bottom: 2px solid #e9ecef;
           display: flex;
           align-items: center;
           gap: 0.5rem;
@@ -512,13 +589,14 @@ body {
           padding: 0.75rem;
           border-radius: 8px;
           text-decoration: none;
-          color: #374151;
           transition: all 0.2s ease;
           margin-bottom: 0.25rem;
         }
 
         .dropdown-item:hover {
-          background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+          background: ${isDark 
+            ? 'rgba(255, 255, 255, 0.1)' 
+            : 'linear-gradient(135deg, #f8fafc, #e2e8f0)'};
           transform: translateX(4px);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -536,37 +614,32 @@ body {
 
         .dropdown-item-title {
           font-weight: 600;
-          color: #1f2937;
           margin-bottom: 0.25rem;
         }
 
         .dropdown-item-desc {
           font-size: 0.875rem;
-          color: #6b7280;
           line-height: 1.4;
         }
 
         /* User Profile Styles */
-       .user-profile-button {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            color: black;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
+        .user-profile-button {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.5rem 1rem;
+          backdrop-filter: blur(10px);
+          border-radius: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          text-decoration: none;
         }
 
-.user-profile-button:hover {
-  color: #1e40af; /* màu xanh đậm */
-  text-decoration: underline;
-}
+        .user-profile-button:hover {
+          color: ${isDark ? '#60a5fa' : '#1e40af'};
+          text-decoration: underline;
+        }
+
         .user-avatar {
           width: 32px;
           height: 32px;
@@ -577,8 +650,6 @@ body {
           justify-content: center;
           position: relative;
         }
-
-        
 
         @keyframes pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
@@ -613,13 +684,11 @@ body {
           right: 0;
           top: calc(100% + 0.5rem);
           width: 18rem;
-          background: rgba(255, 255, 255, 0.98);
           backdrop-filter: blur(20px);
           border-radius: 16px;
           box-shadow: 
             0 20px 64px rgba(124, 58, 237, 0.25),
             0 8px 32px rgba(0, 0, 0, 0.15);
-          border: 1px solid rgba(255, 255, 255, 0.3);
           padding: 0.5rem;
           z-index: 1000;
           animation: dropdown-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -638,7 +707,6 @@ body {
 
         .user-dropdown-header {
           padding: 1rem;
-          border-bottom: 1px solid #e5e7eb;
           display: flex;
           align-items: center;
           gap: 0.75rem;
@@ -658,13 +726,11 @@ body {
 
         .user-dropdown-name {
           font-weight: 600;
-          color: #1f2937;
           margin-bottom: 0.25rem;
         }
 
         .user-dropdown-email {
           font-size: 0.875rem;
-          color: #6b7280;
         }
 
         .user-dropdown-items {
@@ -678,8 +744,6 @@ body {
           padding: 0.75rem;
           border-radius: 8px;
           text-decoration: none;
-          color: #374151;
-          transition: all 0.2s ease;
           width: 100%;
           border: none;
           background: none;
@@ -688,15 +752,19 @@ body {
         }
 
         .user-dropdown-item:hover {
-          background: #f3f4f6;
-        }
-
-        .user-dropdown-item.logout-item {
-          color: #dc2626;
+          background: ${isDark ? 'rgba(255, 255, 255, 0.1)' : '#f3f4f6'};
         }
 
         .user-dropdown-item.logout-item:hover {
-          background: #fef2f2;
+          background: ${isDark ? 'rgba(239, 68, 68, 0.2)' : '#fef2f2'};
+        }
+
+        /* Theme Toggle Container */
+        .theme-toggle-container {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
         }
 
         /* Responsive */
@@ -719,24 +787,41 @@ body {
           .nav-item:hover .nav-dropdown {
             transform: none;
           }
+
+          .theme-toggle-container {
+            flex-direction: column;
+            gap: 0.5rem;
+          } 
+
+         
         }
       `}</style>
 
-      <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 text-gray-800">
+      <div className="flex flex-col min-h-screen text-gray-800" style={{
+        background: isDark 
+          ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' 
+          : 'linear-gradient(to-br, #667eea 0%, #764ba2 100%)',
+        color: isDark ? '#ffffff' : '#1f2937',
+        transition: 'all 0.3s ease'
+      }}>
         {/* HEADER WITH SCROLL EFFECT */}
-        <header style={headerStyles} class="header-dashboard">
+        <header style={headerStyles} className="header-dashboard">
           <div className="container mx-auto flex justify-between items-center p-4">
             {/* Logo */}
             <div className="flex items-center space-x-2">
               <span className="text-3xl" style={{animation: 'logoRotate 3s linear infinite'}}>💱</span>
-              <h4 className="text-2xl font-extrabold text-white">FX Rate Dashboard</h4>
+              <h4 className="text-2xl font-extrabold" style={{
+                color: isDark ? '#ffffff' : 'black',
+                transition: 'all 0.3s ease'
+              }}>FX Rate Dashboard</h4>
             </div>
 
             {/* Navigation Menu */}
             <NavigationMenu />
 
-            {/* User Profile */}
-            <div className="auth-buttons ml-auto space-x-4">
+            {/* Theme Toggle & User Profile */}
+            <div className="theme-toggle-container">
+              <ThemeToggle />
               {user && (
                 <UserInfoButton user={user} onLogout={handleLogout} />
               )}
@@ -752,45 +837,127 @@ body {
               transform: 'translateX(-50%)',
               width: '40px',
               height: '2px',
-              background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)',
+              background: isDark 
+                ? 'linear-gradient(90deg, #e74c3c, #3498db)' 
+                : 'linear-gradient(90deg, #3B82F6, #8B5CF6)',
               borderRadius: '1px',
-              opacity: 0.7
+              opacity: 0.7,
+              transition: 'all 0.3s ease'
             }} />
           )}
         </header>
 
         {/* MAIN WITH PROPER PADDING */} 
         <main className="container mx-auto flex-1 p-6" style={mainStyles}>
-          <ThemeProvider>
           <Routes>
             <Route path="/" element={
               rate && Object.keys(rate).length > 0 ? (
                 <div className="home-grid">
                   <section className="welcome-section">
-                    <h2 className="home-title">Welcome to FX Rate Dashboard</h2>
-                    <p className="home-subtitle">
+                    <h2 className="home-title" style={{
+                      color: isDark ? '#ffffff' : '#1f2937',
+                      transition: 'all 0.3s ease'
+                    }}>Welcome to FX Rate Dashboard</h2>
+                    <p className="home-subtitle" style={{
+                      color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#4b5563',
+                      transition: 'all 0.3s ease'
+                    }}>
                       Get real-time currency rates, insights, and analysis tools — all in one place.
                     </p>
                   </section>
 
                   <div className="card-grid">
-                    <div className="home-card"><CurrencyConverter /></div>
-                    <div className="home-card"><CrossRateConverter /></div>
-                    <div className="home-card"><ExchangeRateDisplay /></div>
-                    <div className="home-card"><TechnicalIndicators /></div> 
-                    <div className="home-card"><MarketSummary /></div> 
-                    <div className="home-card"><RateTrend pair="AUD_BGN" period="30d" /></div>  
-                    <div className="home-card"><SaveRateForm /></div>
-                    <div className="home-card"><LogConversionForm /></div>
-                    <div className="home-card"><SaveUserForm /></div>
-                    <div className="home-card"><UpdateUserForm /></div>
-                    <div className="home-card"><UpdatePreferences /></div>
-                    <div className="home-card"><ArchiveRateForm /></div>
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><CurrencyConverter /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><CrossRateConverter /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><ExchangeRateDisplay /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><TechnicalIndicators /></div> 
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><MarketSummary /></div> 
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><RateTrend pair="AUD_BGN" period="30d" /></div>  
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><SaveRateForm /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><LogConversionForm /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><SaveUserForm /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><UpdateUserForm /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><UpdatePreferences /></div>
+                    
+                    <div className="home-card" style={{
+                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
+                      transition: 'all 0.3s ease'
+                    }}><ArchiveRateForm /></div>
                   </div>
                 </div>
               ) : (
                 <div className="flex justify-center items-center h-64">
-                  <p className="text-lg text-gray-500 animate-pulse">Loading exchange rates...</p>
+                  <p className="text-lg animate-pulse" style={{
+                    color: isDark ? 'rgba(255, 255, 255, 0.7)' : '#6b7280',
+                    transition: 'all 0.3s ease'
+                  }}>Loading exchange rates...</p>
                 </div>
               )
             } />
@@ -810,7 +977,6 @@ body {
             <Route path="/converter" element={<Converter />} />
             
           </Routes> 
-          </ThemeProvider>
         </main>
 
         {/* SCROLL TO TOP BUTTON */}
@@ -823,11 +989,15 @@ body {
               right: '2rem',
               width: '3rem',
               height: '3rem',
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              background: isDark 
+                ? 'linear-gradient(135deg, #e74c3c, #3498db)' 
+                : 'linear-gradient(135deg, #667eea, #764ba2)',
               color: 'white',
               border: 'none',
               borderRadius: '50%',
-              boxShadow: '0 10px 25px rgba(102, 126, 234, 0.3)',
+              boxShadow: isDark 
+                ? '0 10px 25px rgba(231, 76, 60, 0.3)' 
+                : '0 10px 25px rgba(102, 126, 234, 0.3)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -838,11 +1008,15 @@ body {
             }}
             onMouseEnter={(e) => {
               e.target.style.transform = 'translateY(-2px)';
-              e.target.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.4)';
+              e.target.style.boxShadow = isDark 
+                ? '0 15px 35px rgba(231, 76, 60, 0.4)' 
+                : '0 15px 35px rgba(102, 126, 234, 0.4)';
             }}
             onMouseLeave={(e) => {
               e.target.style.transform = 'translateY(0)';
-              e.target.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.3)';
+              e.target.style.boxShadow = isDark 
+                ? '0 10px 25px rgba(231, 76, 60, 0.3)' 
+                : '0 10px 25px rgba(102, 126, 234, 0.3)';
             }}
           >
             ↑
@@ -850,7 +1024,13 @@ body {
         )}
 
         {/* Footer */}
-        <footer className="pro-footer">
+        <footer className="pro-footer" style={{
+          background: isDark 
+            ? 'rgba(20, 20, 20, 0.95)' 
+            : 'rgba(255, 255, 255, 0.95)',
+          color: isDark ? '#ffffff' : '#1f2937',
+          transition: 'all 0.3s ease'
+        }}>
           <div className="pro-footer-container">
             <div className="pro-footer-brand">
               <h2>💱 FX Rate Dashboard</h2>
@@ -858,36 +1038,38 @@ body {
             </div>
             <div className="pro-footer-links">
               <div>
-                <h4>Công ty</h4>
-                <a href="/about">Về chúng tôi</a>
-                <a href="/careers">Sự nghiệp</a>
-                <a href="/contact">Liên hệ với chúng tôi</a>
-                <a href="https://vietstock.vn/">Điểm nhấn</a>
+                <h4 style={{ color: isDark ? '#ffffff' : '#1f2937' }}>Công ty</h4>
+                <a href="/about" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Về chúng tôi</a>
+                <a href="/careers" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Sự nghiệp</a>
+                <a href="/contact" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Liên hệ với chúng tôi</a>
+                <a href="https://vietstock.vn/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Điểm nhấn</a>
               </div>
               <div>
-                <h4>Tài nguyên</h4>
-                <a href="https://www.postman.com/api-platform/api-documentation/">Tài liệu về API</a>
-                <a href="https://forextaker.com/understanding-exchange-rates-a-comprehensive-guide/">Hướng dẫn</a>
-                <a href="https://acemoneytransfer.com/blog/exchange-rates-101-get-answers-to-10-common-questions">FAQ</a>
-                <a href="https://ebury.com/e-blog/blog/ebury_post/fx-101-understanding-exchange-rate-regimes/">Blog</a>
+                <h4 style={{ color: isDark ? '#ffffff' : '#1f2937' }}>Tài nguyên</h4>
+                <a href="https://www.postman.com/api-platform/api-documentation/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Tài liệu về API</a>
+                <a href="https://forextaker.com/understanding-exchange-rates-a-comprehensive-guide/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Hướng dẫn</a>
+                <a href="https://acemoneytransfer.com/blog/exchange-rates-101-get-answers-to-10-common-questions" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>FAQ</a>
+                <a href="https://ebury.com/e-blog/blog/ebury_post/fx-101-understanding-exchange-rate-regimes/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Blog</a>
               </div>
               <div>
-                <h4>Hỗ trợ</h4>
-                <a href="https://help.xe.com/hc/en-gb">Trung tâm hỗ trợ</a>
-                <a href="https://support.microsoft.com/en-us/contactus">Trợ giúp và liên hệ</a>
-                <a href="https://clickup.com/blog/how-to-write-a-bug-report/">Báo cáo vấn đề</a>
-                <a href="https://portal.office.com/servicestatus/">Dịch vụ của chúng tôi</a>
+                <h4 style={{ color: isDark ? '#ffffff' : '#1f2937' }}>Hỗ trợ</h4>
+                <a href="https://help.xe.com/hc/en-gb" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Trung tâm hỗ trợ</a>
+                <a href="https://support.microsoft.com/en-us/contactus" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Trợ giúp và liên hệ</a>
+                <a href="https://clickup.com/blog/how-to-write-a-bug-report/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Báo cáo vấn đề</a>
+                <a href="https://portal.office.com/servicestatus/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Dịch vụ của chúng tôi</a>
               </div>
               <div>
-                <h4>Luật lệ</h4>
-                <a href="https://www.termsfeed.com/live/159dd57d-3d00-4060-b937-2c50e86903f9">Quyền riêng tư</a>
-                <a href="/terms">Điều khoản về dịch vụ</a>
-                <a href="/disclaimer">Tuyên bố miễn trừ trách nhiệm</a>
+                <h4 style={{ color: isDark ? '#ffffff' : '#1f2937' }}>Luật lệ</h4>
+                <a href="https://www.termsfeed.com/live/159dd57d-3d00-4060-b937-2c50e86903f9" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Quyền riêng tư</a>
+                <a href="/terms" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Điều khoản về dịch vụ</a>
+                <a href="/disclaimer" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Tuyên bố miễn trừ trách nhiệm</a>
               </div>
             </div>
           </div>
           <div className="pro-footer-bottom">
-            <p>© 2025 FX Rate Dashboard. All rights reserved.</p>
+            <p style={{ color: isDark ? 'rgba(255, 255, 255, 0.7)' : '#6b7280' }}>
+              © 2025 FX Rate Dashboard. All rights reserved.
+            </p>
           </div>
         </footer>      
       </div>
@@ -927,6 +1109,43 @@ body {
           }
         }
         
+        /* Home card styles */
+        .home-card {
+          border-radius: 16px;
+          padding: 1.5rem;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .home-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+          gap: 2rem;
+          margin-top: 2rem;
+        }
+
+        .welcome-section {
+          text-align: center;
+          padding: 2rem 0;
+        }
+
+        .home-title {
+          font-size: 2.5rem;
+          font-weight: bold;
+          margin-bottom: 1rem;
+        }
+
+        .home-subtitle {
+          font-size: 1.2rem;
+          line-height: 1.6;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+        
         /* Mobile responsive adjustments */
         @media (max-width: 1024px) {
           .container {
@@ -941,7 +1160,7 @@ body {
             flex-wrap: wrap;
           }
           
-          .auth-buttons {
+          .theme-toggle-container {
             margin-left: 0;
             width: 100%;
             justify-content: center;
@@ -972,6 +1191,19 @@ body {
           
           .nav-item:hover .nav-dropdown {
             transform: none;
+          }
+
+          .card-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+
+          .home-title {
+            font-size: 2rem;
+          }
+
+          .home-subtitle {
+            font-size: 1rem;
           }
         }
         
@@ -1011,12 +1243,22 @@ body {
           
           .nav-link,
           .dropdown-item,
-          .user-profile-button {
+          .user-profile-button,
+          .home-card {
             transition: none;
           }
         }
       `}</style>
     </>
+  );
+}
+
+// Main App component with ThemeProvider wrapper
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 
