@@ -1,0 +1,47 @@
+.report-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 900px;
+}
+
+.report-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.market-summary ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+
+.market-summary li {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.chart-section h3 {
+  margin: 1.5rem 0 1rem;
+  font-size: 1.2rem;
+}
+
+.market-alerts {
+  margin-top: 2rem;
+  background: #f1f5f9;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+}
+
+.market-alerts ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.market-alerts li {
+  margin-bottom: 0.5rem;
+}
