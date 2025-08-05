@@ -36,7 +36,8 @@ import Profile from './pages/Profile';
 import Terms from './pages/Terms'; 
 import Disclaimer from './pages/Disclamer'; 
 import ThemeToggle from './components/ThemeToggle'; 
-import Analytics from './pages/Analytics';
+import Analytics from './pages/Analytics'; 
+import Report from './pages/Report' 
 
 import './css/theme.css'
 import './App.css';
@@ -952,7 +953,8 @@ function AppContent() {
                       transition: 'all 0.3s ease'
                     }}><ArchiveRateForm /></div> 
 
-                    <div><Analytics /></div>
+                    <div><Analytics /></div> 
+                    <div> <Report /> </div>
                   </div>
                 </div>
               ) : (
@@ -978,7 +980,8 @@ function AppContent() {
             <Route path="/rates" element={<Rates />} />  
             <Route path="/SaveForm" element={<SaveForm />} /> 
             <Route path="/converter" element={<Converter />} />
-            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/analytics" element={<Analytics />} /> 
+            <Route path="/reports" element={<Report />} />
           </Routes> 
         </main>
 
