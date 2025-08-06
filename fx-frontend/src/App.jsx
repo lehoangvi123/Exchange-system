@@ -141,33 +141,7 @@ const UserInfoButton = ({ user, onLogout }) => {
               <span>Thông tin cá nhân</span>
             </Link>
 
-<<<<<<< HEAD
-{/* Cài đặt */}
-<Link
-  to="/setting"
-  onClick={() => setIsDropdownOpen(false)}
-  className="link-button"
->
-  <svg className="custom-icon text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c...z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-  <span>Setting</span>
-</Link>
 
-
-{/* Đăng xuất */}
-<button
-  onClick={handleLogout}
-  className="logout-btn w-full flex items-center space-x-3 px-4 py-2 text-sm text-red-600 
-           hover:bg-red-50 transition-colors"
->
-  <svg className="custom-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1..." />
-  </svg>
-  <span>Đăng xuất</span>
-</button>
-=======
             <Link to="/setting" onClick={() => setIsDropdownOpen(false)} 
                   className="user-dropdown-item"
                   style={{
@@ -180,7 +154,7 @@ const UserInfoButton = ({ user, onLogout }) => {
               </svg>
               <span>Cài đặt</span>
             </Link>
->>>>>>> hi1
+
 
             <button onClick={handleLogout} 
                     className="user-dropdown-item logout-item"
