@@ -1033,12 +1033,10 @@ const Home = () => {
               Theo dõi, phân tích và quản lý tỷ giá với độ chính xác cao và tính năng real-time mạnh mẽ
             </p>
             <div style={styles.heroButtons}>
-              <a href="/register" style={styles.primaryButton}>
-                🚀 Dùng thử miễn phí
+              <a href="/rates" style={styles.primaryButton}>
+                🚀 Theo dõi tỷ giá
               </a>
-              <a href="#demo" style={styles.secondaryButton}>
-                📺 Xem demo
-              </a>
+              
             </div> 
           </section>
 
@@ -1597,7 +1595,7 @@ const Home = () => {
             </p>
             <div style={{display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap'}}>
               <a 
-                href="/register" 
+                href="/" 
                 style={{
                   ...styles.ctaButton,
                   ...(hoveredItem === 'cta-button' ? {
@@ -1608,7 +1606,7 @@ const Home = () => {
                 onMouseEnter={() => setHoveredItem('cta-button')}
                 onMouseLeave={() => setHoveredItem(null)}
               >
-                🚀 Đăng ký miễn phí
+                🚀 Trải nghiệm ngay
               </a>
               <a 
                 href="/contact" 
