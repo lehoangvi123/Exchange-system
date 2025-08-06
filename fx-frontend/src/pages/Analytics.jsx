@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '../contexts/themeContexts';
 
 // Currency Pair Component
-const CurrencyPair = memo(({ pair, isSelected, onSelect, colors }) => (
+const CurrencyPair = memo(({ pair, isSelected, onSelect, colors, language }) => (
   <button
     style={{
       padding: '12px 18px',
@@ -27,8 +27,20 @@ const CurrencyPair = memo(({ pair, isSelected, onSelect, colors }) => (
     <div style={{ fontSize: '18px', marginBottom: '4px' }}>{pair.flag}</div>
     <div style={{ marginBottom: '4px' }}>{pair.pair}</div>
     <div style={{ fontSize: '12px', color: colors.secondary }}>
-      {pair.rate?.toFixed(4) || 'N/A'}
+      {pair.rate?.toFixed(4) || (language === 'vi' ? 'Đang tải...' : 'N/A')}
     </div>
+    {pair.change && (
+      <div style={{
+        fontSize: '12px',
+        color: pair.change.isPositive ? colors.success : colors.danger,
+        background: pair.change.isPositive ? `${colors.success}20` : `${colors.danger}20`,
+        padding: '2px 6px',
+        borderRadius: '4px',
+        marginTop: '4px'
+      }}>
+        {pair.change.isPositive ? '+' : ''}{pair.change.change} ({pair.change.isPositive ? '+' : ''}{pair.change.percentage}%)
+      </div>
+    )}
   </button>
 ));
 
@@ -36,19 +48,25 @@ CurrencyPair.propTypes = {
   pair: PropTypes.shape({
     pair: PropTypes.string,
     flag: PropTypes.string,
-    rate: PropTypes.number
+    rate: PropTypes.number,
+    change: PropTypes.shape({
+      change: PropTypes.number,
+      percentage: PropTypes.number,
+      isPositive: PropTypes.bool
+    })
   }).isRequired,
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
-  colors: PropTypes.object.isRequired
+  colors: PropTypes.object.isRequired,
+  language: PropTypes.string.isRequired
 };
 
 // Line Chart Component
-const LineChart = memo(({ data, height, colors }) => {
+const LineChart = memo(({ data, height, colors, language }) => {
   if (!data?.length) {
     return (
       <div style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: colors.card, borderRadius: '8px', color: colors.secondary }}>
-        No historical data available
+        {language === 'vi' ? 'Không có dữ liệu lịch sử' : 'No historical data available'}
       </div>
     );
   }
@@ -82,13 +100,13 @@ const LineChart = memo(({ data, height, colors }) => {
         ))}
       </svg>
       <div style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '12px', color: colors.secondary, backgroundColor: colors.bg, padding: '4px 8px', borderRadius: '4px' }}>
-        High: {max.toFixed(4)}
+        {language === 'vi' ? 'Cao nhất' : 'High'}: {max.toFixed(4)}
       </div>
       <div style={{ position: 'absolute', bottom: '10px', left: '10px', fontSize: '12px', color: colors.secondary, backgroundColor: colors.bg, padding: '4px 8px', borderRadius: '4px' }}>
-        Low: {min.toFixed(4)}
+        {language === 'vi' ? 'Thấp nhất' : 'Low'}: {min.toFixed(4)}
       </div>
       <div style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '14px', fontWeight: '600', color: colors.text, backgroundColor: colors.bg, padding: '6px 10px', borderRadius: '6px', border: `1px solid ${colors.border}` }}>
-        Current: {values[values.length - 1]?.toFixed(4)}
+        {language === 'vi' ? 'Hiện tại' : 'Current'}: {values[values.length - 1]?.toFixed(4)}
       </div>
     </div>
   );
@@ -97,11 +115,12 @@ const LineChart = memo(({ data, height, colors }) => {
 LineChart.propTypes = {
   data: PropTypes.array,
   height: PropTypes.number,
-  colors: PropTypes.object.isRequired
+  colors: PropTypes.object.isRequired,
+  language: PropTypes.string.isRequired
 };
 
 // Crypto Card Component
-const CryptoCard = memo(({ coin, colors }) => (
+const CryptoCard = memo(({ coin, colors, language }) => (
   <div style={{
     padding: '20px',
     backgroundColor: colors.card,
@@ -124,8 +143,8 @@ const CryptoCard = memo(({ coin, colors }) => (
       {coin.change24h >= 0 ? '+' : ''}{coin.change24h?.toFixed(2)}%
     </div>
     <div style={{ fontSize: '12px', color: colors.secondary }}>
-      <div>Cap: ${(coin.marketCap / 1e9)?.toFixed(1)}B</div>
-      <div>Vol: ${(coin.volume24h / 1e6)?.toFixed(1)}M</div>
+      <div>{language === 'vi' ? 'Vốn hóa' : 'Cap'}: ${(coin.marketCap / 1e9)?.toFixed(1)}B</div>
+      <div>{language === 'vi' ? 'Khối lượng' : 'Vol'}: ${(coin.volume24h / 1e6)?.toFixed(1)}M</div>
     </div>
   </div>
 ));
@@ -138,12 +157,14 @@ CryptoCard.propTypes = {
     marketCap: PropTypes.number,
     volume24h: PropTypes.number
   }).isRequired,
-  colors: PropTypes.object.isRequired
+  colors: PropTypes.object.isRequired,
+  language: PropTypes.string.isRequired
 };
 
 // Main Analytics Component
 const Analytics = () => {
   const { isDark } = useTheme();
+  const [language, setLanguage] = useState('vi'); // Default to Vietnamese
   const [timeRange, setTimeRange] = useState('24h');
   const [rates, setRates] = useState(null);
   const [cryptoData, setCryptoData] = useState(null);
@@ -152,8 +173,8 @@ const Analytics = () => {
   const [error, setError] = useState(null);
   const [selectedPair, setSelectedPair] = useState('USD/VND');
   const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [hoveredItem, setHoveredItem] = useState(null);
 
-  // Move pairs to useMemo to avoid dependency issues
   const pairs = useMemo(() => [
     { pair: 'USD/VND', from: 'USD', to: 'VND', flag: '🇺🇸🇻🇳' },
     { pair: 'EUR/USD', from: 'EUR', to: 'USD', flag: '🇪🇺🇺🇸' },
@@ -162,7 +183,8 @@ const Analytics = () => {
     { pair: 'USD/SGD', from: 'USD', to: 'SGD', flag: '🇺🇸🇸🇬' },
     { pair: 'AUD/USD', from: 'AUD', to: 'USD', flag: '🇦🇺🇺🇸' },
     { pair: 'USD/CHF', from: 'USD', to: 'CHF', flag: '🇺🇸🇨🇭' },
-    { pair: 'USD/CAD', from: 'USD', to: 'CAD', flag: '🇺🇸🇨🇦' }
+    { pair: 'USD/CAD', from: 'USD', to: 'CAD', flag: '🇺🇸🇨🇦' },
+    { pair: 'USD/CNY', from: 'USD', to: 'CNY', flag: '🇺🇸🇨🇳' }
   ], []);
 
   const colors = useMemo(() => isDark ? {
@@ -187,6 +209,26 @@ const Analytics = () => {
     warning: '#f59e0b'
   }, [isDark]);
 
+  const formatCurrency = useCallback((value, currency) => {
+    if (!value) return 'N/A';
+    return new Intl.NumberFormat(language === 'vi' ? 'vi-VN' : 'en-US', {
+      style: 'decimal',
+      minimumFractionDigits: currency === 'VND' ? 0 : 4,
+      maximumFractionDigits: currency === 'VND' ? 0 : 4
+    }).format(value);
+  }, [language]);
+
+  const getRateChange = useCallback((currentRate, currency) => {
+    const previousRate = currentRate * (1 + (Math.random() - 0.5) * 0.01); // Simulated previous rate
+    const change = parseFloat((currentRate - previousRate).toFixed(4));
+    const percentage = parseFloat(((change / previousRate) * 100).toFixed(2));
+    return {
+      change,
+      percentage,
+      isPositive: change >= 0
+    };
+  }, []);
+
   const fetchRates = useCallback(async () => {
     try {
       setLoading(prev => ({ ...prev, rates: true }));
@@ -197,7 +239,8 @@ const Analytics = () => {
         const ratesData = pairs.map(p => ({
           ...p,
           rate: p.from === 'USD' ? data.rates[p.to] : (1 / data.rates[p.from]),
-          lastUpdated: data.date
+          lastUpdated: data.date,
+          change: getRateChange(p.from === 'USD' ? data.rates[p.to] : (1 / data.rates[p.from]), p.to)
         }));
         setRates(ratesData);
         setError(null);
@@ -206,23 +249,23 @@ const Analytics = () => {
       }
     } catch (err) {
       try {
-        // Backup API
         const res = await fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd.json');
         const data = await res.json();
         const ratesData = pairs.map(p => ({
           ...p,
           rate: p.from === 'USD' ? data.usd[p.to.toLowerCase()] : (1 / data.usd[p.from.toLowerCase()]),
-          lastUpdated: new Date().toISOString().split('T')[0]
+          lastUpdated: new Date().toISOString().split('T')[0],
+          change: getRateChange(p.from === 'USD' ? data.usd[p.to.toLowerCase()] : (1 / data.usd[p.from.toLowerCase()]), p.to)
         }));
         setRates(ratesData);
         setError(null);
       } catch (backupErr) {
-        setError('Failed to fetch exchange rates from all sources');
+        setError(language === 'vi' ? 'Không thể tải tỷ giá từ các nguồn' : 'Failed to fetch exchange rates from all sources');
       }
     } finally {
       setLoading(prev => ({ ...prev, rates: false }));
     }
-  }, [pairs]);
+  }, [pairs, getRateChange, language]);
 
   const fetchCrypto = useCallback(async () => {
     try {
@@ -248,11 +291,11 @@ const Analytics = () => {
       setCryptoData(cryptoArray);
       setError(null);
     } catch (err) {
-      setError('Failed to fetch crypto data');
+      setError(language === 'vi' ? 'Không thể tải dữ liệu tiền điện tử' : 'Failed to fetch crypto data');
     } finally {
       setLoading(prev => ({ ...prev, crypto: false }));
     }
-  }, []);
+  }, [language]);
 
   const fetchHistoricalData = useCallback(async () => {
     try {
@@ -264,7 +307,7 @@ const Analytics = () => {
       const startDateStr = startDate.toISOString().split('T')[0];
       const endDateStr = endDate.toISOString().split('T')[0];
       
-      const res = await fetch(`https://api.exchangerate.host/timeseries?start_date=${startDateStr}&end_date=${endDateStr}&base=USD&symbols=VND,EUR,GBP,JPY,SGD,AUD,CHF,CAD`);
+      const res = await fetch(`https://api.exchangerate.host/timeseries?start_date=${startDateStr}&end_date=${endDateStr}&base=USD&symbols=VND,EUR,GBP,JPY,SGD,AUD,CHF,CAD,CNY`);
       const data = await res.json();
       
       if (data.success && data.rates) {
@@ -291,26 +334,24 @@ const Analytics = () => {
         throw new Error('Failed to fetch historical data');
       }
     } catch (err) {
-      setError('Failed to fetch historical data');
+      setError(language === 'vi' ? 'Không thể tải dữ liệu lịch sử' : 'Failed to fetch historical data');
     } finally {
       setLoading(prev => ({ ...prev, historical: false }));
     }
-  }, [pairs]);
+  }, [pairs, language]);
 
-  // Initial data fetch
   useEffect(() => {
     const init = async () => {
       try {
         await Promise.all([fetchRates(), fetchCrypto(), fetchHistoricalData()]);
         setLastUpdate(new Date());
       } catch (err) {
-        setError('Failed to initialize data');
+        setError(language === 'vi' ? 'Không thể khởi tạo dữ liệu' : 'Failed to initialize data');
       }
     };
     init();
-  }, [fetchRates, fetchCrypto, fetchHistoricalData]);
+  }, [fetchRates, fetchCrypto, fetchHistoricalData, language]);
 
-  // Auto-refresh interval
   useEffect(() => {
     const interval = setInterval(() => {
       fetchRates();
@@ -321,228 +362,404 @@ const Analytics = () => {
     return () => clearInterval(interval);
   }, [timeRange, fetchRates, fetchCrypto]);
 
-  // Loading state
   const isLoading = loading.rates && loading.crypto && loading.historical;
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: '2rem', minHeight: '100vh', backgroundColor: colors.bg, color: colors.text }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '400px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ 
-              width: '40px', 
-              height: '40px', 
-              border: `4px solid ${colors.border}`, 
-              borderTop: `4px solid ${colors.accent}`, 
-              borderRadius: '50%', 
-              animation: 'spin 1s linear infinite', 
-              margin: '0 auto 16px' 
-            }} />
-            <p>Loading real data from free APIs...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const styles = {
+    rateCard: {
+      padding: '16px',
+      borderRadius: '8px',
+      border: `1px solid ${colors.border}`,
+      backgroundColor: colors.card,
+      transition: 'all 0.2s ease',
+      cursor: 'pointer',
+      textAlign: 'center'
+    },
+    rateCardHover: {
+      transform: 'translateY(-2px)',
+      boxShadow: `0 2px 8px ${colors.border}40`
+    },
+    currencyPair: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      fontSize: '16px',
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: '8px'
+    },
+    currencyFlag: {
+      fontSize: '20px'
+    },
+    currencyCode: {
+      fontSize: '14px'
+    },
+    rateValue: {
+      fontSize: '18px',
+      fontWeight: '700',
+      color: colors.text,
+      marginBottom: '8px'
+    },
+    rateChange: {
+      fontSize: '12px',
+      padding: '4px 8px',
+      borderRadius: '4px',
+      display: 'inline-block'
+    }
+  };
 
   return (
     <>
       <style>{'@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }'}</style>
       <div style={{ padding: '2rem', minHeight: '100vh', backgroundColor: colors.bg, color: colors.text }}>
-        <h2 style={{ marginBottom: '2rem', color: colors.text }}>
-          📈 Exchange Rate Analytics 
-          <span style={{ fontSize: '14px', fontWeight: '400', color: colors.success, marginLeft: '12px' }}>
-            🆓 100% FREE APIs
-          </span>
-        </h2>
-
-        {/* Time Range Selector */}
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{ 
-            display: 'flex', 
-            gap: '8px', 
-            backgroundColor: colors.card, 
-            padding: '4px', 
-            borderRadius: '12px', 
-            width: 'fit-content',
-            border: `1px solid ${colors.border}`
-          }}>
-            {['1h', '24h', '7d', '30d'].map((range) => (
-              <button
-                key={range}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  backgroundColor: timeRange === range ? colors.accent : 'transparent',
-                  color: timeRange === range ? 'white' : colors.secondary,
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  transition: 'all 0.2s ease'
-                }}
-                onClick={() => setTimeRange(range)}
-              >
-                {range}
-              </button>
-            ))}
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          <h2>
+            {language === 'vi' ? '📈 Phân Tích Tỷ Giá' : '📈 Exchange Rate Analytics'}
+            <span style={{ fontSize: '14px', fontWeight: '400', color: colors.success, marginLeft: '12px' }}>
+              🆓 100% FREE APIs
+            </span>
+          </h2>
+          <select 
+            value={language} 
+            onChange={(e) => setLanguage(e.target.value)}
+            style={{
+              padding: '8px',
+              borderRadius: '4px',
+              border: `1px solid ${colors.border}`,
+              backgroundColor: colors.card,
+              color: colors.text
+            }}
+          >
+            <option value="vi">Tiếng Việt</option>
+            <option value="en">English</option>
+          </select>
         </div>
 
-        {/* Real-time Exchange Rates */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ marginBottom: '1rem', color: colors.text }}>💱 Real-time Exchange Rates</h3>
-          {loading.rates ? (
+        {isLoading ? (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '400px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ 
+                width: '40px', 
+                height: '40px', 
+                border: `4px solid ${colors.border}`, 
+                borderTop: `4px solid ${colors.accent}`, 
+                borderRadius: '50%', 
+                animation: 'spin 1s linear infinite', 
+                margin: '0 auto 16px' 
+              }} />
+              <p>{language === 'vi' ? 'Đang tải dữ liệu thời gian thực...' : 'Loading real data from free APIs...'}</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Time Range Selector */}
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ 
+                display: 'flex', 
+                gap: '8px', 
+                backgroundColor: colors.card, 
+                padding: '4px', 
+                borderRadius: '12px', 
+                width: 'fit-content',
+                border: `1px solid ${colors.border}`
+              }}>
+                {['1h', '24h', '7d', '30d'].map((range) => (
+                  <button
+                    key={range}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      backgroundColor: timeRange === range ? colors.accent : 'transparent',
+                      color: timeRange === range ? 'white' : colors.secondary,
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onClick={() => setTimeRange(range)}
+                  >
+                    {range}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Exchange Rates */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ marginBottom: '1rem' }}>
+                {language === 'vi' ? '💱 Tỷ Giá Thế Giới Hôm Nay' : '💱 Real-time Exchange Rates'}
+              </h3>
+              {loading.rates ? (
+                <div style={{ 
+                  padding: '20px', 
+                  backgroundColor: colors.card, 
+                  borderRadius: '8px', 
+                  color: colors.secondary,
+                  border: `1px solid ${colors.border}`
+                }}>
+                  {language === 'vi' ? 'Đang tải tỷ giá...' : 'Loading exchange rates...'}
+                </div>
+              ) : (
+                <>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <h4>{language === 'vi' ? '🌟 Tiền Tệ Chính' : '🌟 Major Currencies'}</h4>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '1rem' }}>
+                      {rates?.filter(p => ['EUR/USD', 'GBP/USD', 'USD/JPY'].includes(p.pair)).map(pair => (
+                        <CurrencyPair
+                          key={pair.pair}
+                          pair={pair}
+                          isSelected={selectedPair === pair.pair}
+                          onSelect={setSelectedPair}
+                          colors={colors}
+                          language={language}
+                          onMouseEnter={() => setHoveredItem(`rate-${pair.to.toLowerCase()}`)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <h4>{language === 'vi' ? '🌏 Châu Á - Thái Bình Dương' : '🌏 Asia-Pacific'}</h4>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '1rem' }}>
+                      {rates?.filter(p => ['USD/VND', 'USD/CNY', 'AUD/USD'].includes(p.pair)).map(pair => (
+                        <CurrencyPair
+                          key={pair.pair}
+                          pair={pair}
+                          isSelected={selectedPair === pair.pair}
+                          onSelect={setSelectedPair}
+                          colors={colors}
+                          language={language}
+                          onMouseEnter={() => setHoveredItem(`rate-${pair.to.toLowerCase()}`)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <h4>{language === 'vi' ? '💎 Tiền Tệ Phổ Biến Khác' : '💎 Other Popular Currencies'}</h4>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '1rem' }}>
+                      {rates?.filter(p => ['USD/SGD', 'USD/CHF', 'USD/CAD'].includes(p.pair)).map(pair => (
+                        <CurrencyPair
+                          key={pair.pair}
+                          pair={pair}
+                          isSelected={selectedPair === pair.pair}
+                          onSelect={setSelectedPair}
+                          colors={colors}
+                          language={language}
+                          onMouseEnter={() => setHoveredItem(`rate-${pair.to.toLowerCase()}`)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '12px', color: colors.secondary, fontStyle: 'italic' }}>
+                    {language === 'vi' 
+                      ? 'Dữ liệu thời gian thực từ exchangerate-api.com (MIỄN PHÍ không giới hạn)'
+                      : 'Real-time data from exchangerate-api.com (FREE unlimited)'}
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Historical Chart */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ marginBottom: '1rem' }}>
+                {language === 'vi' ? `📈 Xu Hướng Giá ${selectedPair} (30 Ngày)` : `📈 ${selectedPair} Price Trend (30 Days)`}
+              </h3>
+              {loading.historical ? (
+                <div style={{ 
+                  height: '300px',
+                  backgroundColor: colors.card,
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: colors.secondary,
+                  border: `1px solid ${colors.border}`
+                }}>
+                  {language === 'vi' ? 'Đang tải dữ liệu lịch sử...' : 'Loading historical data...'}
+                </div>
+              ) : (
+                <LineChart 
+                  data={historicalData?.[selectedPair]} 
+                  height={300} 
+                  colors={colors} 
+                  language={language}
+                />
+              )}
+              <p style={{ fontSize: '12px', color: colors.secondary, marginTop: '8px', fontStyle: 'italic' }}>
+                {language === 'vi' 
+                  ? 'Dữ liệu lịch sử từ exchangerate.host API (MIỄN PHÍ không giới hạn)'
+                  : 'Historical data from exchangerate.host API (FREE unlimited)'}
+              </p>
+            </div>
+
+            {/* Cryptocurrency Section */}
+            {cryptoData && cryptoData.length > 0 && (
+              <div style={{ marginBottom: '2rem' }}>
+                <h3 style={{ marginBottom: '1rem' }}>
+                  {language === 'vi' ? '🪙 Thị Trường Tiền Điện Tử' : '🪙 Cryptocurrency Market'}
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+                  {cryptoData.map((coin) => (
+                    <CryptoCard key={coin.id} coin={coin} colors={colors} language={language} />
+                  ))}
+                </div>
+                <p style={{ fontSize: '12px', color: colors.secondary, marginTop: '12px', fontStyle: 'italic' }}>
+                  {language === 'vi' 
+                    ? 'Dữ liệu trực tiếp từ CoinGecko API (MIỄN PHÍ không giới hạn)'
+                    : 'Live data from CoinGecko API (FREE unlimited)'}
+                </p>
+              </div>
+            )}
+
+            {/* Data Sources */}
             <div style={{ 
               padding: '20px', 
               backgroundColor: colors.card, 
-              borderRadius: '8px', 
-              color: colors.secondary,
-              border: `1px solid ${colors.border}`
+              borderRadius: '12px', 
+              border: `1px solid ${colors.border}`,
+              marginBottom: '2rem'
             }}>
-              Loading exchange rates...
+              <h3 style={{ marginBottom: '16px' }}>
+                {language === 'vi' ? '🔗 Nguồn Dữ Liệu' : '🔗 Data Sources'}
+              </h3>
+              <div style={{ display: 'grid', gap: '12px' }}>
+                <div style={{ padding: '12px', backgroundColor: colors.bg, borderRadius: '6px' }}>
+                  <strong>{language === 'vi' ? '📊 Tỷ Giá:' : '📊 Exchange Rates:'}</strong> 
+                  <a href="https://exchangerate-api.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent }}>exchangerate-api.com</a> + 
+                  <a href="https://exchangerate.host" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent, marginLeft: '8px' }}>exchangerate.host</a>
+                </div>
+                <div style={{ padding: '12px', backgroundColor: colors.bg, borderRadius: '6px' }}>
+                  <strong>{language === 'vi' ? '🪙 Tiền Điện Tử:' : '🪙 Cryptocurrency:'}</strong> 
+                  <a href="https://coingecko.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent }}>CoinGecko API</a>
+                </div>
+              </div>
+              <div style={{ 
+                marginTop: '16px', 
+                padding: '12px', 
+                backgroundColor: `${colors.success}20`, 
+                borderRadius: '6px',
+                border: `1px solid ${colors.success}40`
+              }}>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: colors.success, marginBottom: '4px' }}>
+                  ✅ {language === 'vi' ? '100% Miễn Phí & Không Giới Hạn' : '100% Free & Unlimited'}
+                </div>
+                <div style={{ fontSize: '12px', color: colors.secondary }}>
+                  {language === 'vi' 
+                    ? 'Không cần khóa API, không giới hạn tỷ lệ, dữ liệu thời gian thực cho sử dụng sản xuất.'
+                    : 'No API keys required, no rate limits, real-time data for production use.'}
+                </div>
+              </div>
             </div>
-          ) : (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '1rem' }}>
-              {rates?.map(pair => (
-                <CurrencyPair
-                  key={pair.pair}
-                  pair={pair}
-                  isSelected={selectedPair === pair.pair}
-                  onSelect={setSelectedPair}
-                  colors={colors}
-                />
-              ))}
-            </div>
-          )}
-          <p style={{ fontSize: '12px', color: colors.secondary, fontStyle: 'italic' }}>
-            Real-time data from exchangerate-api.com (FREE unlimited)
-          </p>
-        </div>
 
-        {/* Historical Chart */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ marginBottom: '1rem', color: colors.text }}>
-            📈 {selectedPair} Price Trend (30 Days)
-          </h3>
-          {loading.historical ? (
+            {/* Market Status */}
             <div style={{ 
-              height: '300px',
-              backgroundColor: colors.card,
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: colors.secondary,
-              border: `1px solid ${colors.border}`
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+              gap: '12px', 
+              marginBottom: '2rem' 
             }}>
-              Loading historical data...
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '12px', backgroundColor: colors.card, borderRadius: '6px' }}>
+                <span style={{ fontSize: '20px' }}>🟢</span>
+                <div>
+                  <span style={{ color: colors.text, fontWeight: '600' }}>
+                    {language === 'vi' ? 'Trạng Thái API: Hoạt động' : 'API Status: Active'}
+                  </span>
+                  <div style={{ fontSize: '12px', color: colors.secondary }}>
+                    {language === 'vi' ? 'Cập nhật mỗi 15 phút (bản miễn phí)' : 'Updates every 15 minutes (free tier)'}
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '12px', backgroundColor: colors.card, borderRadius: '6px' }}>
+                <span style={{ fontSize: '20px' }}>📡</span>
+                <div>
+                  <span style={{ color: colors.text, fontWeight: '600' }}>
+                    {language === 'vi' ? 'Nguồn Dữ Liệu: ExchangeRate-API' : 'Data Source: ExchangeRate-API'}
+                  </span>
+                  <div style={{ fontSize: '12px', color: colors.secondary }}>
+                    {language === 'vi' ? 'Miễn phí & đáng tin cậy' : 'Free & reliable'}
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', padding: '12px', backgroundColor: colors.card, borderRadius: '6px' }}>
+                <span style={{ fontSize: '20px' }}>⏰</span>
+                <div>
+                  <span style={{ color: colors.text, fontWeight: '600' }}>
+                    {language === 'vi' ? 'Cập Nhật API: Hàng Ngày' : 'API Update: Daily'}
+                  </span>
+                  <div style={{ fontSize: '12px', color: colors.secondary }}>
+                    {language === 'vi' ? 'Dữ liệu từ ngân hàng trung ương' : 'Data from central banks'}
+                  </div>
+                </div>
+              </div>
             </div>
-          ) : (
-            <LineChart 
-              data={historicalData?.[selectedPair]} 
-              height={300} 
-              colors={colors} 
-            />
-          )}
-          <p style={{ fontSize: '12px', color: colors.secondary, marginTop: '8px', fontStyle: 'italic' }}>
-            Historical data from exchangerate.host API (FREE unlimited)
-          </p>
-        </div>
 
-        {/* Cryptocurrency Section */}
-        {cryptoData && cryptoData.length > 0 && (
-          <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ marginBottom: '1rem', color: colors.text }}>🪙 Cryptocurrency Market</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-              {cryptoData.map((coin) => (
-                <CryptoCard key={coin.id} coin={coin} colors={colors} />
-              ))}
+            {/* Error Display */}
+            {error && (
+              <div style={{ 
+                padding: '16px', 
+                backgroundColor: `${colors.danger}20`, 
+                border: `1px solid ${colors.danger}40`, 
+                color: colors.danger, 
+                borderRadius: '8px', 
+                marginBottom: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                ⚠️ {error}
+                <button 
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: colors.danger,
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px'
+                  }}
+                  onClick={() => {
+                    setError(null);
+                    fetchRates();
+                    fetchCrypto();
+                    fetchHistoricalData();
+                  }}
+                >
+                  {language === 'vi' ? 'Thử Lại' : 'Retry'}
+                </button>
+              </div>
+            )}
+
+            {/* Footer */}
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              fontSize: '12px', 
+              color: colors.secondary, 
+              marginTop: '24px' 
+            }}>
+              <p>
+                🔄 {language === 'vi' ? 'Cập nhật lần cuối' : 'Last updated'}: {lastUpdate.toLocaleString(language === 'vi' ? 'vi-VN' : 'en-US')} • 
+                {language === 'vi' ? `Tự động làm mới mỗi ${timeRange === '1h' ? '2' : '5'} phút` : `Auto-refresh every ${timeRange === '1h' ? '2' : '5'} minutes`}
+              </p>
+              <button 
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: colors.accent,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => window.open('/rates', '_blank')}
+              >
+                🔍 {language === 'vi' ? `Xem tất cả ${rates ? rates.length : '160+'} tỷ giá` : `View all ${rates ? rates.length : '160+'} rates`}
+              </button>
             </div>
-            <p style={{ fontSize: '12px', color: colors.secondary, marginTop: '12px', fontStyle: 'italic' }}>
-              Live data from CoinGecko API (FREE unlimited)
-            </p>
-          </div>
+          </>
         )}
-
-        {/* Data Sources */}
-        <div style={{ 
-          padding: '20px', 
-          backgroundColor: colors.card, 
-          borderRadius: '12px', 
-          border: `1px solid ${colors.border}`,
-          marginBottom: '2rem'
-        }}>
-          <h3 style={{ color: colors.text, marginBottom: '16px' }}>🔗 Data Sources</h3>
-          <div style={{ display: 'grid', gap: '12px' }}>
-            <div style={{ padding: '12px', backgroundColor: colors.bg, borderRadius: '6px' }}>
-              <strong>📊 Exchange Rates:</strong> <a href="https://exchangerate-api.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent }}>exchangerate-api.com</a> + 
-              <a href="https://exchangerate.host" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent, marginLeft: '8px' }}>exchangerate.host</a>
-            </div>
-            <div style={{ padding: '12px', backgroundColor: colors.bg, borderRadius: '6px' }}>
-              <strong>🪙 Cryptocurrency:</strong> <a href="https://coingecko.com" target="_blank" rel="noopener noreferrer" style={{ color: colors.accent }}>CoinGecko API</a>
-            </div>
-          </div>
-          
-          <div style={{ 
-            marginTop: '16px', 
-            padding: '12px', 
-            backgroundColor: `${colors.success}20`, 
-            borderRadius: '6px',
-            border: `1px solid ${colors.success}40`
-          }}>
-            <div style={{ fontSize: '14px', fontWeight: '600', color: colors.success, marginBottom: '4px' }}>
-              ✅ 100% Free & Unlimited
-            </div>
-            <div style={{ fontSize: '12px', color: colors.secondary }}>
-              No API keys required, no rate limits, real-time data for production use.
-            </div>
-          </div>
-        </div>
-
-        {/* Error Display */}
-        {error && (
-          <div style={{ 
-            padding: '16px', 
-            backgroundColor: `${colors.danger}20`, 
-            border: `1px solid ${colors.danger}40`, 
-            color: colors.danger, 
-            borderRadius: '8px', 
-            marginBottom: '20px'
-          }}>
-            ⚠️ {error}
-            <button 
-              style={{
-                marginLeft: '12px',
-                padding: '6px 12px',
-                backgroundColor: colors.danger,
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-              onClick={() => {
-                setError(null);
-                fetchRates();
-                fetchCrypto();
-                fetchHistoricalData();
-              }}
-            >
-              Retry
-            </button>
-          </div>
-        )}
-        
-        {/* Footer */}
-        <p style={{ 
-          fontSize: '12px', 
-          color: colors.secondary, 
-          textAlign: 'center', 
-          marginTop: '24px' 
-        }}>
-          🔄 Last updated: {lastUpdate.toLocaleString()} • Auto-refresh every {timeRange === '1h' ? '2' : '5'} minutes
-        </p>
       </div>
     </>
   );

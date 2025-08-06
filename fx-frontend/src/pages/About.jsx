@@ -8,11 +8,11 @@ function About() {
         <h2>💼 About FX Rate Dashboard</h2>
         <p>
           FX Rate Dashboard is a real-time currency monitoring platform designed to help you track exchange rates effortlessly and make smarter financial decisions every day.
-        </p>
+        </p>  
         <p>
           Whether you're a traveler planning your next trip, an entrepreneur managing international payments, or simply someone who wants to stay informed — FX Rate Dashboard delivers accurate, live data when it matters most.
-        </p> 
-      </section>
+        </p>  
+      </section>  
 
       <section className="about-section section-purple">
         <h2>🌟 Why Choose Us?</h2>
