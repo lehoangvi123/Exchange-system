@@ -422,19 +422,21 @@ function AppContent() {
     navigate('/');
   };
 
-  const handleRegisterSuccess = () => {
-    setIsAuthenticated(true);
-    navigate('/');
-  };
+ // Trong App.jsx - Thay đổi hàm này
 
   // Hiển thị Register hoặc Login nếu chưa đăng nhập
-  if (!isAuthenticated) {
-    if (location.pathname === '/login') {
-      return <Login onLoginSuccess={handleLoginSuccess} />;
-    } else {
-      return <Register onRegisterSuccess={handleRegisterSuccess} />;
-    }
+  // Xóa hàm handleRegisterSuccess
+// const handleRegisterSuccess = () => { ... }  ← Xóa dòng này
+
+// Sửa phần render
+if (!isAuthenticated) {
+  if (location.pathname === '/login') {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  } else {
+    // ✅ Không cần callback nữa
+    return <Register />;
   }
+}
 
   // HEADER STYLES WITH SCROLL EFFECT
   const headerStyles = {
