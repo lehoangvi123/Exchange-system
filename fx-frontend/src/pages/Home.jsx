@@ -195,7 +195,7 @@ const Home = () => {
     },
     heroIcon: {
       fontSize: '4rem',
-      animation: 'rotate 3s linear infinite'
+      // animation: 'rotate 3s linear infinite'
     },
     heroSubtitle: {
       fontSize: '1.4rem',

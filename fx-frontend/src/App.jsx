@@ -817,7 +817,7 @@ if (!isAuthenticated) {
           <div className="container mx-auto flex justify-between items-center p-4">
             {/* Logo */}
             <div className="flex items-center space-x-2">
-              <span className="text-3xl" style={{animation: 'logoRotate 3s linear infinite'}}>💱</span>
+              <span className="text-3xl" style={{animation: ''}}>💱</span>
               <h4 className="text-2xl font-extrabold" style={{
                 color: isDark ? '#ffffff' : 'black',
                 transition: 'all 0.3s ease'
