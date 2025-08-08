@@ -1,4 +1,3 @@
-// 📁 components/RateChart.jsx
 import React, { useEffect, useState, useRef } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer
@@ -11,10 +10,27 @@ export default function RateChart() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastFetchTime, setLastFetchTime] = useState(null);
+  const [dataSource, setDataSource] = useState('loading'); // 'api', 'mock', 'hybrid'
   const intervalRef = useRef(null);
   const previousRatesRef = useRef(null);
+  const fetchAttempts = useRef(0);
+
+  // Base rates for mock data (realistic current rates)
+  const baseRates = useRef({
+    USD: 1,
+    EUR: 0.9234,       // EUR/USD
+    GBP: 0.7891,       // GBP/USD  
+    JPY: 149.85,       // USD/JPY
+    CNY: 7.2456,       // USD/CNY
+    VND: 26158,        // USD/VND (as requested)
+    AUD: 0.6789,       // AUD/USD
+    CAD: 0.7234,       // CAD/USD
+    CHF: 0.8945        // CHF/USD
+  });
 
   useEffect(() => {
+    // Start with mock data immediately
+    generateInitialMockData();
     startAutoTracking();
     
     return () => {
@@ -22,14 +38,88 @@ export default function RateChart() {
     };
   }, []);
 
+  const generateInitialMockData = () => {
+    const initialData = [];
+    const now = new Date();
+    
+    // Generate 10 initial data points spanning last 10 minutes
+    for (let i = 9; i >= 0; i--) {
+      const timestamp = new Date(now.getTime() - i * 60 * 1000); // Every minute
+      const dataPoint = generateMockDataPoint(timestamp);
+      initialData.push(dataPoint);
+    }
+    
+    setData(initialData);
+    setDataSource('mock');
+    setIsLoading(false);
+    console.log('📊 Generated initial mock data (10 points)');
+  };
+
+  const generateMockDataPoint = (timestamp = new Date()) => {
+    const time = timestamp.toLocaleTimeString('vi-VN', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      second: '2-digit'
+    });
+
+    // Create realistic variations
+    const variation = () => (Math.random() - 0.5) * 0.002; // ±0.1% variation
+    const trendFactor = Math.sin(timestamp.getTime() / 3600000) * 0.001; // Hourly trend
+
+    const rates = baseRates.current;
+    
+    // Apply small realistic changes
+    const mockPoint = {
+      time,
+      timestamp: timestamp.getTime(),
+      
+      // Major pairs
+      USD: 1,
+      EUR: parseFloat((rates.EUR * (1 + variation() + trendFactor)).toFixed(6)),
+      GBP: parseFloat((rates.GBP * (1 + variation() + trendFactor)).toFixed(6)),
+      JPY: parseFloat((rates.JPY * (1 + variation() + trendFactor)).toFixed(2)),
+      CNY: parseFloat((rates.CNY * (1 + variation() + trendFactor)).toFixed(4)),
+      
+      // VND pairs
+      USD_VND: Math.round(rates.VND * (1 + variation() + trendFactor)),
+      EUR_VND: Math.round((rates.VND / rates.EUR) * (1 + variation() + trendFactor)),
+      GBP_VND: Math.round((rates.VND / rates.GBP) * (1 + variation() + trendFactor)),
+      
+      // Additional pairs
+      AUD: parseFloat((rates.AUD * (1 + variation())).toFixed(6)),
+      CAD: parseFloat((rates.CAD * (1 + variation())).toFixed(6)),
+      CHF: parseFloat((rates.CHF * (1 + variation())).toFixed(6)),
+      
+      dataSource: 'mock',
+      isMock: true
+    };
+
+    // Update base rates gradually (market drift simulation)
+    Object.keys(baseRates.current).forEach(key => {
+      if (key !== 'USD') {
+        baseRates.current[key] *= (1 + (Math.random() - 0.5) * 0.0001);
+      }
+    });
+
+    return mockPoint;
+  };
+
   const startAutoTracking = () => {
     setIsRunning(true);
     
-    // Fetch ngay lập tức
+    // Try to fetch real data immediately
     fetchRealRates();
     
-    // Fetch mỗi 60 giây (API này update mỗi ngày, nhưng ta fetch thường xuyên để demo)
-    intervalRef.current = setInterval(fetchRealRates, 10000);
+    // Continue fetching every 10 seconds
+    intervalRef.current = setInterval(() => {
+      if (fetchAttempts.current < 3) {
+        // Try API first few times
+        fetchRealRates();
+      } else {
+        // After failed attempts, use hybrid approach
+        fetchHybridData();
+      }
+    }, 10000);
   };
 
   const stopTracking = () => {
@@ -44,7 +134,14 @@ export default function RateChart() {
     try {
       setError(null);
       
-      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD', {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
       
       if (!response.ok) {
         throw new Error(`API Error: ${response.status}`);
@@ -63,10 +160,9 @@ export default function RateChart() {
         second: '2-digit'
       });
 
-      // Lấy tỷ giá thật từ API
+      // Process real API data
       const rates = apiData.rates;
       
-      // Tính toán các cặp tiền tệ cần thiết
       const newPoint = {
         time,
         timestamp: now.getTime(),
@@ -79,97 +175,78 @@ export default function RateChart() {
         CNY: parseFloat(rates.CNY.toFixed(4)), // USD/CNY
         
         // VND pairs
-        USD_VND: parseFloat(rates.VND.toFixed(0)), // USD/VND
-        EUR_VND: parseFloat((rates.VND / rates.EUR).toFixed(0)), // EUR/VND
-        GBP_VND: parseFloat((rates.VND / rates.GBP).toFixed(0)), // GBP/VND
+        USD_VND: Math.round(rates.VND), // USD/VND
+        EUR_VND: Math.round(rates.VND / rates.EUR), // EUR/VND
+        GBP_VND: Math.round(rates.VND / rates.GBP), // GBP/VND
         
         // Additional useful rates
-        AUD: parseFloat((1 / rates.AUD).toFixed(6)), // AUD/USD
-        CAD: parseFloat((1 / rates.CAD).toFixed(6)), // CAD/USD
-        CHF: parseFloat((1 / rates.CHF).toFixed(6)), // CHF/USD
+        AUD: parseFloat((1 / rates.AUD).toFixed(6)),
+        CAD: parseFloat((1 / rates.CAD).toFixed(6)),
+        CHF: parseFloat((1 / rates.CHF).toFixed(6)),
         
-        // Store raw API data for reference
+        // Metadata
         apiTimestamp: apiData.date,
-        apiRates: rates
+        dataSource: 'api',
+        isReal: true
       };
 
-      // Store previous rates for change calculation
-      if (previousRatesRef.current) {
-        newPoint.changes = {
-          EUR: ((newPoint.EUR - previousRatesRef.current.EUR) / previousRatesRef.current.EUR * 100).toFixed(4),
-          GBP: ((newPoint.GBP - previousRatesRef.current.GBP) / previousRatesRef.current.GBP * 100).toFixed(4),
-          USD_VND: ((newPoint.USD_VND - previousRatesRef.current.USD_VND) / previousRatesRef.current.USD_VND * 100).toFixed(4),
-          EUR_VND: ((newPoint.EUR_VND - previousRatesRef.current.EUR_VND) / previousRatesRef.current.EUR_VND * 100).toFixed(4)
-        };
-      }
-      
-      previousRatesRef.current = newPoint;
-
-      setData(prev => {
-        const newData = [...prev, newPoint];
-        // Giữ tối đa 50 điểm để tránh quá tải
-        return newData.slice(-50);
+      // Update base rates with real data for better mock generation
+      Object.keys(baseRates.current).forEach(key => {
+        if (newPoint[key] !== undefined) {
+          baseRates.current[key] = newPoint[key];
+        }
       });
 
+      setData(prev => [...prev, newPoint].slice(-50));
       setLastFetchTime(now);
+      setDataSource('api');
       setIsLoading(false);
+      fetchAttempts.current = 0; // Reset on success
       
-      console.log(`📊 Real rates fetched at ${time} - USD/VND: ${newPoint.USD_VND}, EUR/VND: ${newPoint.EUR_VND}`);
+      console.log(`✅ Real API data fetched at ${time} - USD/VND: ${newPoint.USD_VND}`);
       
     } catch (err) {
-      console.error('❌ API fetch failed:', err);
-      setError(err.message);
-      setIsLoading(false);
+      fetchAttempts.current++;
+      console.warn(`⚠️ API fetch failed (attempt ${fetchAttempts.current}):`, err.message);
       
-      // Fallback: continue với mock data nếu API fail
-      generateFallbackData();
+      if (fetchAttempts.current >= 3) {
+        setError(`API unavailable after ${fetchAttempts.current} attempts`);
+        setDataSource('hybrid');
+      }
+      
+      // Always fallback to mock data
+      const mockPoint = generateMockDataPoint();
+      setData(prev => [...prev, mockPoint].slice(-50));
+      setLastFetchTime(new Date());
+      setIsLoading(false);
     }
   };
 
-  // Fallback function khi API không hoạt động
-  const generateFallbackData = () => {
-    const now = new Date();
-    const time = now.toLocaleTimeString('vi-VN', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit'
-    });
-
-    // Base fallback rates (gần với thực tế)
-    const baseRates = {
-      EUR: 0.9234,
-      GBP: 0.7891,
-      JPY: 149.85,
-      VND: 24650,
-      CNY: 7.2456
-    };
-
-    // Thêm variation nhỏ
-    const variation = () => (Math.random() - 0.5) * 0.001; // ±0.05%
-
-    const fallbackPoint = {
-      time,
-      timestamp: now.getTime(),
-      USD: 1,
-      EUR: parseFloat((baseRates.EUR + variation()).toFixed(6)),
-      GBP: parseFloat((baseRates.GBP + variation()).toFixed(6)),
-      JPY: parseFloat((baseRates.JPY + variation() * 50).toFixed(2)),
-      CNY: parseFloat((baseRates.CNY + variation()).toFixed(4)),
-      USD_VND: parseFloat((baseRates.VND + variation() * 100).toFixed(0)),
-      EUR_VND: parseFloat((baseRates.VND * baseRates.EUR + variation() * 100).toFixed(0)),
-      GBP_VND: parseFloat((baseRates.VND * baseRates.GBP + variation() * 100).toFixed(0)),
-      isFallback: true
-    };
-
-    setData(prev => {
-      const newData = [...prev, fallbackPoint];
-      return newData.slice(-50);
-    });
+  const fetchHybridData = () => {
+    // Generate mock data but try to keep it realistic
+    const mockPoint = generateMockDataPoint();
+    
+    // Add some indicator that this is hybrid mode
+    mockPoint.dataSource = 'hybrid';
+    mockPoint.isHybrid = true;
+    
+    setData(prev => [...prev, mockPoint].slice(-50));
+    setLastFetchTime(new Date());
+    
+    console.log(`🔄 Hybrid data generated at ${mockPoint.time}`);
+    
+    // Periodically retry API
+    if (Math.random() < 0.1) { // 10% chance to retry API
+      fetchRealRates();
+    }
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const data = payload[0]?.payload;
+      const sourceIcon = data?.isReal ? '🌐' : data?.isHybrid ? '🔄' : '📊';
+      const sourceText = data?.isReal ? 'Real API Data' : data?.isHybrid ? 'Hybrid Data' : 'Mock Data';
+      
       return (
         <div style={{
           backgroundColor: 'rgba(255, 255, 255, 0.98)',
@@ -195,20 +272,41 @@ export default function RateChart() {
               <span>{typeof entry.value === 'number' ? entry.value.toLocaleString() : entry.value}</span>
             </p>
           ))}
-          {data?.isFallback && (
-            <p style={{ margin: '8px 0 0 0', fontSize: '11px', color: '#f59e0b', fontStyle: 'italic' }}>
-              ⚠️ Fallback Data (API unavailable)
-            </p>
-          )}
+          <div style={{ 
+            marginTop: '8px', 
+            paddingTop: '8px', 
+            borderTop: '1px solid #e5e7eb',
+            fontSize: '11px',
+            color: '#6b7280',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span>{sourceIcon}</span>
+            <span>{sourceText}</span>
+          </div>
           {data?.apiTimestamp && (
-            <p style={{ margin: '8px 0 0 0', fontSize: '11px', color: '#6b7280' }}>
-              📊 API Date: {data.apiTimestamp}
+            <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: '#6b7280' }}>
+              📅 API Date: {data.apiTimestamp}
             </p>
           )}
         </div>
       );
     }
     return null;
+  };
+
+  const getDataSourceStatus = () => {
+    switch (dataSource) {
+      case 'api':
+        return { icon: '🌐', text: 'Real API', color: '#10b981', desc: 'Live data from exchangerate-api.com' };
+      case 'hybrid':
+        return { icon: '🔄', text: 'Hybrid Mode', color: '#f59e0b', desc: 'Mock data + periodic API retries' };
+      case 'mock':
+        return { icon: '📊', text: 'Mock Data', color: '#8b5cf6', desc: 'Simulated realistic market data' };
+      default:
+        return { icon: '⏳', text: 'Loading', color: '#6b7280', desc: 'Initializing data source' };
+    }
   };
 
   const styles = {
@@ -220,7 +318,7 @@ export default function RateChart() {
       borderRadius: '20px',
       padding: '30px',
       boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
-      fontFamily: 'Segoe UI, sans-serif',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       border: '1px solid #e5e7eb'
     },
     header: {
@@ -327,16 +425,6 @@ export default function RateChart() {
       color: '#6b7280',
       fontSize: '16px'
     },
-    errorState: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '450px',
-      color: '#ef4444',
-      fontSize: '16px',
-      textAlign: 'center'
-    },
     dataInfo: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
@@ -361,6 +449,16 @@ export default function RateChart() {
       borderRadius: '12px',
       border: '1px solid #e2e8f0',
       lineHeight: '1.5'
+    },
+    dataSourceIndicator: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      padding: '8px 12px',
+      borderRadius: '8px',
+      fontSize: '12px',
+      fontWeight: '600',
+      border: '1px solid #e5e7eb'
     }
   };
 
@@ -470,6 +568,8 @@ export default function RateChart() {
     </ResponsiveContainer>
   );
 
+  const sourceStatus = getDataSourceStatus();
+
   return (
     <>
       <style>{pulseKeyframes}</style>
@@ -509,8 +609,18 @@ export default function RateChart() {
                   fontWeight: '600',
                   fontSize: '13px'
                 }}>
-                  {isRunning ? '🟢 LIVE' : '🔴 STOPPED'} • 60s
+                  {isRunning ? '🟢 LIVE' : '🔴 STOPPED'} • 10s
                 </span>
+              </div>
+
+              <div style={{
+                ...styles.dataSourceIndicator,
+                backgroundColor: sourceStatus.color + '20',
+                color: sourceStatus.color,
+                borderColor: sourceStatus.color + '40'
+              }}>
+                <span>{sourceStatus.icon}</span>
+                <span>{sourceStatus.text}</span>
               </div>
 
               {!isRunning ? (
@@ -536,14 +646,14 @@ export default function RateChart() {
           {selectedChart === 'major' ? (
             <>
               📊 <strong>Major Currency Pairs:</strong> EUR/USD, GBP/USD, USD/CNY - 
-              Theo dõi các cặp tiền tệ chính với dữ liệu thật từ ExchangeRate-API. 
-              {error && <span style={{color: '#ef4444'}}> ⚠️ API Error: {error}</span>}
+              Hybrid data combining real API and mock simulation. {sourceStatus.desc}.
+              {error && <span style={{color: '#ef4444'}}> ⚠️ {error}</span>}
             </>
           ) : (
             <>
-              🇻🇳 <strong>VND Currency Pairs:</strong> USD/VND, EUR/VND, GBP/VND - 
-              Tỷ giá VND thời gian thực quan trọng cho thị trường Việt Nam.
-              {error && <span style={{color: '#ef4444'}}> ⚠️ Using fallback data</span>}
+              🇻🇳 <strong>VND Currency Pairs:</strong> USD/VND (26,158), EUR/VND, GBP/VND - 
+              Real-time VND rates crucial for Vietnamese markets. {sourceStatus.desc}.
+              {error && <span style={{color: '#f59e0b'}}> ⚠️ Using fallback data</span>}
             </>
           )}
         </div>
@@ -552,24 +662,10 @@ export default function RateChart() {
           {isLoading ? (
             <div style={styles.loadingState}>
               <div style={{fontSize: '48px', marginBottom: '16px'}}>🌐</div>
-              <div>Đang tải dữ liệu từ API...</div>
+              <div>Khởi tạo dữ liệu...</div>
               <div style={{fontSize: '14px', marginTop: '8px', opacity: 0.7}}>
-                api.exchangerate-api.com
+                Mock data ready • API connecting...
               </div>
-            </div>
-          ) : error && data.length === 0 ? (
-            <div style={styles.errorState}>
-              <div style={{fontSize: '48px', marginBottom: '16px'}}>❌</div>
-              <div><strong>API Connection Failed</strong></div>
-              <div style={{fontSize: '14px', marginTop: '8px', maxWidth: '400px'}}>
-                {error}
-              </div>
-              <button 
-                onClick={fetchRealRates}
-                style={{...styles.controlButton, ...styles.startButton, marginTop: '16px'}}
-              >
-                🔄 Retry
-              </button>
             </div>
           ) : (
             selectedChart === 'major' ? renderMajorChart() : renderVNDChart()
@@ -586,9 +682,9 @@ export default function RateChart() {
             </div>
             
             <div style={styles.infoCard}>
-              <strong>🌐 Data Source</strong><br/>
-              API: exchangerate-api.com<br/>
-              Fetch: Every 60 seconds<br/>
+              <strong>{sourceStatus.icon} Data Source</strong><br/>
+              Mode: {sourceStatus.text}<br/>
+              Fetch: Every 10 seconds<br/>
               {lastFetchTime && <>Last: {lastFetchTime.toLocaleTimeString('vi-VN')}</>}
             </div>
 
@@ -607,6 +703,13 @@ export default function RateChart() {
                   GBP/VND: {data[data.length - 1]?.GBP_VND?.toLocaleString()}
                 </>
               )}
+            </div>
+
+            <div style={styles.infoCard}>
+              <strong>🔄 Data Quality</strong><br/>
+              API Success: {Math.max(0, 100 - fetchAttempts.current * 25)}%<br/>
+              Real Points: {data.filter(d => d.isReal).length}<br/>
+              Mock Points: {data.filter(d => d.isMock || d.isHybrid).length}
             </div>
           </div>
         )}

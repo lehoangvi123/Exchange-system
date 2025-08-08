@@ -90,7 +90,7 @@ export default function HistoryChart({ period = '24h' }) {
   const styles = {
     container: {
       padding: '32px',
-      maxWidth: '900px',
+     
       margin: '40px auto',
       backgroundColor: '#ffffff',
       border: '1px solid #e2e8f0',
@@ -101,7 +101,8 @@ export default function HistoryChart({ period = '24h' }) {
       `,
       fontFamily: "'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif",
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden', 
+      width: '1200px'        
     },
     
     // Gradient background overlay

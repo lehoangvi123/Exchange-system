@@ -113,7 +113,7 @@ const Report = () => {
     <div style={{ 
       padding: '20px', 
       fontFamily: 'Arial, sans-serif',
-      maxWidth: '1200px',
+      width: '1200px', 
       margin: '0 auto',
       backgroundColor: '#f8fafc'
     }}>

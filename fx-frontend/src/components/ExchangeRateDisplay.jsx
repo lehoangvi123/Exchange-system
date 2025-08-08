@@ -26,7 +26,7 @@ export default function ExchangeRateDisplay() {
 
   return (
     <div style={{ maxWidth: '700px', margin: '30px auto', padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h2 style={{ textAlign: 'center' }}>💱 Defective Abnormal Exchange Rates</h2>
+      <h2 style={{ textAlign: 'center', color: 'white'}}>💱 Defective Abnormal Exchange Rates</h2>
 
       {/* 🔍 Lý thuyết phát hiện tỷ giá bất thường */}
       <div style={{

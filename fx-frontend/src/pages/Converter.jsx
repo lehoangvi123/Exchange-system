@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import '../css/Convert.css'
 function CurrencyConverter() {
   const [from, setFrom] = useState('USD');
   const [to, setTo] = useState('VND');
@@ -257,7 +257,7 @@ function CurrencyConverter() {
 
   const handleQuickAmount = (value) => {
     setAmount(value);
-    setConvertedAmount(null);
+    setConvertedAmount(null);        
   };
 
   const filteredFromCurrencies = allCurrencies.filter(currency =>
@@ -358,14 +358,14 @@ function CurrencyConverter() {
 
   const styles = {
     container: {
-      maxWidth: '500px',
+      width: '1000px',
       margin: '0 auto',
       padding: '30px',
       backgroundColor: '#ffffff',
       borderRadius: '20px',
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
       border: '1px solid #e5e7eb',
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", 
     },
     title: {
       fontSize: '28px',
@@ -584,7 +584,9 @@ function CurrencyConverter() {
       fontWeight: '600',
       color: '#6b7280',
       borderBottom: '1px solid #e5e7eb'
-    }
+    } 
+
+    
   };
 
   const keyframes = `
@@ -604,7 +606,7 @@ function CurrencyConverter() {
             Last updated: {lastUpdated.toLocaleTimeString('vi-VN')}
           </p>
         )}
-
+<div class="InputButton">
         {/* From Currency */}
         <div style={styles.inputGroup}>
           <label style={styles.label}>From:</label>
@@ -647,6 +649,7 @@ function CurrencyConverter() {
             filteredCurrencies={filteredToCurrencies}
             placeholder="to currency"
           />
+        </div> 
         </div>
 
         {/* Amount Input */}

@@ -449,7 +449,8 @@ const CrossRateConverter = () => {
   const styles = {
     container: {
       maxWidth: '100%',
-      fontFamily: 'Segoe UI, sans-serif',
+      fontFamily: 'Segoe UI, sans-serif', 
+      width: '1000px'
     },
     title: {
       textAlign: 'center',

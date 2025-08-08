@@ -30,7 +30,7 @@ import UpdateUserForm from './components/UpdateUserForm';
 import SaveUserForm from './components/SaveUserForm';
 import LogConversionForm from './components/LogConversionForm';
 import ArchiveRateForm from './components/ArchiveRateForm';
-import RateTrend from './components/RateTrend';
+import RateTrend from './pages/RateTrend';
 import UpdatePreferences from './components/UpdatePreferences'; 
 import Profile from './pages/Profile'; 
 import Terms from './pages/Terms'; 
@@ -200,7 +200,8 @@ const NavigationMenu = () => {
         { title: "Tỷ giá hiện tại", icon: "💰", link: "/rates", desc: "Xem tỷ giá thời gian thực" },
         { title: "Lịch sử tỷ giá", icon: "📊", link: "/historyRate", desc: "Dữ liệu tỷ giá theo thời gian" },
         { title: "Biểu đồ tỷ giá", icon: "📈", link: "/chart", desc: "Trực quan hóa tỷ giá" },
-        { title: "Cảnh báo tỷ giá", icon: "🚨", link: "/alerts", desc: "Thiết lập thông báo" }
+        { title: "Cảnh báo tỷ giá", icon: "🚨", link: "/alerts", desc: "Thiết lập thông báo" }, 
+        { title: "Xu hướng tỷ giá", icon: "📈", link: "/RateTrend", desc: "Xem xu hướng các tỷ giá"}
       ]
     },
     {
@@ -524,6 +525,10 @@ if (!isAuthenticated) {
 
         .nav-link:hover::before {
           left: 100%;
+        } 
+
+        .home-card{ 
+            
         }
 
         .nav-link:hover {
@@ -863,11 +868,11 @@ if (!isAuthenticated) {
                 <div className="home-grid">
                   <section className="welcome-section">
                     <h2 className="home-title" style={{
-                      color: isDark ? '#ffffff' : '#1f2937',
+                      color: 'white',
                       transition: 'all 0.3s ease'
                     }}>Welcome to FX Rate Dashboard</h2>
                     <p className="home-subtitle" style={{
-                      color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#4b5563',
+                      color: 'white', 
                       transition: 'all 0.3s ease'
                     }}>
                       Get real-time currency rates, insights, and analysis tools — all in one place.
@@ -875,94 +880,32 @@ if (!isAuthenticated) {
                   </section>
 
                   <div className="card-grid">
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><CurrencyConverter /></div>
+                    {/* <div ><CurrencyConverter /></div> */}
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><CrossRateConverter /></div>
+                    <div ><CrossRateConverter /></div>
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><ExchangeRateDisplay /></div>
+                    <div ><ExchangeRateDisplay /></div>
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><TechnicalIndicators /></div> 
+                    <div ><TechnicalIndicators /></div> 
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><MarketSummary /></div> 
+                   
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><RateTrend pair="AUD_BGN" period="30d" /></div>  
+                    {/* <div><RateTrend pair="AUD_BGN" period="30d" /></div>   */}
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><SaveRateForm /></div>
+                    <div ><SaveRateForm /></div>
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><LogConversionForm /></div>
+                    <div ><LogConversionForm /></div>
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><SaveUserForm /></div>
+                    <div ><SaveUserForm /></div>
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><UpdateUserForm /></div>
+                    {/* <div ><UpdateUserForm /></div> */}
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><UpdatePreferences /></div>
+                    <div ><UpdatePreferences /></div>
                     
-                    <div className="home-card" style={{
-                      background: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`,
-                      transition: 'all 0.3s ease'
-                    }}><ArchiveRateForm /></div> 
+                    <div ><ArchiveRateForm /></div> 
 
-                    <div><Analytics /></div> 
-                    <div> <Report /> </div>
-                    <div><Export /></div> 
-                    <div><APIIntegration /></div>
+                    
+                    {/* <div> <Report /> </div>  */}
                   </div>
                 </div>
               ) : (
@@ -991,7 +934,8 @@ if (!isAuthenticated) {
             <Route path="/analytics" element={<Analytics />} /> 
             <Route path="/reports" element={<Report />} /> 
             <Route path="/export" element={<Export />} /> 
-            <Route path="/api" element={<APIIntegration />} />
+            <Route path="/api" element={<APIIntegration />} /> 
+            <Route path="/RateTrend" element={<RateTrend />} />
           </Routes> 
         </main>
 
@@ -1009,7 +953,7 @@ if (!isAuthenticated) {
                 ? 'linear-gradient(135deg, #e74c3c, #3498db)' 
                 : 'linear-gradient(135deg, #667eea, #764ba2)',
               color: 'white',
-              border: 'none',
+              border: 'none',        
               borderRadius: '50%',
               boxShadow: isDark 
                 ? '0 10px 25px rgba(231, 76, 60, 0.3)' 
@@ -1146,7 +1090,8 @@ if (!isAuthenticated) {
 
         .welcome-section {
           text-align: center;
-          padding: 2rem 0;
+          padding: 2rem 0; 
+          color: white; 
         }
 
         .home-title {
