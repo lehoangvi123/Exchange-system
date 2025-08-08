@@ -2,23 +2,54 @@ import React, { useEffect, useState } from 'react';
 import { useTheme } from '../contexts/themeContexts'; // Import ThemeContext
 
 function Setting() {
-  const { theme, changeTheme } = useTheme(); // Sử dụng ThemeContext
+  const { theme, changeTheme } = useTheme(); // Use ThemeContext
   
-  // State cho các settings đơn giản
+  // State for settings
   const [settings, setSettings] = useState({
-    theme: theme, // Sync với context
+    theme: theme,
     language: 'vi'
   });
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState({
+  const [user] = useState({
     name: 'Nguyễn Văn An',
     email: 'nguyen.van.an@email.com',
     avatar: '👨‍💼'
   });
 
-  // Sync settings với theme context khi theme thay đổi
+  // Translation object
+  const translations = {
+    vi: {
+      headerTitle: 'Cài đặt',
+      headerSubtitle: 'Tùy chỉnh giao diện và ngôn ngữ theo sở thích của bạn',
+      languageSectionTitle: '🌍 Chọn ngôn ngữ',
+      languageLabel: 'Ngôn ngữ hiển thị',
+      saveButton: '💾 Lưu cài đặt',
+      savingButton: '⏳ Đang lưu...',
+      // resetButton: '🔄 Đặt lại mặc định',
+      successMessage: 'Cài đặt đã được lưu thành công! 🎉',
+      errorMessage: 'Lỗi khi lưu cài đặt. Vui lòng thử lại.',
+      resetConfirm: 'Bạn có chắc chắn muốn đặt lại tất cả cài đặt về mặc định?'
+    },
+    en: {
+      headerTitle: 'Settings',
+      headerSubtitle: 'Customize the appearance and language to your preference',
+      languageSectionTitle: '🌍 Select Language',
+      languageLabel: 'Display Language',
+      saveButton: '💾 Save Settings',
+      savingButton: '⏳ Saving...',
+      // resetButton: '🔄 Reset to Default',
+      successMessage: 'Settings saved successfully! 🎉',
+      errorMessage: 'Error saving settings. Please try again.',
+      resetConfirm: 'Are you sure you want to reset all settings to default?'
+    }
+  };
+
+  // Get current translations based on selected language
+  const t = translations[settings.language] || translations.vi;
+
+  // Sync settings with theme context when theme changes
   useEffect(() => {
     setSettings(prev => ({
       ...prev,
@@ -26,7 +57,7 @@ function Setting() {
     }));
   }, [theme]);
 
-  // Load saved settings from localStorage khi component mount
+  // Load saved settings from localStorage when component mounts
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language') || 'vi';
     setSettings(prev => ({
@@ -52,10 +83,10 @@ function Setting() {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      setMessage('Cài đặt đã được lưu thành công! 🎉');
+      setMessage(t.successMessage);
       setTimeout(() => setMessage(''), 4000);
     } catch (error) {
-      setMessage('Lỗi khi lưu cài đặt. Vui lòng thử lại.');
+      setMessage(t.errorMessage);
       console.error('Error saving settings:', error);
     } finally {
       setLoading(false);
@@ -72,17 +103,17 @@ function Setting() {
 
   // Reset to defaults
   const resetToDefaults = () => {
-    if (window.confirm('Bạn có chắc chắn muốn đặt lại tất cả cài đặt về mặc định?')) {
+    if (window.confirm(t.resetConfirm)) {
       const defaultSettings = {
         theme: 'light',
         language: 'vi'
       };
       
       setSettings(defaultSettings);
-      changeTheme('light'); // Reset theme through context
-      localStorage.setItem('language', 'vi'); // Reset language in localStorage
+      changeTheme('light');
+      localStorage.setItem('language', 'vi');
       
-      setMessage('Đã đặt lại cài đặt về mặc định! ⚡');
+      setMessage(t.successMessage);
       setTimeout(() => setMessage(''), 3000);
     }
   };
@@ -231,51 +262,6 @@ function Setting() {
         textAlign: 'center',
         transition: 'color 0.3s ease'
       },
-      themeContainer: {
-        display: 'flex',
-        gap: '20px',
-        justifyContent: 'center',
-        flexWrap: 'wrap'
-      },
-      themeOption: {
-        flex: 1,
-        minWidth: '200px',
-        padding: '25px 20px',
-        border: `3px solid ${isDark ? '#4a5568' : '#e5e7eb'}`,
-        borderRadius: '20px',
-        cursor: 'pointer',
-        transition: 'all 0.4s ease',
-        background: isDark ? '#3a3a3a' : 'white',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden'
-      },
-      themeOptionActive: {
-        borderColor: '#667eea',
-        background: isDark 
-          ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2))'
-          : 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
-        transform: 'translateY(-5px)',
-        boxShadow: '0 15px 35px rgba(102, 126, 234, 0.2)'
-      },
-      themeIcon: {
-        fontSize: '3rem',
-        marginBottom: '15px',
-        display: 'block'
-      },
-      themeLabel: {
-        fontSize: '1.3rem',
-        fontWeight: 'bold',
-        color: isDark ? '#ffffff' : '#2c3e50',
-        marginBottom: '8px',
-        transition: 'color 0.3s ease'
-      },
-      themeDesc: {
-        fontSize: '0.95rem',
-        color: isDark ? '#a0aec0' : '#6b7280',
-        lineHeight: 1.4,
-        transition: 'color 0.3s ease'
-      },
       select: {
         width: '100%',
         padding: '18px 20px',
@@ -388,18 +374,11 @@ function Setting() {
             <div style={styles.headerContent}>
               <h1 style={styles.headerTitle}>
                 <span>⚙️</span>
-                Cài đặt
+                {t.headerTitle}
               </h1>
               <p style={styles.headerSubtitle}>
-                Tùy chỉnh giao diện và ngôn ngữ theo sở thích của bạn
+                {t.headerSubtitle}
               </p>
-              {/* <div style={styles.userInfo}>
-                <div style={styles.avatar}>{user.avatar}</div>
-                <div style={styles.userDetails}>
-                  <div style={styles.userName}>{user.name}</div>
-                  <div style={styles.userEmail}>{user.email}</div>
-                </div>
-              </div> */}
             </div>
           </div>
 
@@ -407,62 +386,22 @@ function Setting() {
           {message && (
             <div style={{
               ...styles.message,
-              ...(message.includes('Lỗi') ? styles.messageError : styles.messageSuccess)
-            }}>
+              ...(message.includes('Lỗi') || message.includes('Error') ? styles.messageError : styles.messageSuccess)
+            }}> 
               {message}
             </div>
           )}
 
           {/* Content */}
-          {/* <div style={styles.content}>
-            
-            <div style={styles.section}>
-              <h3 style={styles.sectionTitle}>
-                🎨 Chọn giao diện
-              </h3>
-              
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Chủ đề hiển thị</label>
-                <div style={styles.themeContainer}>
-                  <div
-                    style={{
-                      ...styles.themeOption,
-                      ...(settings.theme === 'light' ? styles.themeOptionActive : {})
-                    }}
-                    onClick={() => handleChange('theme', 'light')}
-                  >
-                    <span style={styles.themeIcon}>☀️</span>
-                    <div style={styles.themeLabel}>Giao diện sáng</div>
-                    <div style={styles.themeDesc}>
-                      Giao diện truyền thống với nền sáng, phù hợp sử dụng ban ngày
-                    </div>
-                  </div>
-                  
-                  <div
-                    style={{
-                      ...styles.themeOption,
-                      ...(settings.theme === 'dark' ? styles.themeOptionActive : {})
-                    }}
-                    onClick={() => handleChange('theme', 'dark')}
-                  >
-                    <span style={styles.themeIcon}>🌙</span>
-                    <div style={styles.themeLabel}>Giao diện tối</div>
-                    <div style={styles.themeDesc}>
-                      Giao diện tối bảo vệ mắt, phù hợp sử dụng ban đêm
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-
+          <div style={styles.content}>
             {/* Language Section */}
             <div style={styles.section}>
               <h3 style={styles.sectionTitle}>
-                🌍 Chọn ngôn ngữ
+                {t.languageSectionTitle}
               </h3>
               
               <div style={styles.formGroup}>
-                <label style={styles.label}>Ngôn ngữ hiển thị</label>
+                <label style={styles.label}>{t.languageLabel}</label>
                 <select
                   value={settings.language}
                   onChange={(e) => handleChange('language', e.target.value)}
@@ -504,34 +443,14 @@ function Setting() {
                   }
                 }}
               >
-                {loading ? '⏳ Đang lưu...' : '💾 Lưu cài đặt'}
+                {loading ? t.savingButton : t.saveButton}
               </button>
               
-              <button
-                onClick={resetToDefaults}
-                style={{
-                  ...styles.button,
-                  ...styles.secondaryButton
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = '#667eea';
-                  e.target.style.color = 'white';
-                  e.target.style.transform = 'translateY(-3px)';
-                  e.target.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = theme === 'dark' ? '#a0aec0' : '#667eea';
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              >
-                🔄 Đặt lại mặc định
-              </button>
+              
             </div>
           </div>
         </div>
-      {/* </div> */}
+      </div>
     </>
   );
 }
