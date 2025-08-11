@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from 'axios'; 
+import '../css/Rates.css'
+
 
 const currencyCountries = {
   AED: "United Arab Emirates", AFN: "Afghanistan", ALL: "Albania", AMD: "Armenia",
@@ -126,7 +128,7 @@ function Rates({ rates, loading, error }) {
         </h2>
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-gray-600 mt-4">Đang tải dữ liệu tỷ giá...</p>
+          <p className="text-gray-600 mt-4">Đang tải dữ liệu tỷ giá...</p> 
         </div>
       </div>
     );
@@ -183,8 +185,8 @@ function Rates({ rates, loading, error }) {
   }
 
   return (
-    <div className="w-full bg-white rounded-2xl shadow-xl p-6 max-w-5xl mx-auto mt-8">
-      <h2 className="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-2">
+    <div className="full-screen w-full bg-white rounded-2xl shadow-xl p-6 max-w-5xl mx-auto mt-8">
+      <h2 className="header-2 text-3xl font-bold text-blue-800 mb-6 flex items-center gap-2">
         🌍 Exchange Rates
         <span className="text-base font-medium text-gray-600 ml-2">
           (USD convert to: {usdAmount})
@@ -236,9 +238,7 @@ function Rates({ rates, loading, error }) {
         </table>
       </div>
 
-      <p className="text-center text-xs text-gray-400 mt-6 italic">
-        Data auto-updates from real-time API
-      </p>
+      
     </div>
   );
 }
@@ -302,12 +302,12 @@ function CombinedExchangeRateApp() {
       {/* Header Navigation */}
       <div className="bg-white shadow-md">
         <div className="container mx-auto px-4">
-          <div className="flex justify-center space-x-8 py-4">
+          <div className="Exchange-button flex justify-center space-x-8 py-4">
             <button
               onClick={() => setActiveTab('rates')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
+              className={`Exchange-Rate-button px-6 py-2 rounded-lg font-semibold transition ${
                 activeTab === 'rates'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-blue-600 text-white' 
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
@@ -315,7 +315,7 @@ function CombinedExchangeRateApp() {
             </button>
             <button
               onClick={() => setActiveTab('sources')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
+              className={`Raw-Source-button px-6 py-2 rounded-lg font-semibold transition ${
                 activeTab === 'sources'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'

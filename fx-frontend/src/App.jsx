@@ -18,7 +18,7 @@ import Chart from './pages/Chart';
 import Rates from './pages/Rates'; 
 import SaveForm from './pages/SaveForm'; 
 import Converter from './pages/Converter'
-
+import Careers from './pages/Careers'; 
 // Components
 import CurrencyConverter from './components/CurrencyConverter';
 import CrossRateConverter from './components/CrossRateConverter';
@@ -903,7 +903,8 @@ if (!isAuthenticated) {
                     <div ><UpdatePreferences /></div>
                     
                     <div ><ArchiveRateForm /></div> 
-
+                    
+                    
                     
                     {/* <div> <Report /> </div>  */}
                   </div>
@@ -935,9 +936,13 @@ if (!isAuthenticated) {
             <Route path="/reports" element={<Report />} /> 
             <Route path="/export" element={<Export />} /> 
             <Route path="/api" element={<APIIntegration />} /> 
-            <Route path="/RateTrend" element={<RateTrend />} />
+            <Route path="/RateTrend" element={<RateTrend />} /> 
+            {/* <Route path="/careers" element={<Careers />} /> */}
           </Routes> 
         </main>
+
+        {/* This is the comment
+         */}
 
         {/* SCROLL TO TOP BUTTON */}
         {!isHeaderVisible && (
@@ -1000,7 +1005,7 @@ if (!isAuthenticated) {
               <div>
                 <h4 style={{ color: isDark ? '#ffffff' : '#1f2937' }}>Công ty</h4>
                 <a href="/about" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Về chúng tôi</a>
-                <a href="/careers" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Sự nghiệp</a>
+                <a href="https://jobs.apple.com/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Sự nghiệp</a>
                 <a href="/contact" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Liên hệ với chúng tôi</a>
                 <a href="https://vietstock.vn/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Điểm nhấn</a>
               </div>
@@ -1022,7 +1027,7 @@ if (!isAuthenticated) {
                 <h4 style={{ color: isDark ? '#ffffff' : '#1f2937' }}>Luật lệ</h4>
                 <a href="https://www.termsfeed.com/live/159dd57d-3d00-4060-b937-2c50e86903f9" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Quyền riêng tư</a>
                 <a href="/terms" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Điều khoản về dịch vụ</a>
-                <a href="/disclaimer" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Tuyên bố miễn trừ trách nhiệm</a>
+                <a href="https://privacyterms.io/view/austMd3V-RiKa3uTO-t1cHGR/" style={{ color: isDark ? 'rgba(255, 255, 255, 0.8)' : '#6b7280' }}>Tuyên bố miễn trừ trách nhiệm</a>
               </div>
             </div>
           </div>

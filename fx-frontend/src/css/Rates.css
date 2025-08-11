@@ -1,0 +1,126 @@
+.full-screen{ 
+    background-color: white; 
+    border-radius: 10px; 
+    padding: 20px; 
+    margin-left: 130px; 
+    margin-right: 0; 
+} 
+
+
+
+
+/* Header Navigation CSS */
+
+/* Container chính với background trắng và shadow */
+.header-nav {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Container wrapper với max-width và padding */
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Container cho buttons với flex layout */
+.Exchange-button {
+  display: flex;
+  justify-content: center;
+  gap: 2rem; /* space-x-8 = 2rem */
+  padding: 1rem 0; /* py-4 = 1rem top/bottom */ 
+  font-family: ''
+}
+
+/* Base styles cho tất cả navigation buttons */
+.Exchange-Rate-button,
+.Raw-Source-button {
+  padding: 0.5rem 1.5rem; /* px-6 py-2 */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-weight: 600; /* font-semibold */
+  transition: all 0.2s ease-in-out; /* transition */
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* Active state styles (khi button được chọn) */
+.Exchange-Rate-button.active,
+.Raw-Source-button.active {
+  background-color: #2563eb; /* bg-blue-600 */
+  color: white; /* text-white */
+}
+
+/* Inactive state styles (khi button không được chọn) */
+.Exchange-Rate-button.inactive,
+.Raw-Source-button.inactive {
+  background-color: #e5e7eb; /* bg-gray-200 */
+  color: #374151; /* text-gray-700 */
+}
+
+/* Hover effect cho inactive buttons */
+.Exchange-Rate-button.inactive:hover,
+.Raw-Source-button.inactive:hover {
+  background-color: #d1d5db; /* hover:bg-gray-300 */
+}
+
+/* Alternative: Sử dụng một class chung cho buttons */
+.nav-button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav-button.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+.nav-button.inactive {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.nav-button.inactive:hover {
+  background-color: #d1d5db;
+}
+
+/* Responsive design cho mobile */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 0.5rem;
+  }
+  
+  .Exchange-button {
+    gap: 1rem; /* Giảm khoảng cách trên mobile */
+    padding: 0.75rem 0;
+  }
+  
+  .Exchange-Rate-button,
+  .Raw-Source-button,
+  .nav-button {
+    padding: 0.5rem 1rem; /* Giảm padding trên mobile */
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .Exchange-button {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .Exchange-Rate-button,
+  .Raw-Source-button,
+  .nav-button {
+    width: 200px; /* Fixed width cho buttons */
+    text-align: center;
+  }
+}
+
