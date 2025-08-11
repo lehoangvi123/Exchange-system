@@ -137,8 +137,8 @@ const Home = () => {
       minHeight: '100vh',
       width: '100%',
       background: isDark 
-        ? 'linear-gradient(135deg, #8f8fb9ff 0%, #5c74b6ff 100%)'
-        : 'linear-gradient(135deg, #1c7e7eff 0%, #5e0fadff 100%)',
+        ? 'linear-gradient(135deg, #004030 0%, #4A9782 100%)'
+        : 'linear-gradient(135deg, #4A9782 0%, #004030 100%)',
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       margin: 0,
       padding: 0,
