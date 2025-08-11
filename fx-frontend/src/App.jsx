@@ -44,7 +44,7 @@ import APIIntegration from './pages/APIintegration';
 import './css/theme.css'
 import './App.css';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://backend-1-8b9z.onrender.com/';
 
 // User Info Button Component
 const UserInfoButton = ({ user, onLogout }) => {

@@ -137,8 +137,8 @@ const Home = () => {
       minHeight: '100vh',
       width: '100%',
       background: isDark 
-        ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
-        : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        ? 'linear-gradient(135deg, #8f8fb9ff 0%, #5c74b6ff 100%)'
+        : 'linear-gradient(135deg, #1c7e7eff 0%, #5e0fadff 100%)',
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       margin: 0,
       padding: 0,
@@ -214,8 +214,8 @@ const Home = () => {
     },
     primaryButton: {
       background: isDark 
-        ? 'linear-gradient(45deg, #e74c3c, #3498db)'
-        : 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
+        ? 'linear-gradient(45deg, #073452ff, #ff0a0aff)'
+        : 'linear-gradient(45deg, #3bb3b8ff)',
       color: 'white',
       border: 'none',
       padding: '15px 30px',
@@ -1034,7 +1034,7 @@ const Home = () => {
             </p>
             <div style={styles.heroButtons}>
               <a href="/rates" style={styles.primaryButton}>
-                🚀 Theo dõi tỷ giá
+                Theo dõi tỷ giá
               </a>
               
             </div> 
