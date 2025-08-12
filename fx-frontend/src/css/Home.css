@@ -1,5 +1,424 @@
-/* Trong CSS */
+/* Reset và Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
 }
+
+/* Container chính - Không dùng ảnh background */
+.page-container {
+  min-height: 100vh;
+  width: 100%;
+  /* Thay ảnh bằng gradient đẹp hơn và nhẹ hơn */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-size: 100% 100%; /* Luôn fit màn hình */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Tạo hiệu ứng parallax */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+/* Dark mode - Gradient tối */
+.page-container.dark {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+/* Alternative: Nếu vẫn muốn dùng ảnh */
+.page-container.with-image {
+  background-image: url('../image/create-picture-exchange-rate-system-full HD-(3).jpg');
+  background-size: contain; /* Hiển thị toàn bộ ảnh không bị cắt */
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Hoặc dùng background-size: 80% auto; để thu nhỏ ảnh */
+}
+
+.page-container.dark.with-image {
+  background-image: url('../image/create-picture-exchange-rate-system-full HD-(4).jpg');
+  background-size: contain;
+}
+
+/* Responsive cho ảnh background */
+@media (max-width: 1920px) {
+  .page-container.with-image {
+    background-size: cover; /* Phủ đầy màn hình nhỏ hơn FullHD */
+  }
+}
+
+@media (max-width: 1200px) {
+  .page-container.with-image {
+    background-size: 120% auto; /* Phóng to 120% cho tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container.with-image {
+    background-size: cover; /* Mobile dùng cover */
+    background-attachment: scroll; /* Tắt parallax trên mobile */
+  }
+}
+
+/* Overlay để tăng độ tương phản text */
+.page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2); /* Overlay nhẹ */
+  pointer-events: none;
+  z-index: 1;
+}
+
+.page-container.dark::before {
+  background: rgba(0, 0, 0, 0.4); /* Overlay đậm hơn cho dark mode */
+}
+
+/* Đảm bảo content nằm trên overlay */
+.page-container > * {
+  position: relative;
+  z-index: 2;
+} 
+
+/* ===== HOME.CSS - BACKGROUND FIXES ===== */
+
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ===== MAIN CONTAINER BACKGROUND ===== */
+.page-container {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Sử dụng ảnh background với overlay sáng hơn */
+.page-container.with-image {
+  background-image: url('../image/create-picture-exchange-rate-system-full\ HD-\(5\).jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Overlay để text dễ đọc hơn - SÁNG HỠN */
+.page-container.with-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Overlay nhẹ hơn để background sáng hơn */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(1px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Dark mode overlay */
+.page-container.with-image.dark-mode::before {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(1px);
+}
+
+/* Alternative: Gradient thay ảnh (sáng và đẹp) */
+.page-container.gradient-mode {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* Dark mode gradient */
+.page-container.gradient-mode.dark-mode {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a6741 100%);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Đảm bảo content nằm trên overlay */
+.page-container > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== SECTION BACKGROUNDS - SÁNG HƠN ===== */
+
+/* Hero Section */
+.heroSection {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+.heroSection.dark-mode {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Stats Section */
+.statsSection {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.statsSection.dark-mode {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Tech Section */
+.techSection {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.techSection.dark-mode {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Feature Cards */
+.featureCard {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+.featureCard.dark-mode {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Steps Section */
+.stepsSection {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.stepsSection.dark-mode {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* FAQ Section */
+.faqSection {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(15px) !important;
+}
+
+.faqSection.dark-mode {
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ===== TEXT CONTRAST IMPROVEMENTS ===== */
+
+/* Hero Title - Text tối hơn để đọc dễ */
+.heroTitle {
+  color: #1e293b !important;
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8) !important;
+  font-weight: 800 !important;
+}
+
+.heroTitle.dark-mode {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Hero Subtitle */
+.heroSubtitle {
+  color: #374151 !important;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.8) !important;
+  font-weight: 600 !important;
+}
+
+.heroSubtitle.dark-mode {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Section Titles */
+.sectionTitle {
+  color: #1e293b !important;
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8) !important;
+  font-weight: 700 !important;
+}
+
+.sectionTitle.dark-mode {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Feature Titles */
+.featureTitle {
+  color: #1e293b !important;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.8) !important;
+}
+
+.featureTitle.dark-mode {
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Feature Items */
+.featureItem {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: #1e293b !important;
+  border-left: 4px solid #3b82f6 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+}
+
+.featureItem.dark-mode {
+  background: rgba(0, 0, 0, 0.3) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* ===== BUTTON IMPROVEMENTS ===== */
+.primaryButton {
+  background: linear-gradient(45deg, #3b82f6, #1d4ed8) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  color: #1e293b !important;
+  border: 2px solid #1e293b !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+}
+
+.secondaryButton.dark-mode {
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* ===== CONVERTER SECTION ===== */
+.Section_converter {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 20px !important;
+  padding: 2rem !important;
+  margin: 2rem 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+.Section_converter.dark-mode {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .page-container.with-image {
+    background-attachment: scroll;
+    background-size: cover;
+  }
+
+  .page-container.with-image::before {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .page-container.with-image.dark-mode::before {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .heroTitle {
+    font-size: 2.5rem !important;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem !important;
+    padding: 0 1rem !important;
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+  .page-container.with-image::before {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .heroTitle {
+    color: #000000 !important;
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 1) !important;
+  }
+
+  .heroSubtitle {
+    color: #1e293b !important;
+    text-shadow: 0 1px 4px rgba(255, 255, 255, 1) !important;
+  }
+}
+
+/* ===== ALTERNATIVE LIGHT BACKGROUNDS ===== */
+
+/* Option 1: Very light gradient */
+.page-container.light-gradient {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+}
+
+/* Option 2: Subtle pattern */
+.page-container.pattern-bg {
+  background: #f8fafc;
+  background-image: 
+    radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.1) 2px, transparent 2px),
+    radial-gradient(circle at 75px 75px, rgba(16, 185, 129, 0.1) 2px, transparent 2px);
+  background-size: 100px 100px;
+}
+
+/* Option 3: Clean white with subtle shadow */
+.page-container.clean-white {
+  background: #ffffff;
+  box-shadow: inset 0 0 200px rgba(59, 130, 246, 0.05);
+}
+
+/* ===== ACCESSIBILITY IMPROVEMENTS ===== */
+@media (prefers-reduced-motion: reduce) {
+  .page-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus states for accessibility */
+.primaryButton:focus,
+.secondaryButton:focus {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+} 
+
+/* ===== LIGHT TONE THEME - NGẮN GỌN ===== */
+
+body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #1e293b;
+  font-family: 'Inter', sans-serif;
+}
+
+
 

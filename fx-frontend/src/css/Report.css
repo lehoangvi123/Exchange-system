@@ -1,47 +1,462 @@
+/* ===== REPORT.CSS - CSS RIÊNG CHO REPORT COMPONENT ===== */
+
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ===== MAIN CONTAINER ===== */
 .report-container {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  padding: 2rem;
-  margin: 2rem auto;
-  max-width: 900px;
+  padding: 20px;
+  font-family: 'Inter', Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  
+  /* 🖼️ BACKGROUND IMAGE CHO TOÀN BỘ REPORT */
+  background-image: url('../image//create-picture-exchange-rate-system-full\ HD-\(3\).jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  
+  /* Fallback gradient nếu ảnh không load */
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  
+  position: relative;
 }
 
-.report-title {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+/* Overlay để text dễ đọc hơn */
+.report-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(1px);
+  pointer-events: none;
+  z-index: 1;
 }
 
-.market-summary ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
+/* Đảm bảo content nằm trên overlay */
+.report-container > * {
+  position: relative;
+  z-index: 2;
 }
 
-.market-summary li {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+
+.main-title {
+  color: #1e293b;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.chart-section h3 {
-  margin: 1.5rem 0 1rem;
-  font-size: 1.2rem;
-}
-
-.market-alerts {
-  margin-top: 2rem;
-  background: #f1f5f9;
-  padding: 1rem 1.5rem;
-  border-left: 4px solid #f59e0b;
-  border-radius: 8px;
-}
-
-.market-alerts ul {
+.subtitle {
+  color: #64748b;
+  font-size: 16px;
   margin: 0;
-  padding: 0;
-  list-style: none;
+  font-weight: 500;
 }
 
-.market-alerts li {
-  margin-bottom: 0.5rem;
+/* ===== LOADING & ERROR STATES ===== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 18px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.error-container {
+  padding: 30px;
+  text-align: center;
+  background: rgba(254, 242, 242, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* ===== REPORT CARDS ===== */
+.report-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== CARD HEADERS ===== */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.card-title {
+  color: #374151;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.section-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* ===== CURRENCY SECTION ===== */
+.currency-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+
+
+.currency-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.flag-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.currency-info {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+}
+
+
+
+/* ===== CRYPTO SECTION ===== */
+.crypto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.crypto-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background cho từng loại crypto */
+
+
+
+
+
+.crypto-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.crypto-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.crypto-info {
+  flex: 1;
+}
+
+.crypto-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.crypto-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.crypto-change {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ===== CHANGE INDICATORS ===== */
+.change-positive {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.change-negative {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ===== INFO SECTION ===== */
+
+.info-item {
+  margin: 10px 0;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.update-time {
+  margin: 15px 0 0 0;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+  text-align: right;
+  font-weight: 400;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .report-container {
+    padding: 15px;
+    background-attachment: scroll;
+  }
+  
+  .header-section {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .main-title {
+    font-size: 22px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+  }
+  
+  .report-card {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .currency-grid,
+  .crypto-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .currency-item,
+  .crypto-item {
+    padding: 15px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .section-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .report-container {
+    padding: 10px;
+  }
+  
+  .header-section {
+    padding: 15px;
+  }
+  
+  .main-title {
+    font-size: 20px;
+  }
+  
+  .report-card {
+    padding: 15px;
+  }
+  
+  .currency-item,
+  .crypto-item {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .flag-icon,
+  .crypto-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .crypto-price {
+    font-size: 16px;
+  }
+}
+
+/* ===== ALTERNATIVE BACKGROUNDS (Comment/uncomment để thử) ===== */
+
+/* Light Theme Alternative */
+/*
+.report-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.report-card {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e2e8f0;
+}
+*/
+
+/* Dark Theme Alternative */
+/*
+.report-container {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: #f1f5f9;
+}
+
+.report-card {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid #475569;
+}
+
+.main-title,
+.card-title {
+  color: #f1f5f9;
+}
+*/
+
+/* ===== ANIMATION KEYFRAMES ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.report-card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .report-container {
+    background: none !important;
+    background-image: none !important;
+  }
+  
+  .report-card {
+    background: white !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+  
+  .crypto-item,
+  .currency-item {
+    background: #f9f9f9 !important;
+  }
+}
+
+.report-container{ 
+ background-image: url('../image/create-picture-exchange-rate-system-full\ HD-\(4\).jpg'); 
+ background-size: cover;
+ background-position: center;
+ background-repeat: no-repeat;
+ background-attachment: fixed; 
+ width: 100vw;        
+ min-height: 100vh;   
+ margin: 0 0px;           
+ padding: 0 50px;     
+ position: relative;
+} 
+
+.report-container::before {
+ content: '';
+ position: absolute;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background: rgba(255, 255, 255, 0.3);
+ backdrop-filter: blur(1px);
+ pointer-events: none;
+ z-index: 1;
+}
+
+.report-container > * {
+ position: relative;
+ z-index: 2;
 }

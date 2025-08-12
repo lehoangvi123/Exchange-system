@@ -464,9 +464,7 @@ if (!isAuthenticated) {
   const mainStyles = {
     paddingTop: '6rem',
     minHeight: 'calc(100vh - 6rem)',
-    background: isDark 
-      ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' 
-      : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    
     transition: 'all 0.3s ease'
   };
 

@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
+import '../css/Report.css';
 
 const Report = () => {
   const [marketData, setMarketData] = useState([]);
@@ -18,7 +19,6 @@ const Report = () => {
   useEffect(() => {
     const fetchCurrentRates = async () => {
       try {
-        // Using exchangerate-api.com (free, no API key required)
         const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
         const data = await response.json();
         
@@ -74,7 +74,6 @@ const Report = () => {
   useEffect(() => {
     const fetchCryptoData = async () => {
       try {
-        // Using CoinGecko API (free, no API key required)
         const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple&vs_currencies=usd&include_24hr_change=true');
         const data = await response.json();
         setCryptoData(data);
@@ -88,16 +87,21 @@ const Report = () => {
 
   if (loading) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <div style={{ fontSize: '18px' }}>📊 Đang tải dữ liệu thị trường...</div>
+      <div className="report-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <div className="loading-text">📊 Đang tải dữ liệu thị trường...</div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
-        <div>{error}</div>
+      <div className="report-container">
+        <div className="error-container">
+          <div className="error-text">{error}</div>
+        </div>
       </div>
     );
   }
@@ -105,119 +109,188 @@ const Report = () => {
   const formatChange = (change) => {
     if (!change) return 'N/A';
     const sign = change > 0 ? '+' : '';
-    const color = change > 0 ? '#10b981' : '#ef4444';
-    return <span style={{ color }}>{sign}{change.toFixed(2)}%</span>;
+    const className = change > 0 ? 'change-positive' : 'change-negative';
+    return <span className={className}>{sign}{change.toFixed(2)}%</span>;
   };
 
   return (
-    <div style={{ 
-      padding: '20px', 
-      fontFamily: 'Arial, sans-serif',
-      width: '1200px', 
-      margin: '0 auto',
-      backgroundColor: '#f8fafc'
-    }}>
-      <h2 style={{ 
-        color: '#1e293b', 
-        borderBottom: '2px solid #e2e8f0', 
-        paddingBottom: '10px',
-        fontSize: '24px'
-      }}>
-        📊 Tổng quan thị trường hôm nay
-      </h2>
+    <div className="report-container">
+      {/* Header Section */}
+      <div className="header-section">
+        <h2 className="main-title">
+          📊 Tổng quan thị trường hôm nay
+        </h2>
+        <p className="subtitle">
+          Báo cáo chi tiết về tỷ giá ngoại tệ và thị trường crypto
+        </p>
+      </div>
 
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '20px', 
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        marginBottom: '20px'
-      }}>
-        <h3 style={{ color: '#374151', marginBottom: '15px' }}>💱 Tỷ giá ngoại tệ (Live)</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
-          <div style={{ padding: '10px', backgroundColor: '#f1f5f9', borderRadius: '6px' }}>
-            <strong>💶 EUR/USD:</strong> {currentRates.eurusd || 'Loading...'}
+      {/* Currency Rates Section */}
+      <div className="report-card">
+        <div className="card-header">
+          <img 
+            src="/image/currency-icon.png" 
+            alt="Currency" 
+            className="section-icon"
+            onError={(e) => {e.target.style.display = 'none'}}
+          />
+          <h3 className="card-title">💱 Tỷ giá ngoại tệ (Live)</h3>
+        </div>
+        
+        <div className="currency-grid">
+          <div className="currency-item">
+            <img 
+              src="/image/eur-flag.png" 
+              alt="EUR" 
+              className="flag-icon"
+              onError={(e) => {e.target.innerHTML = '💶'}}
+            />
+            <div className="currency-info">
+              <strong>EUR/USD:</strong> {currentRates.eurusd || 'Loading...'}
+            </div>
           </div>
-          <div style={{ padding: '10px', backgroundColor: '#f1f5f9', borderRadius: '6px' }}>
-            <strong>💴 USD/JPY:</strong> {currentRates.usdjpy || 'Loading...'}
+          
+          <div className="currency-item">
+            <img 
+              src="/image/jpy-flag.png" 
+              alt="JPY" 
+              className="flag-icon"
+              onError={(e) => {e.target.innerHTML = '💴'}}
+            />
+            <div className="currency-info">
+              <strong>USD/JPY:</strong> {currentRates.usdjpy || 'Loading...'}
+            </div>
           </div>
-          <div style={{ padding: '10px', backgroundColor: '#f1f5f9', borderRadius: '6px' }}>
-            <strong>💷 GBP/USD:</strong> {currentRates.gbpusd || 'Loading...'}
+          
+          <div className="currency-item">
+            <img 
+              src="/image/gbp-flag.png" 
+              alt="GBP" 
+              className="flag-icon"
+              onError={(e) => {e.target.innerHTML = '💷'}}
+            />
+            <div className="currency-info">
+              <strong>GBP/USD:</strong> {currentRates.gbpusd || 'Loading...'}
+            </div>
           </div>
         </div>
       </div>
 
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '20px', 
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        marginBottom: '20px'
-      }}>
-        <h3 style={{ color: '#374151', marginBottom: '15px' }}>📈 Biểu đồ EUR/USD theo giờ</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={marketData}>
-            <XAxis dataKey="time" />
-            <YAxis domain={['auto', 'auto']} />
-            <Tooltip 
-              formatter={(value) => [value, 'EUR/USD']}
-              labelFormatter={(label) => `Thời gian: ${label}`}
-            />
-            <Line
-              type="monotone"
-              dataKey="eurusd"
-              stroke="#4f46e5"
-              strokeWidth={2}
-              dot={{ fill: '#4f46e5', strokeWidth: 2, r: 4 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      {/* Chart Section */}
+      <div className="report-card">
+        <div className="card-header">
+          <img 
+            src="/image/chart-icon.png" 
+            alt="Chart" 
+            className="section-icon"
+            onError={(e) => {e.target.style.display = 'none'}}
+          />
+          <h3 className="card-title">📈 Biểu đồ EUR/USD theo giờ</h3>
+        </div>
+        
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={marketData}>
+              <XAxis dataKey="time" />
+              <YAxis domain={['auto', 'auto']} />
+              <Tooltip 
+                formatter={(value) => [value, 'EUR/USD']}
+                labelFormatter={(label) => `Thời gian: ${label}`}
+              />
+              <Line
+                type="monotone"
+                dataKey="eurusd"
+                stroke="#4f46e5"
+                strokeWidth={2}
+                dot={{ fill: '#4f46e5', strokeWidth: 2, r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
+      {/* Crypto Section */}
       {Object.keys(cryptoData).length > 0 && (
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '20px', 
-          borderRadius: '8px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          marginBottom: '20px'
-        }}>
-          <h3 style={{ color: '#374151', marginBottom: '15px' }}>₿ Thị trường tiền mã hóa (Live)</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
+        <div className="report-card">
+          <div className="card-header">
+            <img 
+              src="/image/crypto-icon.png" 
+              alt="Crypto" 
+              className="section-icon"
+              onError={(e) => {e.target.style.display = 'none'}}
+            />
+            <h3 className="card-title">₿ Thị trường tiền mã hóa (Live)</h3>
+          </div>
+          
+          <div className="crypto-grid">
             {cryptoData.bitcoin && (
-              <div style={{ padding: '10px', backgroundColor: '#fef3c7', borderRadius: '6px' }}>
-                <strong>₿ Bitcoin:</strong> ${cryptoData.bitcoin.usd?.toLocaleString()} 
-                <div>{formatChange(cryptoData.bitcoin.usd_24h_change)}</div>
+              <div className="crypto-item bitcoin">
+                <img 
+                  src="/image/bitcoin-logo.png" 
+                  alt="Bitcoin" 
+                  className="crypto-icon"
+                  onError={(e) => {e.target.innerHTML = '₿'}}
+                />
+                <div className="crypto-info">
+                  <div className="crypto-name">Bitcoin</div>
+                  <div className="crypto-price">${cryptoData.bitcoin.usd?.toLocaleString()}</div>
+                  <div className="crypto-change">{formatChange(cryptoData.bitcoin.usd_24h_change)}</div>
+                </div>
               </div>
             )}
+            
             {cryptoData.ethereum && (
-              <div style={{ padding: '10px', backgroundColor: '#dbeafe', borderRadius: '6px' }}>
-                <strong>⧫ Ethereum:</strong> ${cryptoData.ethereum.usd?.toLocaleString()}
-                <div>{formatChange(cryptoData.ethereum.usd_24h_change)}</div>
+              <div className="crypto-item ethereum">
+                <img 
+                  src="/image/ethereum-logo.png" 
+                  alt="Ethereum" 
+                  className="crypto-icon"
+                  onError={(e) => {e.target.innerHTML = '⧫'}}
+                />
+                <div className="crypto-info">
+                  <div className="crypto-name">Ethereum</div>
+                  <div className="crypto-price">${cryptoData.ethereum.usd?.toLocaleString()}</div>
+                  <div className="crypto-change">{formatChange(cryptoData.ethereum.usd_24h_change)}</div>
+                </div>
               </div>
             )}
+            
             {cryptoData.ripple && (
-              <div style={{ padding: '10px', backgroundColor: '#f3e8ff', borderRadius: '6px' }}>
-                <strong>◆ Ripple:</strong> ${cryptoData.ripple.usd?.toFixed(4)}
-                <div>{formatChange(cryptoData.ripple.usd_24h_change)}</div>
+              <div className="crypto-item ripple">
+                <img 
+                  src="/image/ripple-logo.png" 
+                  alt="Ripple" 
+                  className="crypto-icon"
+                  onError={(e) => {e.target.innerHTML = '◆'}}
+                />
+                <div className="crypto-info">
+                  <div className="crypto-name">Ripple</div>
+                  <div className="crypto-price">${cryptoData.ripple.usd?.toFixed(4)}</div>
+                  <div className="crypto-change">{formatChange(cryptoData.ripple.usd_24h_change)}</div>
+                </div>
               </div>
             )}
           </div>
         </div>
       )}
 
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '20px', 
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h3 style={{ color: '#374151', marginBottom: '15px' }}>🛎️ Thông tin thị trường</h3>
-        <div style={{ backgroundColor: '#f8fafc', padding: '15px', borderRadius: '6px' }}>
-          <p style={{ margin: '5px 0' }}>• Dữ liệu tỷ giá được cập nhật từ exchangerate-api.com</p>
-          <p style={{ margin: '5px 0' }}>• Giá tiền mã hóa từ CoinGecko API (cập nhật 24h)</p>
-          <p style={{ margin: '5px 0' }}>• Biểu đồ EUR/USD mô phỏng biến động trong ngày</p>
-          <p style={{ margin: '5px 0', fontSize: '12px', color: '#6b7280' }}>
+      {/* Info Section */}
+      <div className="report-card">
+        <div className="card-header">
+          <img 
+            src="/image/info-icon.png" 
+            alt="Info" 
+            className="section-icon"
+            onError={(e) => {e.target.style.display = 'none'}}
+          />
+          <h3 className="card-title">🛎️ Thông tin thị trường</h3>
+        </div>
+        
+        <div className="info-section">
+          <p className="info-item">• Dữ liệu tỷ giá được cập nhật từ exchangerate-api.com</p>
+          <p className="info-item">• Giá tiền mã hóa từ CoinGecko API (cập nhật 24h)</p>
+          <p className="info-item">• Biểu đồ EUR/USD mô phỏng biến động trong ngày</p>
+          <p className="update-time">
             Cập nhật lần cuối: {new Date().toLocaleTimeString('vi-VN')}
           </p>
         </div>

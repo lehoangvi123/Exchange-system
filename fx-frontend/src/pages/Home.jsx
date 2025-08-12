@@ -133,17 +133,8 @@ const Home = () => {
   };
 
   const styles = {
-    pageContainer: {
-      minHeight: '100vh',
-      width: '100%',
-      background: isDark 
-        ? 'linear-gradient(135deg, #004030 0%, #4A9782 100%)'
-        : 'linear-gradient(135deg, #4A9782 0%, #004030 100%)',
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      margin: 0,
-      padding: 0,
-      transition: 'all 0.3s ease'
-    },
+   
+
 
     // Theme Toggle Position
     themeToggleContainer: {
@@ -1012,7 +1003,7 @@ const Home = () => {
   return (
     <>
       <style>{keyframes}</style>
-      <div style={styles.pageContainer}>
+      <div style={styles.pageContainer} className="page-container with-image">
        
 
         {/* Background shapes */}
