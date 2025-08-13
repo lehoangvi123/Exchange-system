@@ -49,7 +49,8 @@
 .Exchange-Rate-button.active,
 .Raw-Source-button.active {
   background-color: #2563eb; /* bg-blue-600 */
-  color: white; /* text-white */
+  color: white; /* text-white */ 
+   
 }
 
 /* Inactive state styles (khi button không được chọn) */

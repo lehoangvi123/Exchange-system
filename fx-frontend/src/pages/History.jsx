@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import '../css/History.css';
 export default function HistoryChart({ period = '24h' }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -469,7 +469,8 @@ export default function HistoryChart({ period = '24h' }) {
   };
 
   return (
-    <>
+    <> 
+    <div className='history-container'>
       <style>{keyframes}</style>
       <div style={styles.container}>
         {/* Decorative background elements */}
@@ -683,6 +684,7 @@ export default function HistoryChart({ period = '24h' }) {
             )}
           </>
         )}
+      </div> 
       </div>
     </>
   );

@@ -22,7 +22,9 @@
 @keyframes slideUp {
   from { transform: translateY(30px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
-}
+} 
+
+
 
 /* ===== MAIN BACKGROUND ===== */
 .analytics-background {
@@ -33,7 +35,8 @@
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
-  position: relative;
+  position: relative; 
+  
   
   /* Overlay để text rõ hơn */
   &::before {

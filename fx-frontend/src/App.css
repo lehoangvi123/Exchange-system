@@ -1212,7 +1212,8 @@ label span{
   }
   
   .container {
-    padding: 16px;
+    padding: 16px; 
+    
   }
   
   .auth-buttons {
@@ -1493,5 +1494,9 @@ main.container.mx-auto.flex-1.p-6{
 
 svg.nav-arrow{ 
    color: black;
-} 
+}  
+
+.nav-text{ 
+  color: black;
+}
 

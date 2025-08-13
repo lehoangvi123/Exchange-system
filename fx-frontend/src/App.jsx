@@ -1046,9 +1046,10 @@ if (!isAuthenticated) {
         
         /* Header container adjustments */
         .container {
-          max-width: none !important;
-          width: 100% !important;
-        }
+  max-width: none !important;
+  width: 100% !important;   
+  background-color: #1e3a8a; /* Xanh navy đậm */
+}
         
         /* Logo hover effect */
         .flex.items-center.space-x-2:hover {
