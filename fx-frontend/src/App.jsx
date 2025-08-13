@@ -245,7 +245,7 @@ const NavigationMenu = () => {
       {navigationItems.map((item, index) => (
         <div 
           key={index}
-          className="nav-item"
+          className="nav-item"    
           onMouseEnter={() => handleMouseEnter(index)}
           onMouseLeave={handleMouseLeave}
         >
@@ -898,7 +898,7 @@ if (!isAuthenticated) {
                     
                     {/* <div ><UpdateUserForm /></div> */}
                     
-                    <div ><UpdatePreferences /></div>
+                    {/* <div ><UpdatePreferences /></div> */}
                     
                     <div ><ArchiveRateForm /></div> 
                     

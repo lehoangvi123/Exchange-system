@@ -2,19 +2,46 @@ import React, { useState, useEffect } from 'react';
 
 const SaveRateForm = () => {
   const [rates, setRates] = useState([
-    { currency: 'AUD', value: '', name: 'Australian Dollar' },
-    { currency: 'BGN', value: '', name: 'Bulgarian Lev' },
-    { currency: 'BRL', value: '', name: 'Brazilian Real' }
+    { currency: 'EUR', value: '', name: 'Euro' },
+    { currency: 'GBP', value: '', name: 'British Pound' },
+    { currency: 'JPY', value: '', name: 'Japanese Yen' }
   ]);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [loading, setLoading] = useState(false);
+  const [fetchingRates, setFetchingRates] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [lastFetched, setLastFetched] = useState(null);
+
+  // Danh sách currencies có thể thêm
+  const availableCurrencies = [
+    { code: 'USD', name: 'US Dollar' },
+    { code: 'EUR', name: 'Euro' },
+    { code: 'GBP', name: 'British Pound' },
+    { code: 'JPY', name: 'Japanese Yen' },
+    { code: 'AUD', name: 'Australian Dollar' },
+    { code: 'CAD', name: 'Canadian Dollar' },
+    { code: 'CHF', name: 'Swiss Franc' },
+    { code: 'CNY', name: 'Chinese Yuan' },
+    { code: 'SGD', name: 'Singapore Dollar' },
+    { code: 'KRW', name: 'South Korean Won' },
+    { code: 'THB', name: 'Thai Baht' },
+    { code: 'VND', name: 'Vietnamese Dong' },
+    { code: 'MYR', name: 'Malaysian Ringgit' },
+    { code: 'IDR', name: 'Indonesian Rupiah' },
+    { code: 'PHP', name: 'Philippine Peso' },
+    { code: 'INR', name: 'Indian Rupee' },
+    { code: 'BRL', name: 'Brazilian Real' },
+    { code: 'RUB', name: 'Russian Ruble' },
+    { code: 'ZAR', name: 'South African Rand' },
+    { code: 'MXN', name: 'Mexican Peso' }
+  ];
 
   // Load saved rates từ localStorage khi component mount
   useEffect(() => {
     const savedRates = localStorage.getItem('exchangeRates');
     const savedTime = localStorage.getItem('lastSavedTime');
+    const fetchedTime = localStorage.getItem('lastFetchedTime');
     
     if (savedRates) {
       try {
@@ -28,25 +55,50 @@ const SaveRateForm = () => {
     if (savedTime) {
       setLastSaved(new Date(savedTime));
     }
+    
+    if (fetchedTime) {
+      setLastFetched(new Date(fetchedTime));
+    }
   }, []);
 
-  // Danh sách currencies có thể thêm
-  const availableCurrencies = [
-    { code: 'USD', name: 'US Dollar' },
-    { code: 'EUR', name: 'Euro' },
-    { code: 'GBP', name: 'British Pound' },
-    { code: 'JPY', name: 'Japanese Yen' },
-    { code: 'CAD', name: 'Canadian Dollar' },
-    { code: 'CHF', name: 'Swiss Franc' },
-    { code: 'CNY', name: 'Chinese Yuan' },
-    { code: 'SGD', name: 'Singapore Dollar' },
-    { code: 'KRW', name: 'South Korean Won' },
-    { code: 'THB', name: 'Thai Baht' },
-    { code: 'VND', name: 'Vietnamese Dong' },
-    { code: 'MYR', name: 'Malaysian Ringgit' },
-    { code: 'IDR', name: 'Indonesian Rupiah' },
-    { code: 'PHP', name: 'Philippine Peso' }
-  ];
+  // Fetch current rates from API
+  const fetchCurrentRates = async () => {
+    setFetchingRates(true);
+    try {
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Update rates with current API data
+      const updatedRates = rates.map(rate => {
+        const apiRate = data.rates[rate.currency];
+        if (apiRate) {
+          return {
+            ...rate,
+            value: apiRate.toFixed(4)
+          };
+        }
+        return rate;
+      });
+      
+      setRates(updatedRates);
+      const now = new Date();
+      setLastFetched(now);
+      localStorage.setItem('lastFetchedTime', now.toISOString());
+      
+      showMessage('📡 Tỷ giá mới nhất đã được tải!', 'success');
+      
+    } catch (error) {
+      console.error('Error fetching rates:', error);
+      showMessage(`❌ Lỗi khi tải tỷ giá: ${error.message}`, 'error');
+    } finally {
+      setFetchingRates(false);
+    }
+  };
 
   const handleRateChange = (index, value) => {
     const newRates = [...rates];
@@ -117,40 +169,26 @@ const SaveRateForm = () => {
     setLoading(true);
     
     try {
-
       // Prepare data
       const rateData = {};
       rates.forEach(rate => {
         rateData[rate.currency] = parseFloat(rate.value);
       });
 
-      // Save to API
-      const response = await fetch('http://localhost:5000/api/rates/save', {
-
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
-        },
-        body: JSON.stringify(rateData),
-      });
-
-      const data = await response.json();
+      // Since we don't have a real backend, we'll simulate saving and store locally
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API delay
       
-      if (response.ok && data.success) {
-        // Save to localStorage
-        localStorage.setItem('exchangeRates', JSON.stringify(rates));
-        const now = new Date();
-        localStorage.setItem('lastSavedTime', now.toISOString());
-        setLastSaved(now);
-        
-        showMessage('💾 Tỷ giá đã được lưu thành công!', 'success');
-      } else {
-        showMessage(`❌ Thất bại: ${data.message || 'Unknown error'}`, 'error');
-      }
+      // Save to localStorage
+      localStorage.setItem('exchangeRates', JSON.stringify(rates));
+      const now = new Date();
+      localStorage.setItem('lastSavedTime', now.toISOString());
+      setLastSaved(now);
+      
+      showMessage('💾 Tỷ giá đã được lưu thành công!', 'success');
+      
     } catch (error) {
       console.error('Save error:', error);
-      showMessage('⚠️ Đã xảy ra lỗi khi gửi yêu cầu', 'error');
+      showMessage('⚠️ Đã xảy ra lỗi khi lưu dữ liệu', 'error');
     } finally {
       setLoading(false);
     }
@@ -185,7 +223,7 @@ const SaveRateForm = () => {
   // CSS Styles Object
   const styles = {
     container: {
-      maxWidth: '800px',
+      maxWidth: '900px',
       margin: '0 auto',
       padding: '2rem',
       background: 'white',
@@ -222,6 +260,21 @@ const SaveRateForm = () => {
       marginTop: '0.5rem',
       fontSize: '0.875rem',
       color: '#9ca3af'
+    },
+    fetchButton: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      padding: '0.75rem 1.5rem',
+      background: 'linear-gradient(135deg, #10b981, #059669)',
+      color: 'white',
+      border: 'none',
+      borderRadius: '12px',
+      fontSize: '0.875rem',
+      fontWeight: '600',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      marginTop: '1rem'
     },
     message: {
       display: 'flex',
@@ -321,7 +374,8 @@ const SaveRateForm = () => {
     actionButtons: {
       display: 'flex',
       gap: '1rem',
-      paddingTop: '1rem'
+      paddingTop: '1rem',
+      flexWrap: 'wrap'
     },
     actionBtn: {
       display: 'flex',
@@ -334,6 +388,10 @@ const SaveRateForm = () => {
       cursor: 'pointer',
       transition: 'all 0.2s ease',
       fontSize: '0.875rem'
+    },
+    fetchBtn: {
+      background: 'linear-gradient(135deg, #10b981, #059669)',
+      color: 'white'
     },
     addBtn: {
       background: '#f3f4f6',
@@ -401,11 +459,44 @@ const SaveRateForm = () => {
         </div>
         <p style={styles.headerSubtitle}>Cập nhật tỷ giá ngoại tệ mới nhất</p>
         
-        {lastSaved && (
-          <div style={styles.lastSaved}>
-            Lần lưu cuối: {lastSaved.toLocaleString('vi-VN')}
-          </div>
-        )}
+        {/* Fetch Current Rates Button */}
+        <button
+          onClick={fetchCurrentRates}
+          disabled={fetchingRates}
+          style={{
+            ...styles.fetchButton,
+            ...(fetchingRates ? { background: '#9ca3af', cursor: 'not-allowed' } : {})
+          }}
+          onMouseEnter={(e) => {
+            if (!fetchingRates) {
+              e.target.style.background = 'linear-gradient(135deg, #059669, #047857)';
+              e.target.style.transform = 'translateY(-2px)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!fetchingRates) {
+              e.target.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+              e.target.style.transform = 'translateY(0)';
+            }
+          }}
+        >
+          {fetchingRates ? (
+            <>
+              <span style={styles.loadingSpinner}>⏳</span>
+              Đang tải...
+            </>
+          ) : (
+            <>
+              <span>📡</span>
+              Tải tỷ giá hiện tại
+            </>
+          )}
+        </button>
+        
+        <div style={styles.lastSaved}>
+          {lastSaved && <div>Lần lưu cuối: {lastSaved.toLocaleString('vi-VN')}</div>}
+          {lastFetched && <div>Lần tải cuối: {lastFetched.toLocaleString('vi-VN')}</div>}
+        </div>
       </div>
 
       {/* Message */}
@@ -444,7 +535,7 @@ const SaveRateForm = () => {
 
               {/* Rate Input */}
               <div style={styles.rateInputSection}>
-                <label style={styles.fieldLabel}>Tỷ giá</label>
+                <label style={styles.fieldLabel}>Tỷ giá (USD base)</label>
                 <div style={styles.rateInputContainer}>
                   <span style={styles.currencyIcon}>💰</span>
                   <input
@@ -577,6 +668,10 @@ const SaveRateForm = () => {
             <span style={styles.statsValue}>
               {rates.filter(rate => rate.value).length}/{rates.length}
             </span>
+          </div>
+          <div style={styles.statsRow}>
+            <span>📡 Nguồn dữ liệu:</span>
+            <span style={styles.statsValue}>exchangerate-api.com</span>
           </div>
         </div>
       </div>
