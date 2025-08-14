@@ -128,7 +128,12 @@ const ArchiveRateForm = () => {
     
     // Generate realistic historical data for archiving
     const records = [];
-    const currencies = Object.keys(currentRates);
+    const currencies = Object.keys(currentRates || {});
+    
+    if (currencies.length === 0) {
+      // Fallback currencies if currentRates is empty
+      currencies.push('EUR', 'GBP', 'JPY', 'AUD', 'CAD');
+    }
     
     for (let i = 0; i < daysDiff; i++) {
       const date = new Date(cutoff);
@@ -136,7 +141,7 @@ const ArchiveRateForm = () => {
       
       // Generate rates for each currency for this date
       currencies.slice(0, 10).forEach(currency => { // Limit to top 10 currencies
-        const baseRate = currentRates[currency];
+        const baseRate = (currentRates && currentRates[currency]) || 1.0;
         const variation = (Math.random() - 0.5) * 0.1; // ±5% historical variation
         const historicalRate = baseRate * (1 + variation);
         
@@ -299,9 +304,9 @@ const ArchiveRateForm = () => {
     const cutoff = new Date(cutoffDate);
     const today = new Date();
     const daysDiff = Math.floor((today - cutoff) / (1000 * 60 * 60 * 24));
-    const currencyCount = Math.min(Object.keys(currentRates).length, 10);
+    const currencyCount = Math.min(Object.keys(currentRates || {}).length || 10, 10);
     
-    return daysDiff * currencyCount;
+    return Math.max(0, daysDiff * currencyCount);
   };
 
   const styles = {
@@ -542,7 +547,7 @@ const ArchiveRateForm = () => {
       <div style={styles.statsPanel}>
         <div style={styles.statsGrid}>
           <div style={styles.statItem}>
-            <span style={styles.statValue}>{totalRecords.toLocaleString()}</span>
+            <span style={styles.statValue}>{(totalRecords || 0).toLocaleString()}</span>
             <div style={styles.statLabel}>Tổng bản ghi</div>
           </div>
           <div style={styles.statItem}>
@@ -550,7 +555,7 @@ const ArchiveRateForm = () => {
             <div style={styles.statLabel}>Ước tính archive</div>
           </div>
           <div style={styles.statItem}>
-            <span style={styles.statValue}>{archiveHistory.length}</span>
+            <span style={styles.statValue}>{(archiveHistory?.length || 0)}</span>
             <div style={styles.statLabel}>Cloud archives</div>
           </div>
         </div>
@@ -635,7 +640,7 @@ const ArchiveRateForm = () => {
       <div style={styles.historySection}>
         <div style={styles.historyHeader}>
           <h4 style={styles.historyTitle}>☁️ Cloud Archive History</h4>
-          {archiveHistory.length > 0 && (
+          {(archiveHistory?.length || 0) > 0 && (
             <button
               onClick={clearHistory}
               style={styles.clearHistoryBtn}
@@ -653,29 +658,29 @@ const ArchiveRateForm = () => {
           )}
         </div>
 
-        {archiveHistory.length === 0 ? (
+        {(archiveHistory?.length || 0) === 0 ? (
           <div style={styles.noHistory}>
             Chưa có cloud archive nào
           </div>
         ) : (
           <div style={styles.historyList}>
-            {archiveHistory.map((entry) => (
+            {(archiveHistory || []).map((entry) => (
               <div key={entry.id} style={styles.historyItem}>
                 <div style={styles.historyItemHeader}>
                   <div style={styles.historyDate}>
                     {new Date(entry.date).toLocaleString('vi-VN')}
                   </div>
                   <div style={styles.historyCount}>
-                    ☁️ {entry.archivedCount.toLocaleString()} records
+                    ☁️ {(entry.archivedCount || 0).toLocaleString()} records
                   </div>
                 </div>
                 <div style={styles.historyDetails}>
                   Cutoff: {new Date(entry.cutoffDate).toLocaleDateString('vi-VN')} • 
-                  Before: {entry.totalBefore?.toLocaleString()} • 
-                  After: {entry.totalAfter?.toLocaleString()}
+                  Before: {(entry.totalBefore || 0).toLocaleString()} • 
+                  After: {(entry.totalAfter || 0).toLocaleString()}
                 </div>
                 <div style={styles.serviceInfo}>
-                  🔗 Service: {entry.service}
+                  🔗 Service: {entry.service || 'Unknown'}
                   {entry.gistUrl && (
                     <> • <a href={entry.gistUrl} target="_blank" rel="noopener noreferrer">View on GitHub</a></>
                   )}
