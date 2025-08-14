@@ -39,7 +39,8 @@ import ThemeToggle from './components/ThemeToggle';
 import Analytics from './pages/Analytics'; 
 import Report from './pages/Report'; 
 import Export from './pages/Export'; 
-import APIIntegration from './pages/APIintegration';
+import APIIntegration from './pages/APIintegration'; 
+import Background from './pages/background';
 
 import './css/theme.css'
 import './App.css';
@@ -190,7 +191,8 @@ const NavigationMenu = () => {
         { title: "Tổng quan", icon: "🏠", link: "/home", desc: "Xem tổng quan hệ thống" },
         { title: "Explore", icon: "🔍", link: "/", desc: "Khám phá tính năng" },
         { title: "Thống kê", icon: "📈", link: "/analytics", desc: "Phân tích dữ liệu" },
-        { title: "Báo cáo", icon: "📋", link: "/reports", desc: "Tạo và xem báo cáo" }
+        { title: "Báo cáo", icon: "📋", link: "/reports", desc: "Tạo và xem báo cáo" }, 
+        { title: "Xem hình nền", icon: "🏠", link: "/background", desc:"Xem hình nền trang web"}
       ]
     },
     {
@@ -900,7 +902,8 @@ if (!isAuthenticated) {
                     
                     {/* <div ><UpdatePreferences /></div> */}
                     
-                    <div className="sub-card-grid" ><ArchiveRateForm /></div> 
+                    <div className="sub-card-grid" ><ArchiveRateForm /></div>  
+                    
                     
                     
                     
@@ -934,7 +937,8 @@ if (!isAuthenticated) {
             <Route path="/reports" element={<Report />} /> 
             <Route path="/export" element={<Export />} /> 
             <Route path="/api" element={<APIIntegration />} /> 
-            <Route path="/RateTrend" element={<RateTrend />} /> 
+            <Route path="/RateTrend" element={<RateTrend />} />  
+            <Route path="/background" element={<Background />} />
             {/* <Route path="/careers" element={<Careers />} /> */}
           </Routes> 
         </main>
