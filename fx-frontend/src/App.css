@@ -1529,4 +1529,9 @@ svg.nav-arrow{
     100% { 
         background-image: url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
     }
+} 
+
+.sub-card-grid { 
+      background-color: rgba(0,0,0,0.5);
 }
+

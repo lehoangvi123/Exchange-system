@@ -880,27 +880,27 @@ if (!isAuthenticated) {
                   <div className="card-grid">
                     {/* <div ><CurrencyConverter /></div> */}
                     
-                    <div ><CrossRateConverter /></div>
+                    <div className="sub-card-grid" ><CrossRateConverter /></div>
                     
-                    <div ><ExchangeRateDisplay /></div>
+                    <div className="sub-card-grid" ><ExchangeRateDisplay /></div>
                     
-                    <div ><TechnicalIndicators /></div> 
+                    <div className="sub-card-grid"><TechnicalIndicators /></div> 
                     
                    
                     
                     {/* <div><RateTrend pair="AUD_BGN" period="30d" /></div>   */}
                     
-                    <div ><SaveRateForm /></div>
+                    <div className="sub-card-grid" ><SaveRateForm /></div>
                     
-                    <div ><LogConversionForm /></div>
+                    <div className="sub-card-grid" ><LogConversionForm /></div>
                     
-                    <div ><SaveUserForm /></div>
+                    <div className="sub-card-grid" ><SaveUserForm /></div>
                     
                     {/* <div ><UpdateUserForm /></div> */}
                     
                     {/* <div ><UpdatePreferences /></div> */}
                     
-                    <div ><ArchiveRateForm /></div> 
+                    <div className="sub-card-grid" ><ArchiveRateForm /></div> 
                     
                     
                     
@@ -1089,7 +1089,8 @@ if (!isAuthenticated) {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
           gap: 2rem;
-          margin-top: 2rem;
+          margin-top: 2rem; 
+          background-color: rgba(0,0,0,0.5);
         }
 
         .welcome-section {
