@@ -4,13 +4,9 @@ import '../css/Profile.css'
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const [showEditModal, setShowEditModal] = useState(false);
-const [editName, setEditName] = useState('');
-const [editPassword, setEditPassword] = useState('');
-
-
-
+  const [editName, setEditName] = useState('');
+  const [editPassword, setEditPassword] = useState('');
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -149,83 +145,73 @@ const [editPassword, setEditPassword] = useState('');
         {/* Action Buttons */}
         <div className="profile-actions">
           <button className="profile-btn profile-btn-primary" onClick={() => {
-  setEditName(user.name || '');
-  setEditPassword('');
-  setShowEditModal(true);
-}}>
-
+            setEditName(user.name || '');
+            setEditPassword('');
+            setShowEditModal(true);
+          }}>
             <svg style={{width: '1rem', height: '1rem', marginRight: '0.5rem'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
             Chỉnh sửa thông tin
           </button>
-          
-          {/* <button className="profile-btn profile-btn-secondary">
-            <svg style={{width: '1rem', height: '1rem', marginRight: '0.5rem'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Cài đặt tài khoản
-          </button> */}
         </div> 
 
         {/* Edit Modal */}
-{showEditModal && (
-  <div className="modal-backdrop">
-    <div className="modal">
-      <h3>✏️ Chỉnh sửa thông tin</h3>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const updatedUser = {
-            ...user,
-            name: editName,
-          };
-          if (editPassword) {
-            updatedUser.password = editPassword;
-          }
+        {showEditModal && (
+          <div className="modal-backdrop">
+            <div className="modal">
+              <h3>✏️ Chỉnh sửa thông tin</h3>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const updatedUser = {
+                    ...user,
+                    name: editName,
+                  };
+                  if (editPassword) {
+                    updatedUser.password = editPassword;
+                  }
 
-          // Cập nhật localStorage (hoặc gọi API tại đây)
-          localStorage.setItem('user', JSON.stringify(updatedUser));
-          setUser(updatedUser);
-          setShowEditModal(false);
-        }}
-      >
-        <label>
-          Họ và tên mới:
-          <input
-            type="text"
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            required
-          />
-        </label>
+                  localStorage.setItem('user', JSON.stringify(updatedUser));
+                  setUser(updatedUser);
+                  setShowEditModal(false);
+                }}
+              >
+                <label>
+                  Họ và tên mới:
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    required
+                  />
+                </label>
 
-        <label>
-          Mật khẩu mới:
-          <input
-            type="password"
-            value={editPassword}
-            onChange={(e) => setEditPassword(e.target.value)}
-          />
-        </label>
+                <label>
+                  Mật khẩu mới:
+                  <input
+                    type="password"
+                    value={editPassword}
+                    onChange={(e) => setEditPassword(e.target.value)}
+                  />
+                </label>
 
-        <div className="modal-actions">
-          <button type="submit" className="profile-btn profile-btn-primary">Lưu</button>
-          <button type="button" className="profile-btn profile-btn-secondary" onClick={() => setShowEditModal(false)}>Hủy</button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
+                <div className="modal-actions">
+                  <button type="submit" className="profile-btn profile-btn-primary">Lưu</button>
+                  <button type="button" className="profile-btn profile-btn-secondary" onClick={() => setShowEditModal(false)}>Hủy</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
-        /* Profile Specific Styles */
+        /* 🖤 DARK TRANSPARENT THEME - Background color: rgba(0,0,0,0.5) */
+        
         .profile-container {
           min-height: 100vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          
           padding: 2rem 1rem;
           display: flex;
           align-items: center;
@@ -242,8 +228,8 @@ const [editPassword, setEditPassword] = useState('');
           width: 200%;
           height: 200%;
           background: 
-            radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            radial-gradient(circle at 20% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.2) 0%, transparent 50%);
           animation: float 8s ease-in-out infinite;
           pointer-events: none;
         }
@@ -254,17 +240,18 @@ const [editPassword, setEditPassword] = useState('');
           66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
 
+        /* 🏴 Main Profile Card - Dark Transparent */
         .profile-card {
-          background: rgba(255, 255, 255, 0.95);
+          background: rgba(0, 0, 0, 0.5) !important;
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           border-radius: 24px;
           padding: 3rem;
           box-shadow: 
-            0 25px 50px rgba(0, 0, 0, 0.15),
-            0 8px 32px rgba(102, 126, 234, 0.2),
-            inset 0 1px 2px rgba(255, 255, 255, 0.5);
-          border: 1px solid rgba(255, 255, 255, 0.3);
+            0 25px 50px rgba(0, 0, 0, 0.3),
+            0 8px 32px rgba(0, 0, 0, 0.2),
+            inset 0 1px 2px rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           max-width: 480px;
           width: 100%;
           transform: translateY(0);
@@ -287,8 +274,8 @@ const [editPassword, setEditPassword] = useState('');
         .profile-card:hover {
           transform: translateY(-5px);
           box-shadow: 
-            0 35px 70px rgba(0, 0, 0, 0.2),
-            0 12px 40px rgba(102, 126, 234, 0.3);
+            0 35px 70px rgba(0, 0, 0, 0.4),
+            0 12px 40px rgba(0, 0, 0, 0.3);
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -310,10 +297,10 @@ const [editPassword, setEditPassword] = useState('');
           font-size: 3rem;
           font-weight: bold;
           color: white;
-          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
           box-shadow: 
-            0 15px 35px rgba(102, 126, 234, 0.4),
-            0 5px 15px rgba(0, 0, 0, 0.1);
+            0 15px 35px rgba(0, 0, 0, 0.3),
+            0 5px 15px rgba(0, 0, 0, 0.2);
           position: relative;
           transition: all 0.3s ease;
         }
@@ -365,19 +352,18 @@ const [editPassword, setEditPassword] = useState('');
           }
         }
 
+        /* 🤍 White Text for Contrast */
         .profile-title {
           font-size: 2.25rem;
           font-weight: 800;
-          background: linear-gradient(135deg, #2c3e50, #667eea);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color: white !important;
           margin-bottom: 0.5rem;
           text-align: center;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .profile-subtitle {
-          color: #64748b;
+          color: rgba(255, 255, 255, 0.8) !important;
           font-size: 1.1rem;
           margin-bottom: 2rem;
           text-align: center;
@@ -388,14 +374,16 @@ const [editPassword, setEditPassword] = useState('');
           gap: 1.5rem;
         }
 
+        /* 🖤 Dark Info Items */
         .profile-info-item {
-          background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+          background: rgba(0, 0, 0, 0.5) !important;
           border-radius: 16px;
           padding: 1.5rem;
           border-left: 4px solid;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .profile-info-item::before {
@@ -408,7 +396,7 @@ const [editPassword, setEditPassword] = useState('');
           background: linear-gradient(
             90deg,
             transparent,
-            rgba(255, 255, 255, 0.4),
+            rgba(255, 255, 255, 0.1),
             transparent
           );
           transition: left 0.6s ease;
@@ -420,7 +408,8 @@ const [editPassword, setEditPassword] = useState('');
 
         .profile-info-item:hover {
           transform: translateX(8px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+          background: rgba(0, 0, 0, 0.6) !important;
         }
 
         .profile-info-item:nth-child(1) { border-left-color: #3b82f6; }
@@ -434,13 +423,13 @@ const [editPassword, setEditPassword] = useState('');
           align-items: center;
           gap: 0.75rem;
           font-weight: 600;
-          color: #374151;
+          color: rgba(255, 255, 255, 0.9) !important;
           margin-bottom: 0.5rem;
           font-size: 0.95rem;
         }
 
         .profile-info-value {
-          color: #1f2937;
+          color: white !important;
           font-size: 1.1rem;
           font-weight: 500;
           margin-left: 2rem;
@@ -449,7 +438,7 @@ const [editPassword, setEditPassword] = useState('');
         .profile-icon {
           width: 1.25rem;
           height: 1.25rem;
-          color: #6b7280;
+          color: rgba(255, 255, 255, 0.7) !important;
         }
 
         .profile-loading {
@@ -476,16 +465,25 @@ const [editPassword, setEditPassword] = useState('');
           to { transform: rotate(360deg); }
         }
 
+        /* 🖤 Dark Error Box */
         .profile-error {
-          background: rgba(239, 68, 68, 0.1);
-          border: 1px solid rgba(239, 68, 68, 0.3);
+          background: rgba(0, 0, 0, 0.5) !important;
+          border: 1px solid rgba(239, 68, 68, 0.5);
           border-radius: 16px;
           padding: 2rem;
           text-align: center;
-          color: #dc2626;
+          color: #ff6b6b !important;
           max-width: 400px;
           margin: 0 auto;
           backdrop-filter: blur(10px);
+        }
+
+        .profile-error h3 {
+          color: white !important;
+        }
+
+        .profile-error p {
+          color: rgba(255, 255, 255, 0.8) !important;
         }
 
         .profile-error-icon {
@@ -500,6 +498,7 @@ const [editPassword, setEditPassword] = useState('');
           justify-content: center;
         }
 
+        /* 🖤 Dark Buttons */
         .profile-btn {
           padding: 0.75rem 1.5rem;
           border-radius: 12px;
@@ -516,26 +515,93 @@ const [editPassword, setEditPassword] = useState('');
         }
 
         .profile-btn-primary {
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          color: white;
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+          background: rgba(0, 0, 0, 0.5) !important;
+          color: white !important;
+          border: 1px solid rgba(255, 255, 255, 0.3) !important;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .profile-btn-primary:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+          background: rgba(0, 0, 0, 0.7) !important;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
 
         .profile-btn-secondary {
-          background: rgba(255, 255, 255, 0.9);
-          color: #374151;
-          border: 1px solid rgba(0, 0, 0, 0.1);
+          background: rgba(0, 0, 0, 0.3) !important;
+          color: rgba(255, 255, 255, 0.9) !important;
+          border: 1px solid rgba(255, 255, 255, 0.2) !important;
         }
 
         .profile-btn-secondary:hover {
-          background: white;
+          background: rgba(0, 0, 0, 0.5) !important;
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 🖤 Dark Modal */
+        .modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.7) !important;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          backdrop-filter: blur(5px);
+        }
+
+        .modal {
+          background: rgba(0, 0, 0, 0.5) !important;
+          border-radius: 16px;
+          padding: 2rem;
+          max-width: 400px;
+          width: 90%;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(20px);
+        }
+
+        .modal h3 {
+          color: white !important;
+          margin-bottom: 1.5rem;
+          text-align: center;
+        }
+
+        .modal label {
+          display: block;
+          margin-bottom: 1rem;
+          color: rgba(255, 255, 255, 0.9) !important;
+          font-weight: 600;
+        }
+
+        .modal input {
+          width: 100%;
+          padding: 0.75rem;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: rgba(0, 0, 0, 0.5) !important;
+          color: white !important;
+          margin-top: 0.5rem;
+        }
+
+        .modal input:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+
+        .modal input::placeholder {
+          color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 1rem;
+          margin-top: 2rem;
+          justify-content: center;
         }
 
         /* Responsive Design */
@@ -613,17 +679,8 @@ const [editPassword, setEditPassword] = useState('');
           }
         }
       `}</style>
-    </div>  
-
-    
-
-
-
+    </div>
   ); 
-  
 }; 
- 
-
-
 
 export default Profile;
