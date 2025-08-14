@@ -817,7 +817,7 @@ if (!isAuthenticated) {
       }}>
         {/* HEADER WITH SCROLL EFFECT */}
         <header style={headerStyles} className="header-dashboard">
-          <div className="container mx-auto flex justify-between items-center p-4">
+          <div className="container container-header mx-auto flex justify-between items-center p-4">
             {/* Logo */}
             <div className="flex items-center space-x-2">
               <span className="text-3xl" style={{animation: ''}}>💱</span>
@@ -859,7 +859,7 @@ if (!isAuthenticated) {
         </header>
 
         {/* MAIN WITH PROPER PADDING */} 
-        <main className="container mx-auto flex-1 p-6" style={mainStyles}>
+        <main className="container container-main mx-auto flex-1 p-6" style={mainStyles}>
           <Routes>
             <Route path="/" element={
               rate && Object.keys(rate).length > 0 ? (
