@@ -1,12 +1,14 @@
 .login-container {
   min-height: 100vh;
-  background: linear-gradient(to right, #dbeafe, #e9d5ff);
+  background-image: url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   font-family: 'Segoe UI', sans-serif;
-}
+} 
+
+
 
 .login-box {
   display: flex;
